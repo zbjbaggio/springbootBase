@@ -1,5 +1,7 @@
 package com.springboot.base.data.exception;
 
+import com.springboot.base.data.enmus.ErrorInfo;
+
 /**
  * controller 异常
  * Created by jay on 2016-10-25.

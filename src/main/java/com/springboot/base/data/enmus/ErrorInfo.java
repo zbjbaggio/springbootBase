@@ -1,4 +1,4 @@
-package com.springboot.base.data.exception;
+package com.springboot.base.data.enmus;
 
 
 /**

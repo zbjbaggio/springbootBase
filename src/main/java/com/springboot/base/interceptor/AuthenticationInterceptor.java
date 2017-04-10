@@ -1,7 +1,7 @@
 package com.springboot.base.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.springboot.base.data.exception.ErrorInfo;
+import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.base.ResponseResult;
 import com.springboot.base.util.ValueHolder;
 import org.apache.commons.lang3.StringUtils;

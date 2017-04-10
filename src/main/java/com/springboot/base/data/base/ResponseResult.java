@@ -1,6 +1,6 @@
 package com.springboot.base.data.base;
 
-import com.springboot.base.data.exception.ErrorInfo;
+import com.springboot.base.data.enmus.ErrorInfo;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
@@ -68,4 +68,3 @@ public class ResponseResult implements Serializable {
         return ReflectionToStringBuilder.toString(this);
     }
 }
-
