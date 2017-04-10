@@ -1,8 +1,8 @@
-A)Service/DAO 层方法命名规约\<br>
+A)Service/DAO 层方法命名规约<br>
 1） 获取单个对象的方法用 get 做前缀。\<br>
 2） 获取多个对象的方法用 list 做前缀。
 3） 获取统计值的方法用 count 做前缀。\<br>
-4） 插入的方法用 save\<br> 
+4） 插入的方法用 save\<br>
 5） 删除的方法用 remove
 6） 修改的方法用 update 做前缀。\<br>
 B) 领域模型命名规约\<br>
