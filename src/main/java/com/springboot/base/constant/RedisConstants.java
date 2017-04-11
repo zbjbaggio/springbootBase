@@ -1,10 +1,10 @@
-package com.springboot.base.util;
+package com.springboot.base.constant;
 
 /**
  * redis常量
  * Created by jay on 2016-10-20.
  */
-public interface RedisConstant {
+public interface RedisConstants {
 
     /**
      * 登录

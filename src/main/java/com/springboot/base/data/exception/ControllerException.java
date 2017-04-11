@@ -1,11 +1,13 @@
 package com.springboot.base.data.exception;
 
 import com.springboot.base.data.enmus.ErrorInfo;
+import lombok.ToString;
 
 /**
  * controller 异常
  * Created by jay on 2016-10-25.
  */
+@ToString
 public class ControllerException extends Exception {
 
     public int errCode;

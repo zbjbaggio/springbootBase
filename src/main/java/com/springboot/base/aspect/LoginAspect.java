@@ -1,6 +1,5 @@
 package com.springboot.base.aspect;
 
-import com.springboot.base.util.ValueHolder;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -12,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
-import javax.inject.Inject;
 import java.util.Arrays;
 
 /**
@@ -26,9 +24,6 @@ public class LoginAspect {
     private static final Logger LOG = LoggerFactory.getLogger(LoginAspect.class);
 
     private long startTime = 0; // 开始时间
-
-    @Inject
-    private ValueHolder valueHolder;
 
     @Pointcut("execution (* com.springboot.base.controller..*.*(..))")
     private void aspectMethod() {

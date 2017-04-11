@@ -12,11 +12,8 @@ public enum ErrorInfo {
     LOGIN_AGAIN(5003, "重新登录！"),
     NO_LOGIN(5004, "未登录！"),
     NO_AUTHORITY(5005, "未权限！"),
-    EXCEL_ERROR(5006, "excel导出失败！"),
-    SALE_COUNT_ERROR(5007, "销售数量大于库存数量！" ),
-    USER_NAME_SAME(5008, "用户名重复！"),
-    CATEGORY_CODE_SAME(5009, "编码重复！"),
-    START_DATE_LESS_NOW(5010, "开始日期不能小于今天！");
+    USER_NAME_SAME(5006, "用户名重复！"),
+    REGISTER_ERROR(5007, "用户注册失败！" );
 
     private int value;
 

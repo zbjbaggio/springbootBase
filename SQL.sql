@@ -2,7 +2,7 @@
 DROP TABLE IF EXISTS `t_user_info`;
 CREATE TABLE `t_user_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `create_date` datetime NOT NULL,
+  `create_time` datetime NOT NULL,
   `last_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `email` varchar(50) NOT NULL COMMENT '邮箱',
   `name` varchar(30) NOT NULL COMMENT '真实姓名',
@@ -21,7 +21,7 @@ CREATE TABLE `t_user_info` (
 DROP TABLE IF EXISTS `t_permission`;
 CREATE TABLE `t_permission` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `create_date` datetime NOT NULL,
+  `create_time` datetime NOT NULL,
   `last_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `available` bit(1) NOT NULL COMMENT '是否可用',
   `name` varchar(30) NOT NULL COMMENT '名称',
@@ -37,10 +37,32 @@ CREATE TABLE `t_permission` (
 DROP TABLE IF EXISTS `t_role`;
 CREATE TABLE `t_role` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `create_date` datetime NOT NULL,
+  `create_time` datetime NOT NULL,
   `last_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `available` bit(1) NOT NULL COMMENT '是否可用',
   `description` text COMMENT '角色描述,UI界面显示使用',
   `name` varchar(30) NOT NULL COMMENT '角色名',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*角色权限关系表*/
+DROP TABLE IF EXISTS `t_role_permission`;
+CREATE TABLE `t_role_permission` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `create_time` datetime NOT NULL,
+  `last_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `permission_id` bigint(20) NOT NULL COMMENT '权限id',
+  `role_id` bigint(20) NOT NULL COMMENT '角色id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*用户角色关系表*/
+DROP TABLE IF EXISTS `t_user_role`;
+CREATE TABLE `t_user_role` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `create_time` datetime NOT NULL,
+  `last_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `role_id` bigint(20) NOT NULL COMMENT '角色id',
+  `user_id` bigint(20) NOT NULL COMMENT '用户id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

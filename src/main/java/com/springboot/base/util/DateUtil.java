@@ -1,7 +1,4 @@
 package com.springboot.base.util;
-
-import org.apache.commons.lang3.StringUtils;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,7 +29,7 @@ public class DateUtil {
         return format(strDate, DATEFORMAT);
     }
 
-    public static String formatDateStringToString(String strDate) {
+    /*public static String formatDateStringToString(String strDate) {
         if (StringUtils.isNotBlank(strDate)) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(Long.parseLong(strDate));
@@ -40,7 +37,7 @@ public class DateUtil {
         } else {
             return "";
         }
-    }
+    }*/
 
     /**
      * 校验格式化日期

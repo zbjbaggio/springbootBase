@@ -1,9 +1,8 @@
 package com.springboot.base.controlleradvice;
 
-import com.springboot.base.data.exception.ControllerException;
 import com.springboot.base.data.base.ResponseResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.springboot.base.data.exception.ControllerException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,9 +19,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * Created by jay on 2016-10-25.
  */
 @ControllerAdvice(basePackages = "com.springboot.base.controller")
+@Slf4j
 public class ExceptionControllerAdvice implements ResponseBodyAdvice<Object> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ExceptionControllerAdvice.class);
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
@@ -37,13 +35,14 @@ public class ExceptionControllerAdvice implements ResponseBodyAdvice<Object> {
     @ExceptionHandler()
     @ResponseBody
     public ResponseResult handler(ControllerException e) {
+        log.info(e.toString());
         return ResponseResult.build(e.errCode, e.msg);
     }
 
     @ExceptionHandler()
     @ResponseBody
     public void handler(Exception e, ServerHttpResponse response) {
-        LOG.error("系统异常！", e);
+        log.error("系统异常！", e);
         response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
