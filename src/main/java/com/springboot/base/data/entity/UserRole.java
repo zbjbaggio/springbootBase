@@ -2,6 +2,7 @@ package com.springboot.base.data.entity;
 
 import com.springboot.base.data.base.EntityBase;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
 
@@ -12,8 +13,10 @@ import java.io.Serializable;
 @Data
 public class UserRole extends EntityBase implements Serializable {
 
+    @NotEmpty
     private long roleId;
 
+    @NotEmpty
     private long userId;
 
 }
