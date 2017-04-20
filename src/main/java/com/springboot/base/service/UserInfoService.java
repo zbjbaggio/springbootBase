@@ -8,10 +8,11 @@ import com.springboot.base.data.entity.UserInfo;
  */
 public interface UserInfoService {
 
-    UserInfo login(UserInfo user);
-
     UserInfo save(UserInfo userInfo) throws Exception;
 
     UserInfo getUserNoState(String username);
 
+    UserInfo getUser(String username, byte index);
+
+    UserInfo login(UserInfo userInfo);
 }

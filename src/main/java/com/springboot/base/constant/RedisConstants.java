@@ -9,6 +9,6 @@ public interface RedisConstants {
     /**
      * 登录
      */
-    String MERCHKEY = "merch_token_";
+    String LOGIN = "login_token_";
 
 }

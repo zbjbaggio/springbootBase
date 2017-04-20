@@ -28,15 +28,15 @@ public class ExceptionControllerAdvice implements ResponseBodyAdvice<Object> {
     }
 
     @Override
-    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        return ResponseResult.ok(body);
+    public String beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+        return ResponseResult.ok(body).toString();
     }
 
     @ExceptionHandler()
     @ResponseBody
-    public ResponseResult handler(ControllerException e) {
+    public String handler(ControllerException e) {
         log.info(e.toString());
-        return ResponseResult.build(e.errCode, e.msg);
+        return ResponseResult.build(e.errCode, e.msg).toString();
     }
 
     @ExceptionHandler()

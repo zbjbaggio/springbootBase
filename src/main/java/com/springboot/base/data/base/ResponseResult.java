@@ -1,5 +1,6 @@
 package com.springboot.base.data.base;
 
+import com.alibaba.fastjson.JSON;
 import com.springboot.base.data.enmus.ErrorInfo;
 import lombok.Data;
 
@@ -38,6 +39,11 @@ public class ResponseResult implements Serializable {
         this.status = status;
         this.msg = msg;
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 
 }

@@ -13,7 +13,9 @@ public enum ErrorInfo {
     NO_LOGIN(5004, "未登录！"),
     NO_AUTHORITY(5005, "未权限！"),
     USER_NAME_SAME(5006, "用户名重复！"),
-    REGISTER_ERROR(5007, "用户注册失败！" );
+    REGISTER_EXCEPTION(5007, "用户注册失败！" ),
+    LOGIN_EXCEPTION(5008, "用户登录失败！"),
+    USER_LOCKED(5009, "该用户已锁定！");
 
     private int value;
 

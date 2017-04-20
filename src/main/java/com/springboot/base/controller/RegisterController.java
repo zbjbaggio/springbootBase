@@ -44,7 +44,7 @@ public class RegisterController {
         }
         userInfo = userInfoService.save(userInfo);
         if (userInfo == null) {
-            throw new ControllerException(ErrorInfo.REGISTER_ERROR);
+            throw new ControllerException(ErrorInfo.REGISTER_EXCEPTION);
         }
     }
 

@@ -23,17 +23,18 @@ public class UserInfoServiceImpl implements UserInfoService {
     private UserInfoMapper userInfoMapper;
 
     @Override
-    public UserInfo login(UserInfo user) {
-        UserInfo newUserInfo = userInfoMapper.getUserInfo(user.getUsername(), UserStatus.DEFAULT.getIndex());
-        if (newUserInfo == null) {
-            return null;
-        }
-        return newUserInfo;
+    public UserInfo getUserNoState(String username) {
+        return userInfoMapper.getUserInfoNoState(username);
     }
 
     @Override
-    public UserInfo getUserNoState(String username) {
-        return userInfoMapper.getUserInfoNoState(username);
+    public UserInfo getUser(String username, byte index) {
+        return userInfoMapper.getUserInfo(username, index);
+    }
+
+    @Override
+    public UserInfo login(UserInfo userInfo) {
+        return userInfoMapper.getUserInfo(userInfo.getUsername(), UserStatus.DEFAULT.getIndex());
     }
 
     @Override
@@ -41,7 +42,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         UUID uuid = UUID.randomUUID();
         String salt = uuid.toString();
         userInfo.setSalt(salt);
-        userInfo.setPassword(PasswordUtil.getPassword(userInfo.getPassword(), salt));
+        userInfo.setPassword(PasswordUtil.getPassword(userInfo.getPassword(), salt + userInfo.getUsername()));
         userInfo.setState(UserStatus.DEFAULT.getIndex());
         userInfo.setOperator_id(null);
         int count =  userInfoMapper.save(userInfo);

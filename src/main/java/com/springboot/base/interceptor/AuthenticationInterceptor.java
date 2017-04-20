@@ -19,9 +19,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationInterceptor.class);
 
-    @Value("${userTimeOut}")
-    private Long userTimeOut;
-
     /**
      * 登录认证
      */

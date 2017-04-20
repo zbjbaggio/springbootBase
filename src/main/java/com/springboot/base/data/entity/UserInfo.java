@@ -37,6 +37,10 @@ public class UserInfo extends EntityBase implements Serializable {
 
     private String operator_id;
 
+    public String getCredentialsSalt() {
+        return username + salt;
+    }
+
     public interface LoginGroup {
     }
 

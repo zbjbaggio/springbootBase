@@ -5,13 +5,18 @@ import com.springboot.base.data.entity.UserInfo;
 import com.springboot.base.data.exception.ControllerException;
 import com.springboot.base.service.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 登录
@@ -22,25 +27,47 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class LoginController {
 
-    @Autowired
-    private UserInfoService userInfoService;
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String login(HttpServletRequest request, @RequestParam String username,
+                        @RequestParam String password) throws Exception {
+        String exception = (String) request.getAttribute("shiroLoginFailure");
+        System.out.println("exception=" + exception);
+        if (exception != null) {
+            if (UnknownAccountException.class.getName().equals(exception)) {
+                log.info("UnknownAccountException -- > 账号不存在：");
+                throw new ControllerException(ErrorInfo.LOGIN_ERROR);
+            } else if (IncorrectCredentialsException.class.getName().equals(exception)) {
+                log.info("IncorrectCredentialsException -- > 密码不正确：");
+                throw new ControllerException(ErrorInfo.LOGIN_ERROR);
+            } else if ("kaptchaValidateFailed".equals(exception)) {
+                System.out.println("kaptchaValidateFailed -- > 验证码错误");
+                //msg = "kaptchaValidateFailed -- > 验证码错误";
+            } else {
+                log.error("登录失败！", exception);
+                throw new ControllerException(ErrorInfo.LOGIN_EXCEPTION);
+            }
+        }
+        return "success";
+    }
 
     /**
-     * 登录接口
-     * @param userInfo
-     * @return
+     * 未登录接口
+     *
      * @throws Exception
      */
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public UserInfo login(@RequestBody @Validated(UserInfo.LoginGroup.class) UserInfo userInfo, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", bindingResult);
-            throw new ControllerException(ErrorInfo.PARAMS_ERROR);
-        }
-        userInfo = userInfoService.login(userInfo);
-        if (userInfo == null) {
-            throw new ControllerException(ErrorInfo.LOGIN_ERROR);
-        }
-        return userInfo;
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public void login() throws Exception {
+        throw new ControllerException(ErrorInfo.NO_LOGIN);
+    }
+
+    /**
+     * 退出
+     *
+     * @throws Exception
+     */
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public void logout() throws Exception {
+        log.info("退出！");
     }
 }
