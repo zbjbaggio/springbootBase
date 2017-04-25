@@ -3,12 +3,15 @@ package com.springboot.base.service.impl;
 import com.springboot.base.data.enmus.UserStatus;
 import com.springboot.base.data.entity.UserInfo;
 import com.springboot.base.mapper.UserInfoMapper;
+import com.springboot.base.repository.RedisRepositoryCustom;
 import com.springboot.base.service.UserInfoService;
 import com.springboot.base.util.PasswordUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -21,6 +24,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Autowired
     private UserInfoMapper userInfoMapper;
+
+    @Autowired
+    private RedisRepositoryCustom redisRepositoryCustom;
 
     @Override
     public UserInfo getUserNoState(String username) {
@@ -35,6 +41,11 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public UserInfo login(UserInfo userInfo) {
         return userInfoMapper.getUserInfo(userInfo.getUsername(), UserStatus.DEFAULT.getIndex());
+    }
+
+    @Override
+    public Session getUserBySessionId(Serializable sessionId) {
+         return redisRepositoryCustom.getSession(sessionId);
     }
 
     @Override

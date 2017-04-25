@@ -1,5 +1,7 @@
 package com.springboot.base.data.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.springboot.base.data.base.EntityBase;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -25,6 +27,7 @@ public class UserInfo extends EntityBase implements Serializable {
     @NotEmpty(groups = {BaseInfo.class})
     private String name;
 
+    @JSONField(serialize=false)
     @NotEmpty(groups = {BaseInfo.class, LoginGroup.class})
     private String password;
 

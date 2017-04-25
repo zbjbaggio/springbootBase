@@ -1,6 +1,9 @@
 package com.springboot.base.service;
 
 import com.springboot.base.data.entity.UserInfo;
+import org.apache.shiro.session.Session;
+
+import java.io.Serializable;
 
 /**
  *
@@ -15,4 +18,7 @@ public interface UserInfoService {
     UserInfo getUser(String username, byte index);
 
     UserInfo login(UserInfo userInfo);
+
+    Session getUserBySessionId(Serializable sessionId);
+
 }

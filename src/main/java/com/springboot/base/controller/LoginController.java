@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class LoginController {
 
-
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(HttpServletRequest request, @RequestParam String username,
                         @RequestParam String password) throws Exception {
