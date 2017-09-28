@@ -1,5 +1,6 @@
 package com.springboot.base.service.impl;
 
+import com.springboot.base.constant.SystemConstants;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.enmus.UserStatus;
 import com.springboot.base.data.entity.UserInfo;
@@ -25,8 +26,6 @@ import java.util.UUID;
 @Slf4j
 public class UserInfoServiceImpl implements UserInfoService {
 
-    private final int FREEZE_NUMBER = 3;
-
     @Autowired
     private UserInfoMapper userInfoMapper;
 
@@ -35,13 +34,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserVO login(UserInfo user) throws Exception {
+        Integer number = checkPasswordNumber(user.getUsername());
         UserInfo newUserInfo = userInfoMapper.getUserInfo(user.getUsername(), UserStatus.DEFAULT.getIndex());
-        if (newUserInfo == null) {
-            checkPasswordNumber(user.getUsername());
-            return null;
-        }
-        if (!checkPassword(user.getPassword(), newUserInfo.getPassword(), newUserInfo.getSalt())) {
-            checkPasswordNumber(user.getUsername());
+        if (newUserInfo == null || !checkUser(user.getPassword(), newUserInfo)) {
+            redisService.saveUserPasswordNumber(user.getUsername(), number + 1);
             return null;
         }
         newUserInfo.setPasswordNumber(0);
@@ -52,19 +48,27 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     //校验猜密码次数
-    private void checkPasswordNumber(String username) throws Exception {
+    private Integer checkPasswordNumber(String username) throws Exception {
         Integer number = redisService.getUserPasswordNumber(username);
-        if (number >= FREEZE_NUMBER) {
-            log.info("该用户被冻结！username{}", username);
-            throw new PrivateException(ErrorInfo.USER_FREEZE);
+        if (number >= SystemConstants.FREEZE_NUMBER) {
+            log.info("该用户被停止登录！username{}", username);
+            throw new PrivateException(ErrorInfo.USER_NO_LOGIN);
         }
-        redisService.saveUserPasswordNumber(username, number + 1);
+        return number;
     }
 
     //校验密码
-    private boolean checkPassword(String passwordStr, String passwordMD5, String salt) throws Exception {
-        String password = PasswordUtil.getPassword(passwordStr, salt);
-        return password.equals(passwordMD5);
+    private boolean checkUser(String passwordStr, UserInfo newUserInfo) throws Exception {
+        if (newUserInfo.getState() == UserStatus.FREEZE.getIndex()) {
+            log.info("该用户被冻结！username{}", newUserInfo.getUsername());
+            throw new PrivateException(ErrorInfo.USER_FREEZE);
+        }
+        if (newUserInfo.getState() == UserStatus.UNACTIVATED.getIndex()) {
+            log.info("该用户还未审核通过！username{}", newUserInfo.getUsername());
+            throw new PrivateException(ErrorInfo.USER_UNACTIVATED);
+        }
+        String password = PasswordUtil.getPassword(passwordStr, newUserInfo.getSalt());
+        return password.equals(newUserInfo.getPassword());
     }
 
     //设置token
