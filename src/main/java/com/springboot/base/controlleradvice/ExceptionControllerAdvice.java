@@ -1,7 +1,7 @@
 package com.springboot.base.controlleradvice;
 
 import com.springboot.base.data.base.ResponseResult;
-import com.springboot.base.data.exception.ControllerException;
+import com.springboot.base.data.exception.PrivateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
@@ -34,7 +34,7 @@ public class ExceptionControllerAdvice implements ResponseBodyAdvice<Object> {
 
     @ExceptionHandler()
     @ResponseBody
-    public ResponseResult handler(ControllerException e) {
+    public ResponseResult handler(PrivateException e) {
         log.info(e.toString());
         return ResponseResult.build(e.errCode, e.msg);
     }

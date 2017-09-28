@@ -57,8 +57,9 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public Integer getUserPasswordNumber(String username) {
-        Integer number = Integer.parseInt(get(USER_PASSWORD_KEY + username));
-        return number == null ? 0 : number;
+        String numberString = get(USER_PASSWORD_KEY + username);
+        Integer number = numberString == null ? 0 : Integer.parseInt(numberString);
+        return number;
     }
 
     private void save(String key, Object value, long time, TimeUnit timeUnit) {
