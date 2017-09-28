@@ -1,6 +1,7 @@
 package com.springboot.base.service;
 
 import com.springboot.base.data.entity.UserInfo;
+import com.springboot.base.data.vo.UserVO;
 
 /**
  *
@@ -8,7 +9,7 @@ import com.springboot.base.data.entity.UserInfo;
  */
 public interface UserInfoService {
 
-    UserInfo login(UserInfo user);
+    UserVO login(UserInfo user) throws Exception;
 
     UserInfo save(UserInfo userInfo) throws Exception;
 

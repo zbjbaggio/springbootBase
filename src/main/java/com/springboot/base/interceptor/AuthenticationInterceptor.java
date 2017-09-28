@@ -33,7 +33,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         try {
             String urlPath = request.getRequestURI();
             String token = request.getHeader("token");
-
             return true;
         } catch (Exception e) {
             LOG.error("登录验证异常！{}", e);

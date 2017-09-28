@@ -2,6 +2,7 @@ package com.springboot.base.data.entity;
 
 import com.springboot.base.data.base.EntityBase;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
@@ -15,7 +16,8 @@ import java.io.Serializable;
 @Data
 public class UserInfo extends EntityBase implements Serializable {
 
-    @NotEmpty(groups = {BaseInfo.class, LoginGroup.class})
+    @NotEmpty(groups = {BaseInfo.class, LoginGroup.class}, message = "用户名不能为空！")
+    @Length(max = 30, message = "用户名不能超过30个字！")
     private String username;
 
     @NotEmpty(groups = {BaseInfo.class})
@@ -25,7 +27,7 @@ public class UserInfo extends EntityBase implements Serializable {
     @NotEmpty(groups = {BaseInfo.class})
     private String name;
 
-    @NotEmpty(groups = {BaseInfo.class, LoginGroup.class})
+    @NotEmpty(groups = {BaseInfo.class, LoginGroup.class}, message = "密码不能为空！")
     private String password;
 
     @NotEmpty(groups = {BaseInfo.class})
@@ -36,6 +38,12 @@ public class UserInfo extends EntityBase implements Serializable {
     private byte state;
 
     private String operator_id;
+
+    private String key;
+
+    private String toke;
+
+    private int passwordNumber;//密码猜测次数
 
     public interface LoginGroup {
     }
