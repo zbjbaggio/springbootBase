@@ -28,6 +28,7 @@ public class LoginController {
 
     /**
      * 登录接口
+     *
      * @param userInfo
      * @return
      * @throws Exception
@@ -38,6 +39,10 @@ public class LoginController {
             log.info("添加验证信息{}", bindingResult);
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        return userInfoService.login(userInfo);
+        UserVO userVO = userInfoService.login(userInfo);
+        if (userVO == null) {
+            throw new PrivateException(ErrorInfo.LOGIN_ERROR);
+        }
+        return userVO;
     }
 }
