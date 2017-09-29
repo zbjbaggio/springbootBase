@@ -1,9 +1,8 @@
-package com.springboot.base.controller;
+package com.springboot.base.controller.advice;
 
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.entity.UserInfo;
 import com.springboot.base.data.exception.PrivateException;
-import com.springboot.base.data.vo.UserVO;
 import com.springboot.base.service.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,34 +14,38 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 登录
+ * 注册
  * Created by jay on 2017-4-10.
  */
 @RestController
 @RequestMapping
 @Slf4j
-public class LoginController {
+public class RegisterController {
 
     @Autowired
     private UserInfoService userInfoService;
 
     /**
-     * 登录接口
-     *
+     * 注册
      * @param userInfo
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public UserVO login(@RequestBody @Validated(UserInfo.LoginGroup.class) UserInfo userInfo, BindingResult bindingResult) throws Exception {
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public void register(@RequestBody @Validated(UserInfo.BaseInfo.class) UserInfo userInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", bindingResult);
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        UserVO userVO = userInfoService.login(userInfo);
-        if (userVO == null) {
-            throw new PrivateException(ErrorInfo.LOGIN_ERROR);
+        //校验用户名称是否重复
+        UserInfo user = userInfoService.getUserNoState(userInfo.getUsername());
+        if (user != null) {
+            throw new PrivateException(ErrorInfo.USER_NAME_SAME);
         }
-        return userVO;
+        userInfo = userInfoService.save(userInfo);
+        if (userInfo == null) {
+            throw new PrivateException(ErrorInfo.REGISTER_ERROR);
+        }
     }
+
 }

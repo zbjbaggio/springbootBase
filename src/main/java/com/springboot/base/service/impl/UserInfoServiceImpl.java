@@ -1,6 +1,7 @@
 package com.springboot.base.service.impl;
 
 import com.springboot.base.constant.SystemConstants;
+import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.enmus.UserStatus;
 import com.springboot.base.data.entity.UserInfo;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.UUID;
 
@@ -35,7 +37,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public UserVO login(UserInfo user) throws Exception {
         Integer number = checkPasswordNumber(user.getUsername());
-        UserInfo newUserInfo = userInfoMapper.getUserInfo(user.getUsername(), UserStatus.DEFAULT.getIndex());
+        UserInfo newUserInfo = userInfoMapper.getUserInfo(user.getUsername());
         if (newUserInfo == null || !checkUser(user.getPassword(), newUserInfo)) {
             redisService.saveUserPasswordNumber(user.getUsername(), number + 1);
             return null;
@@ -59,11 +61,11 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     //校验密码
     private boolean checkUser(String passwordStr, UserInfo newUserInfo) throws Exception {
-        if (newUserInfo.getState() == UserStatus.FREEZE.getIndex()) {
+        if (newUserInfo.getStatus() == UserStatus.FREEZE.getIndex()) {
             log.info("该用户被冻结！username{}", newUserInfo.getUsername());
             throw new PrivateException(ErrorInfo.USER_FREEZE);
         }
-        if (newUserInfo.getState() == UserStatus.UNACTIVATED.getIndex()) {
+        if (newUserInfo.getStatus() == UserStatus.UNACTIVATED.getIndex()) {
             log.info("该用户还未审核通过！username{}", newUserInfo.getUsername());
             throw new PrivateException(ErrorInfo.USER_UNACTIVATED);
         }
@@ -75,7 +77,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     private void saveRedis(UserInfo userInfo, boolean isToken) throws Exception {
         userInfo.setKey(TokenUtils.getKey(userInfo));
         if (isToken) {
-            userInfo.setToke(TokenUtils.getToken(userInfo));
+            userInfo.setToken(TokenUtils.getToken(userInfo));
         }
         redisService.saveUser(userInfo);
     }
@@ -86,12 +88,44 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
+    public boolean checkToken(String token, String key) {
+        if (StringUtils.isEmpty(token) || StringUtils.isEmpty(key)) {
+            return false;
+        }
+        UserInfo userInfo = redisService.getUserInfoByKey(key);
+        if (userInfo != null && token.equals(userInfo.getToken())) {
+            redisService.saveUser(userInfo);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Page listPage(int limit, int offset, String searchStr, int state) {
+        if (!"-1".equals(searchStr)) {
+            searchStr = "%" + searchStr + "%";
+        }
+        Page page = new Page();
+        Long count = userInfoMapper.count(searchStr, state);
+        if (count != 0) {
+            page.setCount(count);
+            page.setList(userInfoMapper.listPage(limit, offset, searchStr, state));
+        }
+        return page;
+    }
+
+    @Override
+    public UserVO getDetail(Long userId) {
+        return userInfoMapper.getDetailById(userId);
+    }
+
+    @Override
     public UserInfo save(UserInfo userInfo) throws Exception {
         UUID uuid = UUID.randomUUID();
         String salt = uuid.toString();
         userInfo.setSalt(salt);
         userInfo.setPassword(PasswordUtil.getPassword(userInfo.getPassword(), salt));
-        userInfo.setState(UserStatus.DEFAULT.getIndex());
+        userInfo.setStatus(UserStatus.DEFAULT.getIndex());
         userInfo.setOperator_id(null);
         int count = userInfoMapper.save(userInfo);
         if (count > 0) {

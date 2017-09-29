@@ -62,8 +62,6 @@ public class Application extends WebMvcConfigurerAdapter {
 
 	@RequestMapping("/home")
 	String home() {
-        //UserInfo userInfo = userInfoMapper.getUserInfo();
-        //List<UserInfo> all = userInfoMapper.getAll();
         return "Hello World!";
 	}
 

@@ -14,7 +14,7 @@ public class EntityBase implements Serializable {
 
     private Long id;
 
-    private Date create_time;
+    private Date createTime;
 
-    private Date last_modified;
+    private Date lastModified;
 }

@@ -33,10 +33,10 @@ public class RedisServiceImpl implements RedisService {
         save(USER_TOKEN_KEY + userInfo.getKey(), userInfo, SystemConstants.USER_TOKEN_TIME_LONG, TimeUnit.MINUTES);
     }
 
-    @Override
+/*    @Override
     public UserInfo getUserInfo(UserInfo userInfo) throws Exception {
         return get(USER_TOKEN_KEY + TokenUtils.getKey(userInfo), UserInfo.class);
-    }
+    }*/
 
     /**
      * 保存该用户名猜密码次数
@@ -57,6 +57,11 @@ public class RedisServiceImpl implements RedisService {
         String numberString = get(USER_PASSWORD_KEY + username);
         Integer number = numberString == null ? 0 : Integer.parseInt(numberString);
         return number;
+    }
+
+    @Override
+    public UserInfo getUserInfoByKey(String key) {
+        return get(USER_TOKEN_KEY + key, UserInfo.class);
     }
 
     private void save(String key, Object value, long time, TimeUnit timeUnit) {

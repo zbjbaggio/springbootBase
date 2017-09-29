@@ -1,5 +1,6 @@
 package com.springboot.base.service;
 
+import com.springboot.base.data.base.Page;
 import com.springboot.base.data.entity.UserInfo;
 import com.springboot.base.data.vo.UserVO;
 
@@ -14,5 +15,11 @@ public interface UserInfoService {
     UserInfo save(UserInfo userInfo) throws Exception;
 
     UserInfo getUserNoState(String username);
+
+    boolean checkToken(String token, String key);
+
+    Page listPage(int limit, int offset, String searchStr, int status);
+
+    UserVO getDetail(Long userId);
 
 }

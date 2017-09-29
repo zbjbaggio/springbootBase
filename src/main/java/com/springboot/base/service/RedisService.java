@@ -10,9 +10,11 @@ public interface RedisService {
 
     void saveUser(UserInfo userInfo);
 
-    UserInfo getUserInfo(UserInfo userInfo) throws Exception;
+    //UserInfo getUserInfo(UserInfo userInfo) throws Exception;
 
     void saveUserPasswordNumber(String username, Integer number);
 
     Integer getUserPasswordNumber(String username);
+
+    UserInfo getUserInfoByKey(String key);
 }

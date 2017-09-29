@@ -35,13 +35,13 @@ public class UserInfo extends EntityBase implements Serializable {
 
     private String salt;
 
-    private byte state;
+    private byte status;
 
     private String operator_id;
 
     private String key;
 
-    private String toke;
+    private String token;
 
     private int passwordNumber;//密码猜测次数
 

@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * 异常处理
  * Created by jay on 2016-10-25.
  */
-@ControllerAdvice(basePackages = "com.springboot.base.controller")
+@ControllerAdvice(basePackages = "com.springboot.base.controller.advice")
 @Slf4j
 public class ExceptionControllerAdvice implements ResponseBodyAdvice<Object> {
 
