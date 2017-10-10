@@ -1,7 +1,7 @@
 package com.springboot.base.data.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.Date;
@@ -10,7 +10,7 @@ import java.util.Date;
  * 描述：
  * Created by jay on 2017-9-28.
  */
-@JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class UserVO {
 

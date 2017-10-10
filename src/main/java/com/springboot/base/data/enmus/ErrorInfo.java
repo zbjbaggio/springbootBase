@@ -16,7 +16,10 @@ public enum ErrorInfo {
     REGISTER_ERROR(50007, "用户注册失败！" ),
     USER_FREEZE(50008, "该用户已被冻结，请联系管理员！" ),
     USER_UNACTIVATED(50009, "该用户还未审核通过请耐心等待！"),
-    USER_NO_LOGIN(50010, "该用户已冻结请1个小时后再试！");
+    USER_NO_LOGIN(50010, "该用户已冻结请1个小时后再试！"),
+    SAVE_ERROR(50011, "保存失败！"),
+    STATUS_ERROR(50012, "修改状态失败！"),
+    user_freeze(50013, "用户已冻结！");
 
     private int value;
 

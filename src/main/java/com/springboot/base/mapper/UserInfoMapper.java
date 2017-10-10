@@ -2,10 +2,7 @@ package com.springboot.base.mapper;
 
 import com.springboot.base.data.entity.UserInfo;
 import com.springboot.base.data.vo.UserVO;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -16,19 +13,28 @@ import java.util.List;
 @Mapper
 public interface UserInfoMapper {
 
-    @Select("select * from t_user_info where username = #{username} and dr = 0")
+    @Select("select * from t_user_info where username = #{param1}")
     UserInfo getUserInfoNoState(String username);
 
-    @Select("select * from t_user_info where username = #{param1} and dr = 0")
+    @Select("select * from t_user_info where username = #{param1} and id <> #{param2}")
+    UserInfo getUserInfoNoStateNoId(String username, Long userId);
+
+    @Select("select * from t_user_info where username = #{param1} and dr = 0 ")
     UserInfo getUserInfo(String username);
 
-    @Insert("insert into t_user_info(username,email,name,password,phone,salt,state,operator_id,create_time) values(#{username},#{email},#{name},#{password},#{phone},#{salt},#{state},#{operator_id},now())")
+    @Insert("insert into t_user_info(username,email,name,password,phone,salt,status,operator_id,create_time) values(#{username},#{email},#{name},#{password},#{phone},#{salt},#{status},#{operator_id},now())")
     int save(UserInfo userInfo);
 
-    Long count(@Param("searchStr")String searchStr, @Param("state")int state);
+    Long count(@Param("searchStr")String searchStr, @Param("status")int status);
 
-    List<UserVO> listPage(@Param("limit")int limit, @Param("offset")int offset, @Param("searchStr")String searchStr, @Param("state")int state);
+    List<UserVO> listPage(@Param("limit")int limit, @Param("offset")int offset, @Param("searchStr")String searchStr, @Param("status")int status);
 
     @Select("select * from t_user_info where id = #{param1} and dr = 0")
     UserVO getDetailById(Long userId);
+
+    @Update("update t_user_info set username = #{username}, email = #{email}, name = #{name}, phone = #{phone}, status = #{status} where id = #{id}")
+    int update(UserInfo userInfo);
+
+    @Update("update t_user_info set status = #{param1} where id = #{param2}")
+    int updateStatus(byte index, Long userId);
 }

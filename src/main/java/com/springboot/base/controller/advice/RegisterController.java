@@ -37,11 +37,6 @@ public class RegisterController {
             log.info("添加验证信息{}", bindingResult);
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        //校验用户名称是否重复
-        UserInfo user = userInfoService.getUserNoState(userInfo.getUsername());
-        if (user != null) {
-            throw new PrivateException(ErrorInfo.USER_NAME_SAME);
-        }
         userInfo = userInfoService.save(userInfo);
         if (userInfo == null) {
             throw new PrivateException(ErrorInfo.REGISTER_ERROR);

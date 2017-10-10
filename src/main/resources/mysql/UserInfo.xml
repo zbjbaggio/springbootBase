@@ -22,8 +22,8 @@
         <if test="searchStr != '-1'">
             and username like #{searchStr}
         </if>
-        <if test="state != -1">
-            and state = #{state}
+        <if test="status != -1">
+            and status = #{status}
         </if>
     </select>
 
@@ -35,8 +35,8 @@
         <if test="searchStr != '-1'">
             and username like #{searchStr}
         </if>
-        <if test="state != -1">
-            and state = #{state}
+        <if test="status != -1">
+            and status = #{status}
         </if>
     </select>
 
