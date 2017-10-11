@@ -9,10 +9,11 @@ import com.springboot.base.data.vo.UserVO;
 import com.springboot.base.service.UserInfoService;
 import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.inject.Inject;
 
 /**
  * 描述：用户管理
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class UserInfoController {
 
-    @Autowired
+    @Inject
     private UserInfoService userInfoService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)

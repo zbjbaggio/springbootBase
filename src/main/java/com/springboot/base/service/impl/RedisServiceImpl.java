@@ -4,13 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.springboot.base.constant.SystemConstants;
 import com.springboot.base.data.entity.UserInfo;
 import com.springboot.base.service.RedisService;
-import com.springboot.base.util.TokenUtils;
 import lombok.extern.log4j.Log4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,7 +24,7 @@ public class RedisServiceImpl implements RedisService {
 
     private final String USER_PASSWORD_KEY = "user_password_";//用户猜密码次数存入redis的key
 
-    @Autowired
+    @Inject
     private StringRedisTemplate template;
 
     @Override

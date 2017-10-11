@@ -15,7 +15,6 @@ import com.springboot.base.util.TokenUtils;
 import com.springboot.base.util.ValueHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -30,10 +29,10 @@ import java.util.UUID;
 @Slf4j
 public class UserInfoServiceImpl implements UserInfoService {
 
-    @Autowired
+    @Inject
     private UserInfoMapper userInfoMapper;
 
-    @Autowired
+    @Inject
     private RedisService redisService;
 
     @Inject
