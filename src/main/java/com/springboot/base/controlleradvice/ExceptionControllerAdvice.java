@@ -1,6 +1,7 @@
 package com.springboot.base.controlleradvice;
 
 import com.springboot.base.data.base.ResponseResult;
+import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.exception.PrivateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -41,8 +42,8 @@ public class ExceptionControllerAdvice implements ResponseBodyAdvice<Object> {
 
     @ExceptionHandler()
     @ResponseBody
-    public void handler(Exception e, ServerHttpResponse response) {
+    public Object handler(Exception e) {
         log.error("系统异常！", e);
-        response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseResult.build(ErrorInfo.ERROR);
     }
 }

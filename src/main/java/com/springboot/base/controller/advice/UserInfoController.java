@@ -57,13 +57,13 @@ public class UserInfoController {
         userInfoService.updateStatus(userId, UserStatus.FREEZE);
     }
 
-    @RequestMapping(value = "/updateDefault", method = RequestMethod.POST)
-    public void updateDefault(@RequestParam Long userId) throws Exception {
-        if (userId == null) {
-            log.info("userId为空");
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public void delete(@RequestParam Long[] userIds) throws Exception {
+        if (userIds == null || userIds.length <= 0) {
+            log.info("userIds为空！");
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        userInfoService.updateStatus(userId, UserStatus.DEFAULT);
+        userInfoService.delete(userIds);
     }
 
 }

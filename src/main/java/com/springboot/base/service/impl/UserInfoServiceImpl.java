@@ -102,6 +102,14 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
+    public void delete(Long[] userIds) throws Exception {
+        int i = userInfoMapper.updateDr(userIds);
+        if (i <= 0) {
+            throw new PrivateException(ErrorInfo.DELETE_ERROR);
+        }
+    }
+
+    @Override
     public UserInfo save(UserInfo userInfo) throws Exception {
         //校验用户名称是否重复
         checkUsername(userInfo.getUsername());

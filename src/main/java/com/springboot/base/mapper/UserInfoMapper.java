@@ -10,10 +10,9 @@ import java.util.List;
  * 用户dto
  * Created by jay on 2017-4-7.
  */
-@Mapper
 public interface UserInfoMapper {
 
-    @Select("select * from t_user_info where username = #{param1}")
+    @Select("select * from t_user_info where username = #{username}")
     UserInfo getUserInfoNoState(String username);
 
     @Select("select * from t_user_info where username = #{param1} and id <> #{param2}")
@@ -37,4 +36,6 @@ public interface UserInfoMapper {
 
     @Update("update t_user_info set status = #{param1} where id = #{param2}")
     int updateStatus(byte index, Long userId);
+
+    int updateDr(@Param("userIds")Long[] userIds);
 }

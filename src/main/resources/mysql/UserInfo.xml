@@ -40,4 +40,11 @@
         </if>
     </select>
 
+    <update id="updateDr" parameterType="java.util.Arrays">
+        update t_user_info set dr = 1 where id in
+        <foreach item="userId" index="index" collection="userIds" open="(" separator="," close=")">
+            #{userId}#
+        </foreach>
+    </update>
+
 </mapper>

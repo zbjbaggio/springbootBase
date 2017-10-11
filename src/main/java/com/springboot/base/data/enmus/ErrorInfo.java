@@ -7,6 +7,7 @@ package com.springboot.base.data.enmus;
  */
 public enum ErrorInfo {
     SUCCESS(200, "ok"),
+    ERROR(500, "系统异常"),
     PARAMS_ERROR(50001, "参数错误！"),
     LOGIN_ERROR(50002, "用户名或密码错误！"),
     LOGIN_AGAIN(50003, "重新登录！"),
@@ -19,7 +20,7 @@ public enum ErrorInfo {
     USER_NO_LOGIN(50010, "该用户已冻结请1个小时后再试！"),
     SAVE_ERROR(50011, "保存失败！"),
     STATUS_ERROR(50012, "修改状态失败！"),
-    user_freeze(50013, "用户已冻结！");
+    DELETE_ERROR(50013, "用户已冻结！");
 
     private int value;
 
