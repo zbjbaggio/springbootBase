@@ -64,6 +64,11 @@ public class RedisServiceImpl implements RedisService {
         return get(USER_TOKEN_KEY + key, UserInfo.class);
     }
 
+    @Override
+    public void removeUserTokenByKey(String key) {
+        template.delete(USER_TOKEN_KEY + key);
+    }
+
     private void save(String key, Object value, long time, TimeUnit timeUnit) {
         ValueOperations<String, String> ops = template.opsForValue();
         ops.set(key, JSON.toJSONString(value), time, timeUnit);

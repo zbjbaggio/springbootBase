@@ -31,6 +31,9 @@ public interface UserInfoMapper {
     @Select("select * from t_user_info where id = #{param1} and dr = 0")
     UserVO getDetailById(Long userId);
 
+    @Select("select * from t_user_info where id = #{param1}")
+    UserInfo getById(Long userId);
+
     @Update("update t_user_info set username = #{username}, email = #{email}, name = #{name}, phone = #{phone}, status = #{status} where id = #{id}")
     int update(UserInfo userInfo);
 

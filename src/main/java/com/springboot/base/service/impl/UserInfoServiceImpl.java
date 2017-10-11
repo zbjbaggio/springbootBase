@@ -12,12 +12,14 @@ import com.springboot.base.service.RedisService;
 import com.springboot.base.service.UserInfoService;
 import com.springboot.base.util.PasswordUtil;
 import com.springboot.base.util.TokenUtils;
+import com.springboot.base.util.ValueHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.inject.Inject;
 import java.util.UUID;
 
 /**
@@ -33,6 +35,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Autowired
     private RedisService redisService;
+
+    @Inject
+    private ValueHolder valueHolder;
 
     @Override
     public UserVO login(UserInfo user) throws Exception {
@@ -57,6 +62,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
         UserInfo userInfo = redisService.getUserInfoByKey(key);
         if (userInfo != null && token.equals(userInfo.getToken())) {
+            valueHolder.setUserIdHolder(userInfo.getId());
             redisService.saveUser(userInfo);
             return true;
         }
@@ -107,6 +113,12 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (i <= 0) {
             throw new PrivateException(ErrorInfo.DELETE_ERROR);
         }
+    }
+
+    @Override
+    public void loginOut() throws Exception {
+        UserInfo user = userInfoMapper.getById(valueHolder.getUserIdHolder());
+        redisService.removeUserTokenByKey(TokenUtils.getKey(user));
     }
 
     @Override

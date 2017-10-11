@@ -26,4 +26,6 @@ public interface UserInfoService {
 
     void delete(Long[] userIds) throws Exception;
 
+    void loginOut() throws Exception;
+
 }

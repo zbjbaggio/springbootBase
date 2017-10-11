@@ -46,6 +46,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             if (!isSuccess) {
                 getFail(response);
             }
+
             return isSuccess;
         } catch (Exception e) {
             log.error("登录验证异常！{}", e);

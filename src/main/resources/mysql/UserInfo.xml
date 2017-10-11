@@ -38,6 +38,13 @@
         <if test="status != -1">
             and status = #{status}
         </if>
+        order by create_time desc
+        <if test="limit != -1">
+            limit #{limit}
+        </if>
+        <if test="offset != -1">
+            offset #{offset}
+        </if>
     </select>
 
     <update id="updateDr" parameterType="java.util.Arrays">

@@ -27,8 +27,8 @@ public class UserInfoController {
     private UserInfoService userInfoService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public Page list(@RequestParam(value = "limit", defaultValue = "-1") int limit,
-                     @RequestParam(value = "offset", defaultValue = "-1") int offset,
+    public Page list(@RequestParam(value = "limit", defaultValue = "10") int limit,
+                     @RequestParam(value = "offset", defaultValue = "0") int offset,
                      @RequestParam(value = "searchStr", defaultValue = "-1") String searchStr,
                      @RequestParam(value = "status", defaultValue = "-1") int status) {
         return userInfoService.listPage(limit, offset, searchStr, status);
