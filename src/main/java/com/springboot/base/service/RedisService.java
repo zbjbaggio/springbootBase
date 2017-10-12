@@ -19,4 +19,6 @@ public interface RedisService {
     UserInfo getUserInfoByKey(String key);
 
     void removeUserTokenByKey(String key);
+
+    void removeUserPasswordNumberByKey(String key);
 }

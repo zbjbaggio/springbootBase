@@ -13,7 +13,7 @@ import javax.inject.Inject;
  * Created by jay on 2017-10-11.
  */
 @RestController
-@RequestMapping
+@RequestMapping("user/")
 @Slf4j
 public class LoginOutController {
 

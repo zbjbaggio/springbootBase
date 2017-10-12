@@ -22,7 +22,7 @@ public class RedisServiceImpl implements RedisService {
 
     private final String USER_TOKEN_KEY = "user_token_";//用户登录后存入redis的key
 
-    private final String USER_PASSWORD_KEY = "user_password_";//用户猜密码次数存入redis的key
+    private final String USER_PASSWORD_NUMBER_KEY = "user_password_";//用户猜密码次数存入redis的key
 
     @Inject
     private StringRedisTemplate template;
@@ -44,7 +44,7 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public void saveUserPasswordNumber(String username, Integer number) {
-        save(USER_PASSWORD_KEY + username, number, SystemConstants.USER_PASSWORD_TIME_LONG, TimeUnit.MINUTES);
+        save(USER_PASSWORD_NUMBER_KEY + username, number, SystemConstants.USER_PASSWORD_TIME_LONG, TimeUnit.MINUTES);
     }
 
     /**
@@ -53,7 +53,7 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public Integer getUserPasswordNumber(String username) {
-        String numberString = get(USER_PASSWORD_KEY + username);
+        String numberString = get(USER_PASSWORD_NUMBER_KEY + username);
         Integer number = numberString == null ? 0 : Integer.parseInt(numberString);
         return number;
     }
@@ -66,6 +66,11 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void removeUserTokenByKey(String key) {
         template.delete(USER_TOKEN_KEY + key);
+    }
+
+    @Override
+    public void removeUserPasswordNumberByKey(String key) {
+        template.delete(USER_PASSWORD_NUMBER_KEY + key);
     }
 
     private void save(String key, Object value, long time, TimeUnit timeUnit) {

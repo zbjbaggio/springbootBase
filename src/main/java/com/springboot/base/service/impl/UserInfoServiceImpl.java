@@ -47,6 +47,8 @@ public class UserInfoServiceImpl implements UserInfoService {
             return null;
         }
         newUserInfo.setPasswordNumber(0);
+        newUserInfo.setPassword("");
+//        redisService.removeUserPasswordNumberByKey();
         saveRedis(newUserInfo, true);
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(newUserInfo, userVO);
