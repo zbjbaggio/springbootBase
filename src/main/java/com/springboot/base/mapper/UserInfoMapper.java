@@ -26,7 +26,7 @@ public interface UserInfoMapper {
 
     Long count(@Param("searchStr")String searchStr, @Param("status")int status);
 
-    List<UserVO> listPage(@Param("limit")int limit, @Param("offset")int offset, @Param("searchStr")String searchStr, @Param("status")int status);
+    List<UserVO> listPage(@Param("limit") int limit, @Param("offset") int offset, @Param("searchStr") String searchStr, @Param("status") int status, @Param("orderBy")String orderBy, @Param("descStr")String descStr);
 
     @Select("select * from t_user_info where id = #{param1} and dr = 0")
     UserVO getDetailById(Long userId);

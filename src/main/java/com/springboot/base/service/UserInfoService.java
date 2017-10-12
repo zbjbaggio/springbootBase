@@ -16,7 +16,7 @@ public interface UserInfoService {
 
     boolean checkToken(String token, String key);
 
-    Page listPage(int limit, int offset, String searchStr, int status);
+    Page listPage(int limit, int offset, String searchStr, int status, String orderBy, boolean desc);
 
     UserVO getDetail(Long userId);
 

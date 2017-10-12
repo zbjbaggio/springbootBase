@@ -27,19 +27,40 @@ public class UserInfoController {
     @Inject
     private UserInfoService userInfoService;
 
+    /**
+     * 用户查询
+     * @param limit
+     * @param offset
+     * @param searchStr
+     * @param status
+     * @return
+     */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public Page list(@RequestParam(value = "limit", defaultValue = "10") int limit,
                      @RequestParam(value = "offset", defaultValue = "0") int offset,
                      @RequestParam(value = "searchStr", defaultValue = "-1") String searchStr,
-                     @RequestParam(value = "status", defaultValue = "-1") int status) {
-        return userInfoService.listPage(limit, offset, searchStr, status);
+                     @RequestParam(value = "status", defaultValue = "-1") int status,
+                     @RequestParam(value = "orderBy", defaultValue = "") String orderBy,
+                     @RequestParam(value = "desc") boolean desc) {
+        return userInfoService.listPage(limit, offset, searchStr, status, orderBy, desc);
     }
 
+    /**
+     * 用户详情
+     * @param userId
+     * @return
+     */
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public UserVO list(@RequestParam(value = "userId") Long userId) {
         return userInfoService.getDetail(userId);
     }
 
+    /**
+     * 用户修改
+     * @param userInfo
+     * @param bindingResult
+     * @throws Exception
+     */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public void update(@RequestBody @Validated(UserInfo.Modify.class) UserInfo userInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
@@ -49,6 +70,11 @@ public class UserInfoController {
         userInfoService.update(userInfo);
     }
 
+    /**
+     * 用户冻结
+     * @param userId
+     * @throws Exception
+     */
     @RequestMapping(value = "/updateFreeze", method = RequestMethod.POST)
     public void updateFreeze(@RequestParam Long userId) throws Exception {
         if (userId == null) {
@@ -58,6 +84,11 @@ public class UserInfoController {
         userInfoService.updateStatus(userId, UserStatus.FREEZE);
     }
 
+    /**
+     * 用户删除
+     * @param userIds
+     * @throws Exception
+     */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public void delete(@RequestParam Long[] userIds) throws Exception {
         if (userIds == null || userIds.length <= 0) {

@@ -38,7 +38,12 @@
         <if test="status != -1">
             and status = #{status}
         </if>
-        order by create_time desc
+        <if test="orderBy != ''">
+            order by #{orderBy} #{descStr}
+        </if>
+        <if test="orderBy == ''">
+            order by create_time desc
+        </if>
         <if test="limit != -1">
             limit #{limit}
         </if>

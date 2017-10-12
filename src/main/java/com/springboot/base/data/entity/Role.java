@@ -4,6 +4,7 @@ import com.springboot.base.data.base.EntityBase;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -13,13 +14,16 @@ import java.io.Serializable;
 @Data
 public class Role extends EntityBase implements Serializable {
 
-    @NotEmpty
+    @NotNull(groups = {Role.Modify.class}, message = "是否启用不能为空！")
     private boolean available = true;
 
-    @NotEmpty
+    @NotNull(groups = {Role.Modify.class}, message = "是否启用不能为空！")
     private String description;
 
-    @NotEmpty
+    @NotEmpty(groups = {Role.Modify.class}, message = "名称不能为空！")
     private String name;
+
+    public interface Modify {
+    }
 
 }

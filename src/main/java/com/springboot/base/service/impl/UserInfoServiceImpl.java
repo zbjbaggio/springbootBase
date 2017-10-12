@@ -38,6 +38,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Inject
     private ValueHolder valueHolder;
 
+    // TODO: 2017-10-12 未完成：1.登录成功时删除该用户登录错误次数 2.不能登录一个小时后，再猜错同样次数的直接冻结 3.同样ip地址猜错一次密码出验证码
     @Override
     public UserVO login(UserInfo user) throws Exception {
         Integer number = checkPasswordNumber(user.getUsername());
@@ -72,15 +73,19 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Page listPage(int limit, int offset, String searchStr, int status) {
+    public Page listPage(int limit, int offset, String searchStr, int status, String orderBy, boolean desc) {
         if (!"-1".equals(searchStr)) {
             searchStr = "%" + searchStr + "%";
+        }
+        String descStr = "";
+        if (!StringUtils.isEmpty(orderBy) && desc) {
+            descStr = "desc";
         }
         Page page = new Page();
         Long count = userInfoMapper.count(searchStr, status);
         if (count != 0) {
             page.setCount(count);
-            page.setList(userInfoMapper.listPage(limit, offset, searchStr, status));
+            page.setList(userInfoMapper.listPage(limit, offset, searchStr, status, orderBy, descStr));
         }
         return page;
     }
