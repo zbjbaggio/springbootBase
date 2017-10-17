@@ -15,7 +15,7 @@
     <select id="count" resultType="java.lang.Long">
         SELECT
         count(*)
-        FROM t_role
+        FROM t_role_info
         where 1 = 1
         <if test="searchStr != '-1'">
             and name like #{searchStr}
@@ -28,7 +28,7 @@
     <select id="listPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM t_role
+        FROM t_role_info
         where 1 = 1
         <if test="searchStr != '-1'">
             and name like #{searchStr}
@@ -36,7 +36,12 @@
         <if test="status != null">
             and available = #{status}
         </if>
-        order by create_time desc
+        <if test="orderBy != ''">
+            order by #{orderBy} #{descStr}
+        </if>
+        <if test="orderBy == ''">
+            order by create_time desc
+        </if>
         <if test="limit != -1">
             limit #{limit}
         </if>
@@ -44,5 +49,21 @@
             offset #{offset}
         </if>
     </select>
+
+    <select id="countRoleName" resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM t_role_info
+        where
+        name = #{name}
+        <if test="id != ''">
+            and id != #{id}
+        </if>
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.springboot.base.data.entity.Role">
+        insert into t_role_info(name,available,description,create_time)
+        values(#{name},#{available},#{description}, now())
+    </insert>
 
 </mapper>
