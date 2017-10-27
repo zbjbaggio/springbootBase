@@ -32,7 +32,7 @@ public class PaypalService {
             PaypalPaymentIntent intent,
             String description,
             String cancelUrl,
-            String successUrl) throws PayPalRESTException{
+            String successUrl) throws PayPalRESTException {
         Amount amount = new Amount();
         amount.setCurrency(currency);
         amount.setTotal(String.format("%.2f", total));
@@ -61,7 +61,7 @@ public class PaypalService {
         return payment1;
     }
 
-    public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException{
+    public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
         Payment payment = new Payment();
         payment.setId(paymentId);
         PaymentExecution paymentExecute = new PaymentExecution();
