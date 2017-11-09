@@ -1,6 +1,7 @@
 package com.springboot.base.controller.advice;
 
 import com.springboot.base.data.base.Page;
+import com.springboot.base.data.dto.PasswordDTO;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.enmus.UserStatus;
 import com.springboot.base.data.entity.UserInfo;
@@ -46,12 +47,38 @@ public class UserInfoController {
     }
 
     /**
+     * 添加用户
+     * @param userInfo
+     * @return
+     */
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public void add(@RequestBody @Validated(UserInfo.BaseInfo.class) UserInfo userInfo, BindingResult bindingResult) throws Exception {
+        if (bindingResult.hasErrors()) {
+            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        userInfoService.save(userInfo);
+    }
+
+    /**
+     * 修改密码
+     */
+    @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
+    public void updatePassword(@RequestBody @Validated(PasswordDTO.BaseInfo.class) PasswordDTO passwordDTO, BindingResult bindingResult) throws Exception {
+        if (bindingResult.hasErrors()) {
+            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        userInfoService.updatePassword(passwordDTO);
+    }
+
+    /**
      * 用户详情
      * @param userId
      * @return
      */
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
-    public UserVO list(@RequestParam(value = "userId") Long userId) {
+    public UserVO detail(@RequestParam(value = "userId") Long userId) {
         return userInfoService.getDetail(userId);
     }
 

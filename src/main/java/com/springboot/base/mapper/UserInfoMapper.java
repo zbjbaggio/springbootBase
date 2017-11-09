@@ -41,4 +41,7 @@ public interface UserInfoMapper {
     int updateStatus(byte index, Long userId);
 
     int updateDr(@Param("userIds")Long[] userIds);
+
+    @Update("update t_user_info set password = #{param2} where id = #{param1}")
+    int updatePassword(Long userIdHolder, String newPassword);
 }

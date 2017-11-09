@@ -2,6 +2,7 @@ package com.springboot.base.service.impl;
 
 import com.springboot.base.constant.SystemConstants;
 import com.springboot.base.data.base.Page;
+import com.springboot.base.data.dto.PasswordDTO;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.enmus.UserStatus;
 import com.springboot.base.data.entity.UserInfo;
@@ -128,6 +129,25 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
+    public void updatePassword(PasswordDTO passwordDTO) throws Exception {
+        Long userIdHolder = valueHolder.getUserIdHolder();
+        UserInfo user = userInfoMapper.getById(userIdHolder);
+        if (user == null) {
+            log.error("userId未能查询出用户数据！userId:{}", userIdHolder);
+            throw new PrivateException(ErrorInfo.ERROR);
+        }
+        String password = PasswordUtil.getPassword(passwordDTO.getOldPassword(), user.getSalt());
+        if (!user.getPassword().equals(password)) {
+            log.info("userId:{}, oldPassword:{}, password:{}", userIdHolder, password, user.getPassword());
+            throw new PrivateException(ErrorInfo.PASSWORD_ERROR);
+        }
+        int count = userInfoMapper.updatePassword(userIdHolder, passwordDTO.getNewPassword());
+        if (count <= 0) {
+            throw new PrivateException(ErrorInfo.UPDATE_ERROR);
+        }
+    }
+
+    @Override
     public UserInfo save(UserInfo userInfo) throws Exception {
         //校验用户名称是否重复
         checkUsername(userInfo.getUsername());
@@ -136,7 +156,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setSalt(salt);
         userInfo.setPassword(PasswordUtil.getPassword(userInfo.getPassword(), salt));
         userInfo.setStatus(UserStatus.DEFAULT.getIndex());
-        userInfo.setOperatorId(null);
+        Long userIdHolder = valueHolder.getUserIdHolder();
+        userInfo.setOperatorId(userIdHolder);
         int count = userInfoMapper.save(userInfo);
         if (count > 0) {
             return userInfo;
