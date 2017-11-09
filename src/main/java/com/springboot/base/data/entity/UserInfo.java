@@ -43,7 +43,7 @@ public class UserInfo extends EntityBase implements Serializable {
     @NotNull(groups = {Modify.class}, message = "用户状态不能为空！")
     private byte status;
 
-    private String operator_id;
+    private String operatorId;
 
     private String key;
 

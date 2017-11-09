@@ -19,16 +19,16 @@ public class Permission extends EntityBase implements Serializable {
     private String name;
 
     @NotEmpty
-    private Long parent_id;
+    private Long parentId;
 
     @NotEmpty
-    private String parent_ids;
+    private String parentIds;
 
     @NotEmpty
     private String permission;
 
     @NotEmpty
-    private String resource_type;
+    private String resourceType;
 
     @NotEmpty
     private String url;

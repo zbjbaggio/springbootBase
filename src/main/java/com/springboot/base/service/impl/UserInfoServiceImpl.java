@@ -136,7 +136,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setSalt(salt);
         userInfo.setPassword(PasswordUtil.getPassword(userInfo.getPassword(), salt));
         userInfo.setStatus(UserStatus.DEFAULT.getIndex());
-        userInfo.setOperator_id(null);
+        userInfo.setOperatorId(null);
         int count = userInfoMapper.save(userInfo);
         if (count > 0) {
             return userInfo;
