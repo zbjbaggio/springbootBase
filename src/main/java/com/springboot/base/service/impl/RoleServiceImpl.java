@@ -2,7 +2,7 @@ package com.springboot.base.service.impl;
 
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
-import com.springboot.base.data.entity.Role;
+import com.springboot.base.data.entity.RoleInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.RoleVO;
 import com.springboot.base.mapper.RoleMapper;
@@ -43,7 +43,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Long save(Role role) throws Exception {
+    public Long save(RoleInfo role) throws Exception {
         checkRoleName(role);
         if (role.getId() != null) {
             int count = roleMapper.update(role);
@@ -61,7 +61,7 @@ public class RoleServiceImpl implements RoleService {
         return roleMapper.getDetailById(roleId);
     }
 
-    private void checkRoleName(Role role) throws Exception {
+    private void checkRoleName(RoleInfo role) throws Exception {
         if (roleMapper.countRoleName(role) > 0) {
             throw new PrivateException(ErrorInfo.NAME_SAME);
         }

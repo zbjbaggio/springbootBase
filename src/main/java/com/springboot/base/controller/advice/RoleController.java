@@ -2,8 +2,7 @@ package com.springboot.base.controller.advice;
 
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
-import com.springboot.base.data.entity.Role;
-import com.springboot.base.data.entity.UserInfo;
+import com.springboot.base.data.entity.RoleInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.RoleVO;
 import com.springboot.base.service.RoleService;
@@ -46,7 +45,7 @@ public class RoleController {
     }
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public Long save(@RequestBody @Validated(Role.Modify.class) Role role, BindingResult bindingResult) throws Exception {
+    public Long save(@RequestBody @Validated(RoleInfo.Modify.class) RoleInfo role, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);

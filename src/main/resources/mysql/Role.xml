@@ -61,7 +61,7 @@
         </if>
     </select>
 
-    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.springboot.base.data.entity.Role">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.springboot.base.data.entity.RoleInfo">
         insert into t_role_info(name,available,description,create_time)
         values(#{name},#{available},#{description}, now())
     </insert>
