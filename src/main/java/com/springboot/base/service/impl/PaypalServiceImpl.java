@@ -5,8 +5,11 @@ import java.util.List;
 
 import com.springboot.base.data.enmus.paypal.PaypalPaymentIntent;
 import com.springboot.base.data.enmus.paypal.PaypalPaymentMethod;
+import com.springboot.base.data.entity.OrderInfo;
+import com.springboot.base.service.PaypalService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.paypal.api.payments.Amount;
@@ -16,38 +19,46 @@ import com.paypal.api.payments.PaymentExecution;
 import com.paypal.api.payments.RedirectUrls;
 import com.paypal.api.payments.Transaction;
 import com.paypal.base.rest.APIContext;
-import com.paypal.base.rest.PayPalRESTException;
 
 @Service
 @Log4j
-public class PaypalService {
+public class PaypalServiceImpl implements PaypalService {
+
+    @Value("${web.url}")
+    private String WEB_URL;
+
+    private final String CURRENCY = "USD";
+
+    private String PAYPAL_SUCCESS_URL = WEB_URL + "";
+
+    private String PAYPAL_CANCEL_URL= WEB_URL + "";
 
     @Autowired
     private APIContext apiContext;
 
-    public Payment createPayment(Double total, String currency, PaypalPaymentMethod method, PaypalPaymentIntent intent,
-                                 String description, String cancelUrl, String successUrl) throws PayPalRESTException {
+    @Override
+    public Payment createPayment(OrderInfo order) throws Exception {
         Amount amount = new Amount();
-        amount.setCurrency(currency);
-        amount.setTotal(String.format("%.2f", total));
+        amount.setCurrency(CURRENCY);
+        amount.setTotal(String.format("%.2f", order.getTotal()));
 
         Transaction transaction = new Transaction();
-        transaction.setDescription(description);
+        transaction.setDescription(order.getDescription());
         transaction.setAmount(amount);
 
         List<Transaction> transactions = new ArrayList<>();
         transactions.add(transaction);
 
         Payer payer = new Payer();
-        payer.setPaymentMethod(method.toString());
+        payer.setPaymentMethod(PaypalPaymentMethod.paypal.toString());
 
         Payment payment = new Payment();
-        payment.setIntent(intent.toString());
+        payment.setIntent(PaypalPaymentIntent.sale.toString());
         payment.setPayer(payer);
         payment.setTransactions(transactions);
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl(cancelUrl);
-        redirectUrls.setReturnUrl(successUrl);
+        redirectUrls.setCancelUrl(PAYPAL_SUCCESS_URL);
+        redirectUrls.setReturnUrl(PAYPAL_CANCEL_URL);
         payment.setRedirectUrls(redirectUrls);
 
         Payment payment1 = payment.create(apiContext);
@@ -55,7 +66,8 @@ public class PaypalService {
         return payment1;
     }
 
-    public Payment executePayment(String paymentId, String payerId) throws PayPalRESTException {
+    @Override
+    public Payment executePayment(String paymentId, String payerId) throws Exception {
         Payment payment = new Payment();
         payment.setId(paymentId);
         PaymentExecution paymentExecute = new PaymentExecution();

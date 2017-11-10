@@ -2,14 +2,10 @@ package com.springboot.base.controller.advice;
 
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
-import com.paypal.base.rest.PayPalRESTException;
-import com.springboot.base.data.enmus.paypal.PaypalPaymentIntent;
-import com.springboot.base.data.enmus.paypal.PaypalPaymentMethod;
 import com.springboot.base.data.entity.OrderInfo;
-import com.springboot.base.service.impl.PaypalService;
+import com.springboot.base.service.PaypalService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,33 +18,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Log4j
 public class PaymentController {
 
-    @Value("${web.url}")
-    private String WEB_URL;
-
-    private String PAYPAL_SUCCESS_URL = WEB_URL + "";
-
-    private String PAYPAL_CANCEL_URL= WEB_URL + "";
-
     @Autowired
     private PaypalService paypalService;
 
     @RequestMapping(method = RequestMethod.POST)
     public String pay(@RequestBody @Validated OrderInfo order) {
         try {
-            Payment payment = paypalService.createPayment(
-                    500.00,
-                    "USD",
-                    PaypalPaymentMethod.paypal,
-                    PaypalPaymentIntent.sale,
-                    "payment description",
-                    PAYPAL_CANCEL_URL,
-                    PAYPAL_SUCCESS_URL);
+            Payment payment = paypalService.createPayment(order);
             for (Links links : payment.getLinks()) {
                 if (links.getRel().equals("approval_url")) {
                     return "redirect:" + links.getHref();
                 }
             }
-        } catch (PayPalRESTException e) {
+        } catch (Exception e) {
             log.error(e.getMessage());
         }
         return "redirect:/";
@@ -61,15 +43,11 @@ public class PaymentController {
     }
 
     @RequestMapping(value = "/success", method = RequestMethod.GET)
-    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
+    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) throws Exception {
         log.error("2222222222222222222");
-        try {
-            Payment payment = paypalService.executePayment(paymentId, payerId);
-            if (payment.getState().equals("approved")) {
-                return "success";
-            }
-        } catch (PayPalRESTException e) {
-            log.error(e.getMessage());
+        Payment payment = paypalService.executePayment(paymentId, payerId);
+        if (payment.getState().equals("approved")) {
+            return "success";
         }
         return "redirect:/";
     }

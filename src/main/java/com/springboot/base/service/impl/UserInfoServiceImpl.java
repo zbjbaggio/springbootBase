@@ -141,7 +141,10 @@ public class UserInfoServiceImpl implements UserInfoService {
             log.info("userId:{}, oldPassword:{}, password:{}", userIdHolder, password, user.getPassword());
             throw new PrivateException(ErrorInfo.PASSWORD_ERROR);
         }
-        int count = userInfoMapper.updatePassword(userIdHolder, passwordDTO.getNewPassword());
+        UUID uuid = UUID.randomUUID();
+        String salt = uuid.toString();
+        password = PasswordUtil.getPassword(passwordDTO.getNewPassword(), salt);
+        int count = userInfoMapper.updatePassword(userIdHolder, password, salt);
         if (count <= 0) {
             throw new PrivateException(ErrorInfo.UPDATE_ERROR);
         }
