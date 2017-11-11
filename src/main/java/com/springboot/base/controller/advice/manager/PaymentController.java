@@ -5,7 +5,7 @@ import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import com.springboot.base.data.enmus.paypal.PaypalPaymentIntent;
 import com.springboot.base.data.enmus.paypal.PaypalPaymentMethod;
-import com.springboot.base.data.entity.Order;
+import com.springboot.base.data.entity.OrderInfo;
 import com.springboot.base.service.impl.PaypalService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class PaymentController {
     private PaypalService paypalService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public String pay(@RequestBody @Validated Order order) {
+    public String pay(@RequestBody @Validated OrderInfo order) {
         try {
             Payment payment = paypalService.createPayment(
                     500.00,
