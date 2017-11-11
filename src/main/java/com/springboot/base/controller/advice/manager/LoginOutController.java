@@ -1,4 +1,4 @@
-package com.springboot.base.controller.advice;
+package com.springboot.base.controller.advice.manager;
 
 import com.springboot.base.service.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
