@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.base.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.RoleVO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="available" property="available" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,name,create_time,available,description
+    </sql>
+
+    <select id="count" resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM t_role_info
+        where 1 = 1
+        <if test="searchStr != '-1'">
+            and name like #{searchStr}
+        </if>
+        <if test="status != null">
+            and available = #{status}
+        </if>
+    </select>
+
+    <select id="listPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_role_info
+        where 1 = 1
+        <if test="searchStr != '-1'">
+            and name like #{searchStr}
+        </if>
+        <if test="status != null">
+            and available = #{status}
+        </if>
+        <if test="orderBy != ''">
+            order by #{orderBy} #{descStr}
+        </if>
+        <if test="orderBy == ''">
+            order by create_time desc
+        </if>
+        <if test="limit != -1">
+            limit #{limit}
+        </if>
+        <if test="offset != -1">
+            offset #{offset}
+        </if>
+    </select>
+
+    <select id="countRoleName" resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM t_role_info
+        where
+        name = #{name}
+        <if test="id != ''">
+            and id != #{id}
+        </if>
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.springboot.base.data.entity.Role">
+        insert into t_role_info(name,available,description,create_time)
+        values(#{name},#{available},#{description}, now())
+    </insert>
+
+</mapper>

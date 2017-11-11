@@ -1,4 +1,4 @@
-package com.springboot.base.controller.advice;
+package com.springboot.base.controller.advice.manager;
 
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
