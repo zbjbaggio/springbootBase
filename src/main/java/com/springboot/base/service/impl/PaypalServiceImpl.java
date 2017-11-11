@@ -40,7 +40,7 @@ public class PaypalServiceImpl implements PaypalService {
     public Payment createPayment(OrderInfo order) throws Exception {
         Amount amount = new Amount();
         amount.setCurrency(CURRENCY);
-        amount.setTotal(String.format("%.2f", order.getTotal()));
+        amount.setTotal(String.format("%.2f", order.getAmount()));
 
         Transaction transaction = new Transaction();
         transaction.setDescription(order.getDescription());
