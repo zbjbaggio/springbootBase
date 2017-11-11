@@ -1,7 +1,9 @@
 package com.springboot.base.service;
 
 import com.springboot.base.data.base.Page;
+import com.springboot.base.data.enmus.ProductStatus;
 import com.springboot.base.data.entity.ProductInfo;
+import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ProductVO;
 
 public interface ProductService {
@@ -14,4 +16,7 @@ public interface ProductService {
 
     ProductVO getDetail(Long productId);
 
+    void updateStatus(Long productId, ProductStatus offShelves) throws PrivateException;
+
+    void delete(Long[] productIds) throws PrivateException, Exception;
 }

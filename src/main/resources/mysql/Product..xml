@@ -53,5 +53,16 @@
         </if>
     </select>
 
+    <update id="updateDr" parameterType="java.util.Arrays">
+        update t_product_info set dr = 1 where id in
+        <foreach item="productId" index="index" collection="productIds" open="(" separator="," close=")">
+            #{productId}#
+        </foreach>
+    </update>
+
+    <insert id="save" parameterType="com.springboot.base.data.entity.ProductInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into t_product_info(name,title,price,status,operator_id,create_time,description,product_no) values(#{name},#{title},#{price},#{status},#{operatorId},now(),#{description},#{productNo})
+    </insert>
+
 
 </mapper>

@@ -2,11 +2,10 @@ package com.springboot.base.controller.advice.manager;
 
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
+import com.springboot.base.data.enmus.ProductStatus;
 import com.springboot.base.data.entity.ProductInfo;
-import com.springboot.base.data.entity.UserInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ProductVO;
-import com.springboot.base.data.vo.UserVO;
 import com.springboot.base.service.ProductService;
 import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -54,12 +53,12 @@ public class ProductInfoController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void add(@RequestBody @Validated(ProductInfo.BaseInfo.class) ProductInfo productInfo, BindingResult bindingResult) throws Exception {
+    public ProductInfo add(@RequestBody @Validated(ProductInfo.BaseInfo.class) ProductInfo productInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        productService.save(productInfo);
+        return productService.save(productInfo);
     }
 
     /**
@@ -88,4 +87,31 @@ public class ProductInfoController {
         productService.update(userInfo);
     }
 
+    /**
+     * 产品下架
+     * @param productId
+     * @throws Exception
+     */
+    @RequestMapping(value = "/offShelves", method = RequestMethod.POST)
+    public void offShelves(@RequestParam Long productId) throws Exception {
+        if (productId == null) {
+            log.info("productId为空！");
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        productService.updateStatus(productId, ProductStatus.OFF_SHELVES);
+    }
+
+    /**
+     * 产品删除
+     * @param productIds
+     * @throws Exception
+     */
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public void delete(@RequestParam Long[] productIds) throws Exception {
+        if (productIds == null || productIds.length <= 0) {
+            log.info("productIds为空！");
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        productService.delete(productIds);
+    }
 }

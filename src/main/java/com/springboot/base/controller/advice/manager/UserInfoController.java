@@ -52,12 +52,12 @@ public class UserInfoController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void add(@RequestBody @Validated(UserInfo.BaseInfo.class) UserInfo userInfo, BindingResult bindingResult) throws Exception {
+    public UserInfo add(@RequestBody @Validated(UserInfo.BaseInfo.class) UserInfo userInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        userInfoService.save(userInfo);
+        return userInfoService.save(userInfo);
     }
 
     /**

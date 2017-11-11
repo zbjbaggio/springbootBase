@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @ToString(callSuper = true)
 public class ProductInfo extends EntityBase implements Serializable{
 
-    @NotNull(groups = {UserInfo.Modify.class}, message = "产品Id不能为空！")
+    @NotNull(groups = {Modify.class}, message = "产品Id不能为空！")
     private Long id;
 
     @NotEmpty(groups = {BaseInfo.class, Modify.class}, message = "产品编号不能为空")

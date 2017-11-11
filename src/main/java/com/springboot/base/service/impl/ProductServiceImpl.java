@@ -2,6 +2,7 @@ package com.springboot.base.service.impl;
 
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
+import com.springboot.base.data.enmus.ProductStatus;
 import com.springboot.base.data.entity.ProductInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ProductVO;
@@ -66,6 +67,22 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductVO getDetail(Long productId) {
         return productMapper.getDetailById(productId);
+    }
+
+    @Override
+    public void updateStatus(Long productId, ProductStatus offShelves) throws PrivateException {
+        int i = productMapper.updateStatus(offShelves.getIndex(), productId);
+        if (i <= 0) {
+            throw new PrivateException(ErrorInfo.STATUS_ERROR);
+        }
+    }
+
+    @Override
+    public void delete(Long[] productIds) throws Exception {
+        int i = productMapper.updateDr(productIds);
+        if (i <= 0) {
+            throw new PrivateException(ErrorInfo.DELETE_ERROR);
+        }
     }
 
     private void checkProductNo(ProductInfo productInfo) throws Exception {

@@ -59,4 +59,8 @@
         </foreach>
     </update>
 
+    <insert id="save" parameterType="com.springboot.base.data.entity.UserInfo" useGeneratedKeys="true" keyProperty="id">
+      insert into t_user_info(username,email,name,password,phone,salt,status,operator_id,create_time) values(#{username},#{email},#{name},#{password},#{phone},#{salt},#{status},#{operatorId},now())
+    </insert>
+
 </mapper>

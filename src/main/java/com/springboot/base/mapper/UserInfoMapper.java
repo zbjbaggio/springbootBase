@@ -21,7 +21,6 @@ public interface UserInfoMapper {
     @Select("select * from t_user_info where username = #{param1} and dr = 0 ")
     UserInfo getUserInfo(String username);
 
-    @Insert("insert into t_user_info(username,email,name,password,phone,salt,status,operator_id,create_time) values(#{username},#{email},#{name},#{password},#{phone},#{salt},#{status},#{operatorId},now())")
     int save(UserInfo userInfo);
 
     Long count(@Param("searchStr")String searchStr, @Param("status")int status);
