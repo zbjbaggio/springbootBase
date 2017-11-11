@@ -2,9 +2,9 @@ package com.springboot.base.data.entity;
 
 import com.springboot.base.data.base.EntityBase;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
+@ToString(callSuper = true)
 public class OrderDetail extends EntityBase implements Serializable {
 
     @NotNull(message = "订单id不能为空")

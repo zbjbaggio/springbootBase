@@ -3,6 +3,7 @@ package com.springboot.base.data.entity;
 import com.springboot.base.constant.RegularExpressionConstant;
 import com.springboot.base.data.base.EntityBase;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -15,6 +16,7 @@ import java.io.Serializable;
  * Created by jay on 2017-4-7.
  */
 @Data
+@ToString(callSuper = true)
 public class UserInfo extends EntityBase implements Serializable {
 
     @NotNull(groups = {Modify.class}, message = "用户Id不能为空！")

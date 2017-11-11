@@ -23,7 +23,8 @@ public enum ErrorInfo {
     DELETE_ERROR(50013, "用户已冻结！"),
     NAME_SAME(50014, "名称重复！"),
     UPDATE_ERROR(50015, "修改失败！"),
-    PASSWORD_ERROR(50016, "密码错误！");
+    PASSWORD_ERROR(50016, "密码错误！"),
+    NO_SAME(50017, "编号重复！");
 
     private int value;
 

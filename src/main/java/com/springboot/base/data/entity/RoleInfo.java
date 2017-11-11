@@ -2,6 +2,7 @@ package com.springboot.base.data.entity;
 
 import com.springboot.base.data.base.EntityBase;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
@@ -12,6 +13,7 @@ import java.io.Serializable;
  * Created by jay on 2017-4-7.
  */
 @Data
+@ToString(callSuper = true)
 public class RoleInfo extends EntityBase implements Serializable {
 
     @NotNull(groups = {RoleInfo.Modify.class}, message = "是否启用不能为空！")

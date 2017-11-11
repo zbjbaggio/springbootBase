@@ -2,6 +2,7 @@ package com.springboot.base.data.entity;
 
 import com.springboot.base.data.base.EntityBase;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Max;
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
  * Created by jay on 2017-10-18.
  */
 @Data
+@ToString(callSuper = true)
 public class OrderInfo extends EntityBase implements Serializable {
 
     @NotNull(message = "金额不能为空")

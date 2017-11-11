@@ -19,7 +19,7 @@ public class BindingResutlUtils {
                 stringBuilder.append(error.getDefaultMessage()).append("\n");
             }
             String s = stringBuilder.toString();
-            return s.substring(0, s.length() - 2);
+            return s.substring(0, s.length() - 1);
         }
         return null;
     }

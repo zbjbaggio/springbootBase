@@ -4,13 +4,54 @@
     <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.ProductVO">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="product_no" property="product_no" jdbcType="VARCHAR"/>
+        <result column="create_time" property="create_time" jdbcType="TIMESTAMP"/>
         <result column="title" property="title" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
         <result column="price" property="price" jdbcType="DECIMAL"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id,name,create_time,title,description,price
+        id,name,create_time,title,description,price,status,product_no
     </sql>
+
+    <select id="count" resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM t_product_info
+        where dr = 0
+        <if test="searchStr != '-1'">
+            and name like #{searchStr}
+        </if>
+        <if test="status != -1">
+            and status = #{status}
+        </if>
+    </select>
+
+    <select id="listPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_product_info
+        where dr = 0
+        <if test="searchStr != '-1'">
+            and name like #{searchStr}
+        </if>
+        <if test="status != -1">
+            and status = #{status}
+        </if>
+        <if test="orderBy != ''">
+            order by #{orderBy} #{descStr}
+        </if>
+        <if test="orderBy == ''">
+            order by create_time desc
+        </if>
+        <if test="limit != -1">
+            limit #{limit}
+        </if>
+        <if test="offset != -1">
+            offset #{offset}
+        </if>
+    </select>
+
 
 </mapper>
