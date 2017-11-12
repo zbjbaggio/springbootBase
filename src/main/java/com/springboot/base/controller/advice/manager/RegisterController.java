@@ -18,7 +18,7 @@ import javax.inject.Inject;
  * 注册
  * Created by jay on 2017-4-10.
  */
-@RestController
+//@RestController
 @RequestMapping
 @Slf4j
 public class RegisterController {

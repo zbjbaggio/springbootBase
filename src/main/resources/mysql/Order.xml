@@ -3,8 +3,70 @@
 <mapper namespace="com.springboot.base.mapper.OrderMapper">
     <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.OrderVO">
         <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="order_no" property="order_no" jdbcType="VARCHAR"/>
+        <id column="email" property="email" jdbcType="VARCHAR"/>
+        <id column="receiver_name" property="receiver_name" jdbcType="VARCHAR"/>
+        <id column="receiver_address" property="receiver_address" jdbcType="VARCHAR"/>
+        <id column="receiver_city" property="receiver_city" jdbcType="VARCHAR"/>
+        <id column="receiver_country" property="receiver_country" jdbcType="VARCHAR"/>
+        <id column="remark" property="remark" jdbcType="VARCHAR"/>
+        <id column="description" property="description" jdbcType="VARCHAR"/>
+        <id column="postage" property="postage" jdbcType="VARCHAR"/>
+        <id column="status" property="status" jdbcType="TINYINT"/>
+        <id column="amount" property="amount" jdbcType="DECIMAL"/>
     </resultMap>
+
     <sql id="Base_Column_List">
-        id
+        id,email,receiver_name,receiver_address,receiver_city,receiver_country,remark,create_time,description,postage,amount,order_no,status
     </sql>
+
+    <select id="count" resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM t_order_info
+        where dr = 0
+        <if test="searchStr != '-1'">
+            and order_no like #{searchStr}
+        </if>
+        <if test="status != -1">
+            and status = #{status}
+        </if>
+    </select>
+
+    <select id="listPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_order_info
+        where dr = 0
+        <if test="searchStr != '-1'">
+            and order_no like #{searchStr}
+        </if>
+        <if test="status != -1">
+            and status = #{status}
+        </if>
+        <if test="orderBy != ''">
+            order by #{orderBy} #{descStr}
+        </if>
+        <if test="orderBy == ''">
+            order by create_time desc
+        </if>
+        <if test="limit != -1">
+            limit #{limit}
+        </if>
+        <if test="offset != -1">
+            offset #{offset}
+        </if>
+    </select>
+
+    <update id="updateDr" parameterType="java.util.Arrays">
+        update t_order_info set dr = 1 where id in
+        <foreach item="orderId" index="index" collection="orderIds" open="(" separator="," close=")">
+            #{orderId}#
+        </foreach>
+    </update>
+
+    <insert id="save" parameterType="com.springboot.base.data.entity.OrderInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into t_order_info(order_no,email,receiver_name,receiver_address,receiver_city, receiver_country,amount,status,create_time,description) values(#{orderNo},#{email},#{receiver_name},#{receiver_address},#{receiver_city},#{receiver_country},#{amount},#{status},now(),#{description},#{productNo})
+    </insert>
+
 </mapper>

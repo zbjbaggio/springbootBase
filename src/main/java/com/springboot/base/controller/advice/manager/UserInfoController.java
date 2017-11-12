@@ -21,7 +21,7 @@ import javax.inject.Inject;
  * Created by jay on 2017-9-29.
  */
 @RestController
-@RequestMapping("user/userManager")
+@RequestMapping("/manager/user/userManager")
 @Slf4j
 public class UserInfoController {
 

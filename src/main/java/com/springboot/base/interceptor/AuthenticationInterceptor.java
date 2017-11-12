@@ -1,7 +1,6 @@
 package com.springboot.base.interceptor;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.annotation.JSONField;
 import com.springboot.base.data.base.ResponseResult;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.service.UserInfoService;

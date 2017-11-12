@@ -20,7 +20,7 @@ import javax.inject.Inject;
  * Created by jay on 2017-9-29.
  */
 @RestController
-@RequestMapping("user/productInfo")
+@RequestMapping("/manager/user/productInfo")
 @Slf4j
 public class ProductInfoController {
 

@@ -21,7 +21,7 @@ import javax.inject.Inject;
  * Created by jay on 2017-4-10.
  */
 @RestController
-@RequestMapping
+@RequestMapping("/manager")
 @Slf4j
 public class LoginController {
 

@@ -64,5 +64,4 @@
         insert into t_product_info(name,title,price,status,operator_id,create_time,description,product_no) values(#{name},#{title},#{price},#{status},#{operatorId},now(),#{description},#{productNo})
     </insert>
 
-
 </mapper>

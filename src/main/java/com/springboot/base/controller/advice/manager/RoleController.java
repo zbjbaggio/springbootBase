@@ -18,7 +18,7 @@ import javax.inject.Inject;
  * 描述：角色管理控制类
  * Created by jay on 2017-10-12.
  */
-@RestController
+//@RestController
 @RequestMapping("user/roleManager")
 @Slf4j
 public class RoleController {
