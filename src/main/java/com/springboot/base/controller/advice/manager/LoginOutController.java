@@ -1,6 +1,6 @@
 package com.springboot.base.controller.advice.manager;
 
-import com.springboot.base.service.UserInfoService;
+import com.springboot.base.service.ManagerInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,12 +13,12 @@ import javax.inject.Inject;
  * Created by jay on 2017-10-11.
  */
 @RestController
-@RequestMapping("/manager/user/")
+@RequestMapping("/manage/user/")
 @Slf4j
 public class LoginOutController {
 
     @Inject
-    private UserInfoService userInfoService;
+    private ManagerInfoService managerInfoService;
 
     /**
      * 注销
@@ -27,6 +27,6 @@ public class LoginOutController {
      */
     @RequestMapping(value = "/loginOut", method = RequestMethod.POST)
     public void loginOut() throws Exception {
-        userInfoService.loginOut();
+        managerInfoService.loginOut();
     }
 }

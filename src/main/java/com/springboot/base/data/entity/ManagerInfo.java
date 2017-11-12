@@ -17,7 +17,7 @@ import java.io.Serializable;
  */
 @Data
 @ToString(callSuper = true)
-public class UserInfo extends EntityBase implements Serializable {
+public class ManagerInfo extends EntityBase implements Serializable {
 
     @NotNull(groups = {Modify.class}, message = "用户Id不能为空！")
     private Long id;

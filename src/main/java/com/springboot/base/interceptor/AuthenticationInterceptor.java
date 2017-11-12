@@ -3,7 +3,7 @@ package com.springboot.base.interceptor;
 import com.alibaba.fastjson.JSON;
 import com.springboot.base.data.base.ResponseResult;
 import com.springboot.base.data.enmus.ErrorInfo;
-import com.springboot.base.service.UserInfoService;
+import com.springboot.base.service.ManagerInfoService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +28,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private Long userTimeOut;
 
     @Autowired
-    private UserInfoService userInfoService;
+    private ManagerInfoService managerInfoService;
 
     /**
      * 登录认证
@@ -41,7 +41,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         try {
             String token = request.getHeader("token");
             String key = request.getHeader("key");
-            boolean isSuccess = userInfoService.checkToken(token, key);
+            boolean isSuccess = managerInfoService.checkToken(token, key);
             if (!isSuccess) {
                 getFail(response);
             }

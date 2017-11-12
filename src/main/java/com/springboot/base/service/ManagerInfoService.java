@@ -3,25 +3,25 @@ package com.springboot.base.service;
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.dto.PasswordDTO;
 import com.springboot.base.data.enmus.UserStatus;
-import com.springboot.base.data.entity.UserInfo;
-import com.springboot.base.data.vo.UserVO;
+import com.springboot.base.data.entity.ManagerInfo;
+import com.springboot.base.data.vo.ManagerVO;
 
 /**
  * Created by jay on 2017-4-10.
  */
-public interface UserInfoService {
+public interface ManagerInfoService {
 
-    UserVO login(UserInfo user) throws Exception;
+    ManagerVO login(ManagerInfo user) throws Exception;
 
-    UserInfo save(UserInfo userInfo) throws Exception;
+    ManagerInfo save(ManagerInfo managerInfo) throws Exception;
 
     boolean checkToken(String token, String key);
 
     Page listPage(int limit, int offset, String searchStr, int status, String orderBy, boolean desc);
 
-    UserVO getDetail(Long userId);
+    ManagerVO getDetail(Long userId);
 
-    void update(UserInfo userInfo) throws Exception;
+    void update(ManagerInfo managerInfo) throws Exception;
 
     void updateStatus(Long userId, UserStatus index) throws Exception;
 

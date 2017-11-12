@@ -18,7 +18,7 @@ import javax.inject.Inject;
  * Created by jay on 2017-9-29.
  */
 @RestController
-@RequestMapping("/manager/user/orderInfo")
+@RequestMapping("/manage/user/orderInfo")
 @Slf4j
 public class OrderInfoController {
 

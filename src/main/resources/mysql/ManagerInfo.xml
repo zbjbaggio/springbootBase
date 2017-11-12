@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.springboot.base.mapper.UserInfoMapper">
-    <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.UserVO">
+<mapper namespace="com.springboot.base.mapper.ManagerInfoMapper">
+    <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.ManagerVO">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="username" property="username" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
@@ -17,7 +17,7 @@
     <select id="count" resultType="java.lang.Long">
         SELECT
         count(*)
-        FROM t_user_info
+        FROM t_manager_info
         where dr = 0
         <if test="searchStr != '-1'">
             and username like #{searchStr}
@@ -30,7 +30,7 @@
     <select id="listPage" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM t_user_info
+        FROM t_manager_info
         where dr = 0
         <if test="searchStr != '-1'">
             and username like #{searchStr}
@@ -53,14 +53,14 @@
     </select>
 
     <update id="updateDr" parameterType="java.util.Arrays">
-        update t_user_info set dr = 1 where id in
+        update t_manager_info set dr = 1 where id in
         <foreach item="userId" index="index" collection="userIds" open="(" separator="," close=")">
             #{userId}#
         </foreach>
     </update>
 
-    <insert id="save" parameterType="com.springboot.base.data.entity.UserInfo" useGeneratedKeys="true" keyProperty="id">
-      insert into t_user_info(username,email,name,password,phone,salt,status,operator_id,create_time) values(#{username},#{email},#{name},#{password},#{phone},#{salt},#{status},#{operatorId},now())
+    <insert id="save" parameterType="com.springboot.base.data.entity.ManagerInfo" useGeneratedKeys="true" keyProperty="id">
+      insert into t_manager_info(username,email,name,password,phone,salt,status,operator_id,create_time) values(#{username},#{email},#{name},#{password},#{phone},#{salt},#{status},#{operatorId},now())
     </insert>
 
 </mapper>

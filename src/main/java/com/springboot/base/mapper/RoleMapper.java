@@ -1,8 +1,8 @@
 package com.springboot.base.mapper;
 
 import com.springboot.base.data.entity.RoleInfo;
+import com.springboot.base.data.vo.ManagerVO;
 import com.springboot.base.data.vo.RoleVO;
-import com.springboot.base.data.vo.UserVO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -17,7 +17,7 @@ public interface RoleMapper {
 
     Long count(@Param("searchStr")String searchStr, @Param("status")Boolean status);
 
-    List<UserVO> listPage(@Param("limit")int limit, @Param("offset")int offset, @Param("searchStr")String searchStr, @Param("status")Boolean status, @Param("orderBy")String orderBy, @Param("descStr")String descStr);
+    List<ManagerVO> listPage(@Param("limit")int limit, @Param("offset")int offset, @Param("searchStr")String searchStr, @Param("status")Boolean status, @Param("orderBy")String orderBy, @Param("descStr")String descStr);
 
     Long save(RoleInfo role);
 

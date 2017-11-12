@@ -5,12 +5,12 @@ import com.springboot.base.data.base.Page;
 import com.springboot.base.data.dto.PasswordDTO;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.enmus.UserStatus;
-import com.springboot.base.data.entity.UserInfo;
+import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.exception.PrivateException;
-import com.springboot.base.data.vo.UserVO;
-import com.springboot.base.mapper.UserInfoMapper;
+import com.springboot.base.data.vo.ManagerVO;
+import com.springboot.base.mapper.ManagerInfoMapper;
+import com.springboot.base.service.ManagerInfoService;
 import com.springboot.base.service.RedisService;
-import com.springboot.base.service.UserInfoService;
 import com.springboot.base.util.PasswordUtil;
 import com.springboot.base.util.TokenUtils;
 import com.springboot.base.util.ValueHolder;
@@ -28,10 +28,10 @@ import java.util.UUID;
  */
 @Service
 @Slf4j
-public class UserInfoServiceImpl implements UserInfoService {
+public class ManagerInfoServiceImpl implements ManagerInfoService {
 
     @Inject
-    private UserInfoMapper userInfoMapper;
+    private ManagerInfoMapper managerInfoMapper;
 
     @Inject
     private RedisService redisService;
@@ -41,20 +41,20 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     // TODO: 2017-10-12 未完成：1.登录成功时删除该用户登录错误次数 2.不能登录一个小时后，再猜错同样次数的直接冻结 3.同样ip地址猜错一次密码出验证码
     @Override
-    public UserVO login(UserInfo user) throws Exception {
+    public ManagerVO login(ManagerInfo user) throws Exception {
         Integer number = checkPasswordNumber(user.getUsername());
-        UserInfo newUserInfo = userInfoMapper.getUserInfo(user.getUsername());
-        if (newUserInfo == null || !checkUser(user.getPassword(), newUserInfo)) {
+        ManagerInfo newManagerInfo = managerInfoMapper.getUserInfo(user.getUsername());
+        if (newManagerInfo == null || !checkUser(user.getPassword(), newManagerInfo)) {
             redisService.saveUserPasswordNumber(user.getUsername(), number + 1);
             return null;
         }
-        newUserInfo.setPasswordNumber(0);
-        newUserInfo.setPassword("");
+        newManagerInfo.setPasswordNumber(0);
+        newManagerInfo.setPassword("");
 //        redisService.removeUserPasswordNumberByKey();
-        saveRedis(newUserInfo, true);
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(newUserInfo, userVO);
-        return userVO;
+        saveRedis(newManagerInfo, true);
+        ManagerVO managerVO = new ManagerVO();
+        BeanUtils.copyProperties(newManagerInfo, managerVO);
+        return managerVO;
     }
 
     @Override
@@ -63,10 +63,10 @@ public class UserInfoServiceImpl implements UserInfoService {
             log.info("未登录");
             return false;
         }
-        UserInfo userInfo = redisService.getUserInfoByKey(key);
-        if (userInfo != null && token.equals(userInfo.getToken())) {
-            valueHolder.setUserIdHolder(userInfo.getId());
-            redisService.saveUser(userInfo);
+        ManagerInfo managerInfo = redisService.getUserInfoByKey(key);
+        if (managerInfo != null && token.equals(managerInfo.getToken())) {
+            valueHolder.setUserIdHolder(managerInfo.getId());
+            redisService.saveUser(managerInfo);
             return true;
         }
         log.info("重新登录");
@@ -83,24 +83,24 @@ public class UserInfoServiceImpl implements UserInfoService {
             descStr = "desc";
         }
         Page page = new Page();
-        Long count = userInfoMapper.count(searchStr, status);
+        Long count = managerInfoMapper.count(searchStr, status);
         if (count != 0) {
             page.setCount(count);
-            page.setList(userInfoMapper.listPage(limit, offset, searchStr, status, orderBy, descStr));
+            page.setList(managerInfoMapper.listPage(limit, offset, searchStr, status, orderBy, descStr));
         }
         return page;
     }
 
     @Override
-    public UserVO getDetail(Long userId) {
-        return userInfoMapper.getDetailById(userId);
+    public ManagerVO getDetail(Long userId) {
+        return managerInfoMapper.getDetailById(userId);
     }
 
     @Override
-    public void update(UserInfo userInfo) throws Exception {
+    public void update(ManagerInfo managerInfo) throws Exception {
         //校验用户名称是否重复
-        checkUsernameByUserId(userInfo.getUsername(), userInfo.getId());
-        int count = userInfoMapper.update(userInfo);
+        checkUsernameByUserId(managerInfo.getUsername(), managerInfo.getId());
+        int count = managerInfoMapper.update(managerInfo);
         if (count <= 0) {
             throw new PrivateException(ErrorInfo.SAVE_ERROR);
         }
@@ -108,7 +108,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public void updateStatus(Long userId, UserStatus index) throws Exception {
-        int i = userInfoMapper.updateStatus(index.getIndex(), userId);
+        int i = managerInfoMapper.updateStatus(index.getIndex(), userId);
         if (i <= 0) {
             throw new PrivateException(ErrorInfo.STATUS_ERROR);
         }
@@ -116,7 +116,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public void delete(Long[] userIds) throws Exception {
-        int i = userInfoMapper.updateDr(userIds);
+        int i = managerInfoMapper.updateDr(userIds);
         if (i <= 0) {
             throw new PrivateException(ErrorInfo.DELETE_ERROR);
         }
@@ -124,14 +124,14 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public void loginOut() throws Exception {
-        UserInfo user = userInfoMapper.getById(valueHolder.getUserIdHolder());
+        ManagerInfo user = managerInfoMapper.getById(valueHolder.getUserIdHolder());
         redisService.removeUserTokenByKey(TokenUtils.getKey(user));
     }
 
     @Override
     public void updatePassword(PasswordDTO passwordDTO) throws Exception {
         Long userIdHolder = valueHolder.getUserIdHolder();
-        UserInfo user = userInfoMapper.getById(userIdHolder);
+        ManagerInfo user = managerInfoMapper.getById(userIdHolder);
         if (user == null) {
             log.error("userId未能查询出用户数据！userId:{}", userIdHolder);
             throw new PrivateException(ErrorInfo.ERROR);
@@ -144,65 +144,65 @@ public class UserInfoServiceImpl implements UserInfoService {
         UUID uuid = UUID.randomUUID();
         String salt = uuid.toString();
         password = PasswordUtil.getPassword(passwordDTO.getNewPassword(), salt);
-        int count = userInfoMapper.updatePassword(userIdHolder, password, salt);
+        int count = managerInfoMapper.updatePassword(userIdHolder, password, salt);
         if (count <= 0) {
             throw new PrivateException(ErrorInfo.UPDATE_ERROR);
         }
     }
 
     @Override
-    public UserInfo save(UserInfo userInfo) throws Exception {
+    public ManagerInfo save(ManagerInfo managerInfo) throws Exception {
         //校验用户名称是否重复
-        checkUsername(userInfo.getUsername());
+        checkUsername(managerInfo.getUsername());
         UUID uuid = UUID.randomUUID();
         String salt = uuid.toString();
-        userInfo.setSalt(salt);
-        userInfo.setPassword(PasswordUtil.getPassword(userInfo.getPassword(), salt));
-        userInfo.setStatus(UserStatus.DEFAULT.getIndex());
+        managerInfo.setSalt(salt);
+        managerInfo.setPassword(PasswordUtil.getPassword(managerInfo.getPassword(), salt));
+        managerInfo.setStatus(UserStatus.DEFAULT.getIndex());
         Long userIdHolder = valueHolder.getUserIdHolder();
-        userInfo.setOperatorId(userIdHolder);
-        int count = userInfoMapper.save(userInfo);
+        managerInfo.setOperatorId(userIdHolder);
+        int count = managerInfoMapper.save(managerInfo);
         if (count > 0) {
-            return userInfo;
+            return managerInfo;
         }
         return null;
     }
 
     private void checkUsernameByUserId(String username, Long userId) throws Exception {
-        UserInfo user = userInfoMapper.getUserInfoNoStateNoId(username, userId);
+        ManagerInfo user = managerInfoMapper.getUserInfoNoStateNoId(username, userId);
         if (user != null) {
             throw new PrivateException(ErrorInfo.USER_NAME_SAME);
         }
     }
 
     //设置token
-    private void saveRedis(UserInfo userInfo, boolean isToken) throws Exception {
-        userInfo.setKey(TokenUtils.getKey(userInfo));
+    private void saveRedis(ManagerInfo managerInfo, boolean isToken) throws Exception {
+        managerInfo.setKey(TokenUtils.getKey(managerInfo));
         if (isToken) {
-            userInfo.setToken(TokenUtils.getToken(userInfo));
+            managerInfo.setToken(TokenUtils.getToken(managerInfo));
         }
-        redisService.saveUser(userInfo);
+        redisService.saveUser(managerInfo);
     }
 
     private void checkUsername(String username) throws Exception {
-        UserInfo user = userInfoMapper.getUserInfoNoState(username);
+        ManagerInfo user = managerInfoMapper.getUserInfoNoState(username);
         if (user != null) {
             throw new PrivateException(ErrorInfo.USER_NAME_SAME);
         }
     }
 
     //校验密码
-    private boolean checkUser(String passwordStr, UserInfo newUserInfo) throws Exception {
-        if (newUserInfo.getStatus() == UserStatus.FREEZE.getIndex()) {
-            log.info("该用户被冻结！username：{}", newUserInfo.getUsername());
+    private boolean checkUser(String passwordStr, ManagerInfo newManagerInfo) throws Exception {
+        if (newManagerInfo.getStatus() == UserStatus.FREEZE.getIndex()) {
+            log.info("该用户被冻结！username：{}", newManagerInfo.getUsername());
             throw new PrivateException(ErrorInfo.USER_FREEZE);
         }
-        if (newUserInfo.getStatus() == UserStatus.UNACTIVATED.getIndex()) {
-            log.info("该用户还未审核通过！username：{}", newUserInfo.getUsername());
+        if (newManagerInfo.getStatus() == UserStatus.UNACTIVATED.getIndex()) {
+            log.info("该用户还未审核通过！username：{}", newManagerInfo.getUsername());
             throw new PrivateException(ErrorInfo.USER_UNACTIVATED);
         }
-        String password = PasswordUtil.getPassword(passwordStr, newUserInfo.getSalt());
-        return password.equals(newUserInfo.getPassword());
+        String password = PasswordUtil.getPassword(passwordStr, newManagerInfo.getSalt());
+        return password.equals(newManagerInfo.getPassword());
     }
 
     //校验猜密码次数

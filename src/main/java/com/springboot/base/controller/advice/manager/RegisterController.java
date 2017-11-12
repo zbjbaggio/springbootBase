@@ -1,16 +1,15 @@
 package com.springboot.base.controller.advice.manager;
 
 import com.springboot.base.data.enmus.ErrorInfo;
-import com.springboot.base.data.entity.UserInfo;
+import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.exception.PrivateException;
-import com.springboot.base.service.UserInfoService;
+import com.springboot.base.service.ManagerInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 
@@ -24,22 +23,22 @@ import javax.inject.Inject;
 public class RegisterController {
 
     @Inject
-    private UserInfoService userInfoService;
+    private ManagerInfoService managerInfoService;
 
     /**
      * 注册
-     * @param userInfo
+     * @param managerInfo
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public void register(@RequestBody @Validated(UserInfo.BaseInfo.class) UserInfo userInfo, BindingResult bindingResult) throws Exception {
+    public void register(@RequestBody @Validated(ManagerInfo.BaseInfo.class) ManagerInfo managerInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", bindingResult);
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        userInfo = userInfoService.save(userInfo);
-        if (userInfo == null) {
+        managerInfo = managerInfoService.save(managerInfo);
+        if (managerInfo == null) {
             throw new PrivateException(ErrorInfo.REGISTER_ERROR);
         }
     }

@@ -4,10 +4,10 @@ import com.springboot.base.data.base.Page;
 import com.springboot.base.data.dto.PasswordDTO;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.enmus.UserStatus;
-import com.springboot.base.data.entity.UserInfo;
+import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.exception.PrivateException;
-import com.springboot.base.data.vo.UserVO;
-import com.springboot.base.service.UserInfoService;
+import com.springboot.base.data.vo.ManagerVO;
+import com.springboot.base.service.ManagerInfoService;
 import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -17,16 +17,16 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 
 /**
- * 描述：用户管理
+ * 描述：后台管理员管理
  * Created by jay on 2017-9-29.
  */
 @RestController
-@RequestMapping("/manager/user/userManager")
+@RequestMapping("/manage/user/managerInfo")
 @Slf4j
-public class UserInfoController {
+public class ManagerInfoController {
 
     @Inject
-    private UserInfoService userInfoService;
+    private ManagerInfoService managerInfoService;
 
     /**
      * 用户查询
@@ -43,21 +43,21 @@ public class UserInfoController {
                      @RequestParam(value = "status", defaultValue = "-1") int status,
                      @RequestParam(value = "orderBy", defaultValue = "") String orderBy,
                      @RequestParam(value = "desc") boolean desc) {
-        return userInfoService.listPage(limit, offset, searchStr, status, orderBy, desc);
+        return managerInfoService.listPage(limit, offset, searchStr, status, orderBy, desc);
     }
 
     /**
-     * 添加用户
-     * @param userInfo
+     * 添加管理员
+     * @param managerInfo
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public UserInfo add(@RequestBody @Validated(UserInfo.BaseInfo.class) UserInfo userInfo, BindingResult bindingResult) throws Exception {
+    public ManagerInfo add(@RequestBody @Validated(ManagerInfo.BaseInfo.class) ManagerInfo managerInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        return userInfoService.save(userInfo);
+        return managerInfoService.save(managerInfo);
     }
 
     /**
@@ -69,36 +69,36 @@ public class UserInfoController {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        userInfoService.updatePassword(passwordDTO);
+        managerInfoService.updatePassword(passwordDTO);
     }
 
     /**
-     * 用户详情
+     * 管理员详情
      * @param userId
      * @return
      */
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
-    public UserVO detail(@RequestParam(value = "userId") Long userId) {
-        return userInfoService.getDetail(userId);
+    public ManagerVO detail(@RequestParam(value = "userId") Long userId) {
+        return managerInfoService.getDetail(userId);
     }
 
     /**
-     * 用户修改
-     * @param userInfo
+     * 管理员修改
+     * @param managerInfo
      * @param bindingResult
      * @throws Exception
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public void update(@RequestBody @Validated(UserInfo.Modify.class) UserInfo userInfo, BindingResult bindingResult) throws Exception {
+    public void update(@RequestBody @Validated(ManagerInfo.Modify.class) ManagerInfo managerInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        userInfoService.update(userInfo);
+        managerInfoService.update(managerInfo);
     }
 
     /**
-     * 用户冻结
+     * 管理员冻结
      * @param userId
      * @throws Exception
      */
@@ -108,11 +108,11 @@ public class UserInfoController {
             log.info("userId为空！");
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        userInfoService.updateStatus(userId, UserStatus.FREEZE);
+        managerInfoService.updateStatus(userId, UserStatus.FREEZE);
     }
 
     /**
-     * 用户删除
+     * 管理员删除
      * @param userIds
      * @throws Exception
      */
@@ -122,7 +122,7 @@ public class UserInfoController {
             log.info("userIds为空！");
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        userInfoService.delete(userIds);
+        managerInfoService.delete(userIds);
     }
 
 }

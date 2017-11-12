@@ -2,7 +2,7 @@ package com.springboot.base.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.springboot.base.constant.SystemConstants;
-import com.springboot.base.data.entity.UserInfo;
+import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.service.RedisService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -28,13 +28,13 @@ public class RedisServiceImpl implements RedisService {
     private StringRedisTemplate template;
 
     @Override
-    public void saveUser(UserInfo userInfo) {
-        save(USER_TOKEN_KEY + userInfo.getKey(), userInfo, SystemConstants.USER_TOKEN_TIME_LONG, TimeUnit.MINUTES);
+    public void saveUser(ManagerInfo managerInfo) {
+        save(USER_TOKEN_KEY + managerInfo.getKey(), managerInfo, SystemConstants.USER_TOKEN_TIME_LONG, TimeUnit.MINUTES);
     }
 
 /*    @Override
-    public UserInfo getUserInfo(UserInfo userInfo) throws Exception {
-        return get(USER_TOKEN_KEY + TokenUtils.getKey(userInfo), UserInfo.class);
+    public ManagerInfo getUserInfo(ManagerInfo userInfo) throws Exception {
+        return get(USER_TOKEN_KEY + TokenUtils.getKey(userInfo), ManagerInfo.class);
     }*/
 
     /**
@@ -59,8 +59,8 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public UserInfo getUserInfoByKey(String key) {
-        return get(USER_TOKEN_KEY + key, UserInfo.class);
+    public ManagerInfo getUserInfoByKey(String key) {
+        return get(USER_TOKEN_KEY + key, ManagerInfo.class);
     }
 
     @Override

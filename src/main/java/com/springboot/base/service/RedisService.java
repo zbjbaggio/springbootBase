@@ -1,6 +1,6 @@
 package com.springboot.base.service;
 
-import com.springboot.base.data.entity.UserInfo;
+import com.springboot.base.data.entity.ManagerInfo;
 
 /**
  * 描述：redis 服务
@@ -8,15 +8,15 @@ import com.springboot.base.data.entity.UserInfo;
  */
 public interface RedisService {
 
-    void saveUser(UserInfo userInfo);
+    void saveUser(ManagerInfo managerInfo);
 
-    //UserInfo getUserInfo(UserInfo userInfo) throws Exception;
+    //ManagerInfo getUserInfo(ManagerInfo userInfo) throws Exception;
 
     void saveUserPasswordNumber(String username, Integer number);
 
     Integer getUserPasswordNumber(String username);
 
-    UserInfo getUserInfoByKey(String key);
+    ManagerInfo getUserInfoByKey(String key);
 
     void removeUserTokenByKey(String key);
 
