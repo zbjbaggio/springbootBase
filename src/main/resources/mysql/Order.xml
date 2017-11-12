@@ -3,17 +3,18 @@
 <mapper namespace="com.springboot.base.mapper.OrderMapper">
     <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.OrderVO">
         <id column="id" property="id" jdbcType="BIGINT"/>
-        <id column="order_no" property="order_no" jdbcType="VARCHAR"/>
-        <id column="email" property="email" jdbcType="VARCHAR"/>
-        <id column="receiver_name" property="receiver_name" jdbcType="VARCHAR"/>
-        <id column="receiver_address" property="receiver_address" jdbcType="VARCHAR"/>
-        <id column="receiver_city" property="receiver_city" jdbcType="VARCHAR"/>
-        <id column="receiver_country" property="receiver_country" jdbcType="VARCHAR"/>
-        <id column="remark" property="remark" jdbcType="VARCHAR"/>
-        <id column="description" property="description" jdbcType="VARCHAR"/>
-        <id column="postage" property="postage" jdbcType="VARCHAR"/>
-        <id column="status" property="status" jdbcType="TINYINT"/>
-        <id column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="create_time" property="create_time" jdbcType="TIMESTAMP"/>
+        <result column="order_no" property="order_no" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="receiver_name" property="receiver_name" jdbcType="VARCHAR"/>
+        <result column="receiver_address" property="receiver_address" jdbcType="VARCHAR"/>
+        <result column="receiver_city" property="receiver_city" jdbcType="VARCHAR"/>
+        <result column="receiver_country" property="receiver_country" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="postage" property="postage" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="amount" property="amount" jdbcType="DECIMAL"/>
     </resultMap>
 
     <sql id="Base_Column_List">
