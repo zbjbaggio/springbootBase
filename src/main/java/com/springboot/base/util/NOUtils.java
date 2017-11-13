@@ -3,6 +3,7 @@ package com.springboot.base.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * 描述：编号工具
@@ -21,6 +22,10 @@ public class NOUtils {
         int randNum = random.nextInt(10000);
         String number = time + randNum + "";
         return GENERATOR + dateStr + number.substring(number.length()-8);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(UUID.randomUUID());
     }
 
 }
