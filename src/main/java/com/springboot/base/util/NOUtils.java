@@ -3,7 +3,6 @@ package com.springboot.base.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * 描述：编号工具
