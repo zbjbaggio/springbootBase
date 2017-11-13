@@ -79,6 +79,7 @@ public class EmailUtils {
     }
 
     /**
+     * ;
      * 创建一封只包含文本的简单邮件
      *
      * @param session  和服务器交互的会话
