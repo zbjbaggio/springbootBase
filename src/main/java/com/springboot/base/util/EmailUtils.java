@@ -2,6 +2,8 @@ package com.springboot.base.util;
 
 import com.springboot.base.data.dto.EmailDTO;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -10,6 +12,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.Date;
 import java.util.Properties;
 
+@Component
 public class EmailUtils {
 
     private static final String CHARSET = "UTF-8";
@@ -18,15 +21,12 @@ public class EmailUtils {
     // 发件人的 邮箱 和 密码（替换为自己的邮箱和密码）
     // PS: 某些邮箱服务器为了增加邮箱本身密码的安全性，给 SMTP 客户端设置了独立密码（有的邮箱称为“授权码”）,
     //     对于开启了独立密码的邮箱, 这里的邮箱密码必需使用这个独立密码（授权码）。
-    @Value("${email.account}")
-    public static String myEmailAccount;
+    private static  String myEmailAccount;
 
-    @Value("${email.password}")
-    public static String myEmailPassword;
+    private static String myEmailPassword;
 
     // 发件人邮箱的 SMTP 服务器地址, 必须准确, 不同邮件服务器地址不同, 一般(只是一般, 绝非绝对)格式为: smtp.xxx.com
-    @Value("${email.smtp}")
-    public static String myEmailSMTPHost;
+    private static String myEmailSMTPHost;
 
     public static void sendEmail(EmailDTO emailDTO) throws Exception {
         // 1. 创建参数配置, 用于连接邮件服务器的参数配置
@@ -102,5 +102,20 @@ public class EmailUtils {
         // 7. 保存设置
         message.saveChanges();
         return message;
+    }
+
+    @Value("${email.account}")
+    public void setMyEmailAccount(String myEmailAccount) {
+        EmailUtils.myEmailAccount = myEmailAccount;
+    }
+
+    @Value("${email.password}")
+    public void setMyEmailPassword(String myEmailPassword) {
+        EmailUtils.myEmailPassword = myEmailPassword;
+    }
+
+    @Value("${email.smtp}")
+    public void setMyEmailSMTPHost(String myEmailSMTPHost) {
+        EmailUtils.myEmailSMTPHost = myEmailSMTPHost;
     }
 }
