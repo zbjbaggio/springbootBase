@@ -13,7 +13,7 @@ public class NOUtils {
 
     private static final String GENERATOR = "10";
 
-    private static String getGeneratorNO() {
+    public static String getGeneratorNO() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
         Date date = new Date();
         long time = date.getTime();
@@ -22,10 +22,6 @@ public class NOUtils {
         int randNum = random.nextInt(10000);
         String number = time + randNum + "";
         return GENERATOR + dateStr + number.substring(number.length()-8);
-    }
-
-    public static void main(String[] args) {
-        System.out.println(UUID.randomUUID());
     }
 
 }

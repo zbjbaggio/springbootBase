@@ -24,7 +24,9 @@ public enum ErrorInfo {
     NAME_SAME(50014, "名称重复！"),
     UPDATE_ERROR(50015, "修改失败！"),
     PASSWORD_ERROR(50016, "密码错误！"),
-    NO_SAME(50017, "编号重复！");
+    NO_SAME(50017, "编号重复！"),
+    PAY_ERROR(50018, "支付失败！"),
+    PRODUCT_ERROR(50019, "请重新选择商品!");
 
     private int value;
 

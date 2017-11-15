@@ -9,7 +9,7 @@ import com.springboot.base.data.entity.OrderInfo;
  */
 public interface PaypalService {
 
-    Payment createPayment(OrderInfo order) throws Exception;
+    String createPayment(OrderInfo order) throws Exception;
 
-    Payment executePayment(String paymentId, String payerId) throws Exception;
+    void executePayment(String paymentId, String payerId) throws Exception;
 }

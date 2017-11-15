@@ -6,6 +6,8 @@ import com.springboot.base.data.entity.ProductInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ProductVO;
 
+import java.util.List;
+
 public interface ProductService {
 
     Page listPage(int limit, int offset, String searchStr, int status, String orderBy, boolean desc);
@@ -19,4 +21,6 @@ public interface ProductService {
     void updateStatus(Long productId, ProductStatus offShelves) throws PrivateException;
 
     void delete(Long[] productIds) throws PrivateException, Exception;
+
+    List<ProductVO> getByIds(List<Long> productIds);
 }

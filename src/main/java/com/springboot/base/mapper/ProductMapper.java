@@ -2,7 +2,6 @@ package com.springboot.base.mapper;
 
 import com.springboot.base.data.entity.ProductInfo;
 import com.springboot.base.data.vo.ProductVO;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -33,4 +32,7 @@ public interface ProductMapper {
     int updateStatus(byte index, Long productId);
 
     int updateDr(@Param("productIds")Long[] productIds);
+
+    List<ProductVO> getByIds(@Param("productIds")List<Long> productIds);
+
 }

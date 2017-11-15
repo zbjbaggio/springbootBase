@@ -10,6 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 描述：订单信息
@@ -18,6 +19,8 @@ import java.math.BigDecimal;
 @Data
 @ToString(callSuper = true)
 public class OrderInfo extends EntityBase implements Serializable {
+
+    private String orderNo;
 
     @NotNull(message = "金额不能为空")
     @Min(value = 0, message = "金额最小为0")
@@ -55,5 +58,7 @@ public class OrderInfo extends EntityBase implements Serializable {
 
     //备注
     private String remark;
+
+    private List<OrderDetail> orderDetailList;
 
 }

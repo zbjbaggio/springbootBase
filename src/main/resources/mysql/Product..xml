@@ -64,4 +64,13 @@
         insert into t_product_info(name,title,price,status,operator_id,create_time,description,product_no) values(#{name},#{title},#{price},#{status},#{operatorId},now(),#{description},#{productNo})
     </insert>
 
+    <select id="getByIds" parameterType="java.util.List" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_product_info where dr = 0 and id in
+        <foreach item="productId" index="index" collection="productIds" open="(" separator="," close=")">
+            #{productId}#
+        </foreach>
+    </select>
+
 </mapper>

@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class ProductServiceImpl implements ProductService {
@@ -83,6 +85,11 @@ public class ProductServiceImpl implements ProductService {
         if (i <= 0) {
             throw new PrivateException(ErrorInfo.DELETE_ERROR);
         }
+    }
+
+    @Override
+    public List<ProductVO> getByIds(List<Long> productIds) {
+        return productMapper.getByIds(productIds);
     }
 
     private void checkProductNo(ProductInfo productInfo) throws Exception {

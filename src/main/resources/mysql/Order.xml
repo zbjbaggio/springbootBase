@@ -67,7 +67,19 @@
     </update>
 
     <insert id="save" parameterType="com.springboot.base.data.entity.OrderInfo" useGeneratedKeys="true" keyProperty="id">
-        insert into t_order_info(order_no,email,receiver_name,receiver_address,receiver_city, receiver_country,amount,status,create_time,description) values(#{orderNo},#{email},#{receiver_name},#{receiver_address},#{receiver_city},#{receiver_country},#{amount},#{status},now(),#{description},#{productNo})
+        insert into t_order_info(order_no,email,receiver_name,receiver_address,receiver_city, receiver_country,amount,status,create_time,description) values(#{orderNo},#{email},#{receiverName},#{receiverAddress},#{receiverCity},#{receiverCountry},#{amount},#{status},now(),#{description})
+    </insert>
+
+    <insert id="saveDetails" useGeneratedKeys="true" parameterType="java.util.List">
+        <selectKey resultType="long" keyProperty="id" order="AFTER">
+            SELECT
+            LAST_INSERT_ID()
+        </selectKey>
+        insert into t_order_detail (add_time,emp_id,activity_id,flag)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.addTime},#{item.empId},#{item.activityId},#{item.flag})
+        </foreach>
     </insert>
 
 </mapper>

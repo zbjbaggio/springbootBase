@@ -1,6 +1,7 @@
 package com.springboot.base.service;
 
 import com.springboot.base.data.base.Page;
+import com.springboot.base.data.entity.OrderInfo;
 import com.springboot.base.data.vo.OrderVO;
 
 public interface OrderService {
@@ -11,4 +12,5 @@ public interface OrderService {
 
     void delete(Long[] orderIds);
 
+    OrderInfo save(OrderInfo order) throws Exception;
 }

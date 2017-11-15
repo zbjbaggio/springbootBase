@@ -1,16 +1,8 @@
 package com.springboot.base.controller.advice.web;
 
 import com.springboot.base.data.dto.EmailDTO;
-import com.springboot.base.data.enmus.ErrorInfo;
-import com.springboot.base.data.entity.ManagerInfo;
-import com.springboot.base.data.exception.PrivateException;
-import com.springboot.base.data.vo.ManagerVO;
-import com.springboot.base.util.BindingResultUtils;
 import com.springboot.base.util.EmailUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
