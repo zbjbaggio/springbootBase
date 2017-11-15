@@ -28,9 +28,9 @@ public class PaypalServiceImpl implements PaypalService {
     @Value("${web.url}")
     private String WEB_URL;
 
-    private String PAYPAL_SUCCESS_URL = WEB_URL + "";
+    private String PAYPAL_SUCCESS_URL = "";
 
-    private String PAYPAL_CANCEL_URL = WEB_URL + "";
+    private String PAYPAL_CANCEL_URL ="";
 
     @Autowired
     private APIContext apiContext;
@@ -42,12 +42,12 @@ public class PaypalServiceImpl implements PaypalService {
     @Transactional(rollbackFor = Exception.class)
     public String createPayment(OrderInfo order) throws Exception {
         //订单保存
-        orderService.save(order);
+        OrderInfo save = orderService.save(order);
         Amount amount = new Amount();
         amount.setCurrency(CURRENCY);
-        amount.setTotal(String.format("%.2f", order.getAmount()));
+        amount.setTotal(String.format("%.2f", save.getAmount()));
         Transaction transaction = new Transaction();
-        transaction.setDescription(order.getDescription());
+        transaction.setDescription(save.getDescription());
         transaction.setAmount(amount);
         List<Transaction> transactions = new ArrayList<>();
         transactions.add(transaction);
@@ -58,8 +58,8 @@ public class PaypalServiceImpl implements PaypalService {
         payment.setPayer(payer);
         payment.setTransactions(transactions);
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl(PAYPAL_CANCEL_URL);
-        redirectUrls.setReturnUrl(PAYPAL_SUCCESS_URL);
+        redirectUrls.setCancelUrl(WEB_URL + PAYPAL_CANCEL_URL);
+        redirectUrls.setReturnUrl(WEB_URL + PAYPAL_SUCCESS_URL);
         payment.setRedirectUrls(redirectUrls);
         Payment newPayment = payment.create(apiContext);
         for (Links links : newPayment.getLinks()) {

@@ -67,7 +67,7 @@
     <select id="getByIds" parameterType="java.util.List" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_product_info where dr = 0 and id in
+        from t_product_info where dr = 0 and status = 1 and id in
         <foreach item="productId" index="index" collection="productIds" open="(" separator="," close=")">
             #{productId}#
         </foreach>

@@ -75,10 +75,10 @@
             SELECT
             LAST_INSERT_ID()
         </selectKey>
-        insert into t_order_detail (add_time,emp_id,activity_id,flag)
+        insert into t_order_detail (order_id,product_id,product_name,price,number,size,amount,create_time)
         values
         <foreach collection="list" item="item" index="index" separator="," >
-            (#{item.addTime},#{item.empId},#{item.activityId},#{item.flag})
+            (#{item.orderId},#{item.productId},#{item.productName},#{item.price},#{item.number},#{item.size},#{item.amount},now())
         </foreach>
     </insert>
 

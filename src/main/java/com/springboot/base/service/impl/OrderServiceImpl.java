@@ -90,7 +90,7 @@ public class OrderServiceImpl implements OrderService {
             orderDetail.setPrice(productVO.getPrice());
             BigDecimal amount = productVO.getPrice().multiply(BigDecimal.valueOf(orderDetail.getNumber()));
             orderDetail.setAmount(amount);
-            orderAmount.add(amount);
+            orderAmount = orderAmount.add(amount);
         }
         order.setAmount(orderAmount);
         int count = orderMapper.save(order);
