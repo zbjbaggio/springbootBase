@@ -1,8 +1,11 @@
 package com.springboot.base.service;
 
 import com.springboot.base.data.base.Page;
+import com.springboot.base.data.entity.OrderDetail;
 import com.springboot.base.data.entity.OrderInfo;
 import com.springboot.base.data.vo.OrderVO;
+
+import java.util.List;
 
 public interface OrderService {
 
@@ -10,7 +13,10 @@ public interface OrderService {
 
     OrderVO getDetail(Long orderId);
 
-    void delete(Long[] orderIds);
+    void delete(Long[] orderIds) throws Exception;
 
     OrderInfo save(OrderInfo order) throws Exception;
+
+    List<OrderDetail> listOrderDetailDetail(Long orderId);
+
 }

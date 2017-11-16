@@ -59,8 +59,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void delete(Long[] orderIds) {
-
+    public void delete(Long[] orderIds) throws Exception {
+        int i = orderMapper.updateDr(orderIds);
+        if (i <= 0) {
+            throw new PrivateException(ErrorInfo.DELETE_ERROR);
+        }
     }
 
     @Override
@@ -107,5 +110,10 @@ public class OrderServiceImpl implements OrderService {
             throw new PrivateException(ErrorInfo.SAVE_ERROR);
         }
         return order;
+    }
+
+    @Override
+    public List<OrderDetail> listOrderDetailDetail(Long orderId) {
+        return orderMapper.listOrderDetailDetail(orderId);
     }
 }
