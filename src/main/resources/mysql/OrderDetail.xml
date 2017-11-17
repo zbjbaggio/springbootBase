@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.springboot.base.mapper.OrderMapper">
-    <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.OrderVO">
+<mapper namespace="com.springboot.base.mapper.OrderDetailMapper">
+    <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.OrderDetailVO">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="create_time" property="create_time" jdbcType="TIMESTAMP"/>
-        <result column="order_no" property="order_no" jdbcType="VARCHAR"/>
+        <result column="order_id" property="order_id" jdbcType="BIGINT"/>
         <result column="email" property="email" jdbcType="VARCHAR"/>
         <result column="receiver_name" property="receiver_name" jdbcType="VARCHAR"/>
         <result column="receiver_address" property="receiver_address" jdbcType="VARCHAR"/>

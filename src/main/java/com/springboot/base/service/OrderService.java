@@ -1,11 +1,9 @@
 package com.springboot.base.service;
 
 import com.springboot.base.data.base.Page;
-import com.springboot.base.data.entity.OrderDetail;
 import com.springboot.base.data.entity.OrderInfo;
+import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.OrderVO;
-
-import java.util.List;
 
 public interface OrderService {
 
@@ -17,6 +15,7 @@ public interface OrderService {
 
     OrderInfo save(OrderInfo order) throws Exception;
 
-    List<OrderDetail> listOrderDetailDetail(Long orderId);
+    void updatePaymentId(Long orderId, String paymentId) throws Exception;
 
+    void updateStatus(String paymentId, byte newOrderStatus, byte oldOrderStatus) throws Exception;
 }

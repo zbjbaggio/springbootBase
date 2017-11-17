@@ -71,13 +71,4 @@ public class OrderInfoController {
         orderService.delete(orderIds);
     }
 
-    /**
-     * 订单明细详情
-     * @param orderId 订单id
-     * @throws Exception 异常
-     */
-    @RequestMapping(value = "/orderDetail", method = RequestMethod.POST)
-    public List<OrderDetail> orderDetail(@RequestParam(value = "orderId") Long orderId) throws Exception {
-        return orderService.listOrderDetailDetail(orderId);
-    }
 }

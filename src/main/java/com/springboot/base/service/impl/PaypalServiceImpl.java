@@ -3,6 +3,7 @@ package com.springboot.base.service.impl;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.springboot.base.data.enmus.ErrorInfo;
+import com.springboot.base.data.enmus.OrderStatus;
 import com.springboot.base.data.enmus.paypal.PaypalPaymentIntent;
 import com.springboot.base.data.enmus.paypal.PaypalPaymentMethod;
 import com.springboot.base.data.entity.OrderInfo;
@@ -62,8 +63,10 @@ public class PaypalServiceImpl implements PaypalService {
         redirectUrls.setReturnUrl(WEB_URL + PAYPAL_SUCCESS_URL);
         payment.setRedirectUrls(redirectUrls);
         Payment newPayment = payment.create(apiContext);
+        log.info("{}", newPayment);
         for (Links links : newPayment.getLinks()) {
             if (links.getRel().equals("approval_url")) {
+                orderService.updatePaymentId(save.getId(), newPayment.getId());
                 return links.getHref();
             }
         }
@@ -79,7 +82,7 @@ public class PaypalServiceImpl implements PaypalService {
         payment = payment.execute(apiContext, paymentExecute);
         if (payment.getState().equals("approved")) {
             //处理订单
-
+            orderService.updateStatus(paymentId, OrderStatus.PAY_SUCCESS.getIndex(), OrderStatus.PAYING.getIndex());
         } else {
             throw new PrivateException(ErrorInfo.PAY_ERROR);
         }

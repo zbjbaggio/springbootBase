@@ -5,6 +5,7 @@ import com.springboot.base.data.entity.OrderInfo;
 import com.springboot.base.data.vo.OrderVO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -18,8 +19,11 @@ public interface OrderMapper {
 
     int saveDetails(List<OrderDetail> orderDetailList);
 
-    @Select("select * from t_order_detail where order_id = #{param1} ")
-    List<OrderDetail> listOrderDetailDetail(Long orderId);
-
     int updateDr(Long[] orderIds);
+
+    @Update("update t_order_info set payment_id = #{paymentId} where id = #{orderId}")
+    int updatePaymentId(@Param("orderId")Long orderId, @Param("paymentId")String paymentId);
+
+    @Update("update t_order_info set status = #{newOrderStatus} where payment_id = #{paymentId} and status = #{oldOrderStatus} ")
+    int updateStatus(@Param("paymentId")String paymentId, @Param("newOrderStatus")byte newOrderStatus, byte oldOrderStatus);
 }

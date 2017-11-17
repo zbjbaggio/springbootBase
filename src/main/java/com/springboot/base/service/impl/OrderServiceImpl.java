@@ -5,7 +5,6 @@ import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.enmus.OrderStatus;
 import com.springboot.base.data.entity.OrderDetail;
 import com.springboot.base.data.entity.OrderInfo;
-import com.springboot.base.data.entity.ProductInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.OrderVO;
 import com.springboot.base.data.vo.ProductVO;
@@ -48,7 +47,13 @@ public class OrderServiceImpl implements OrderService {
         Long count = orderMapper.count(searchStr, status);
         if (count != 0) {
             page.setCount(count);
-            page.setList(orderMapper.listPage(limit, offset, searchStr, status, orderBy, descStr));
+            List<OrderVO> orderVOs = orderMapper.listPage(limit, offset, searchStr, status, orderBy, descStr);
+            List<Long> orderIds = new ArrayList<>();
+            for (OrderVO orderVO : orderVOs) {
+                orderIds.add(orderVO.getId());
+            }
+            //orderMapper.listOrderDetail(orderIds);
+            page.setList(orderVOs);
         }
         return page;
     }
@@ -113,7 +118,21 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDetail> listOrderDetailDetail(Long orderId) {
-        return orderMapper.listOrderDetailDetail(orderId);
+    public void updatePaymentId(Long orderId, String paymentId) throws Exception {
+        int count = orderMapper.updatePaymentId(orderId, paymentId);
+        if (count != 1) {
+            log.error("订单子表保存失败！");
+            throw new PrivateException(ErrorInfo.SAVE_ERROR);
+        }
     }
+
+    @Override
+    public void updateStatus(String paymentId, byte newOrderStatus, byte oldOrderStatus) throws Exception {
+        int count = orderMapper.updateStatus(paymentId, newOrderStatus, oldOrderStatus);
+        if (count != 1) {
+            log.error("订单状态保存失败！");
+            throw new PrivateException(ErrorInfo.SAVE_ERROR);
+        }
+    }
+
 }
