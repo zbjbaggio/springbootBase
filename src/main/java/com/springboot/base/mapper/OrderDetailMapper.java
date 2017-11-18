@@ -1,6 +1,7 @@
 package com.springboot.base.mapper;
 
-import com.springboot.base.data.entity.OrderDetail;
+import com.springboot.base.data.vo.OrderDetailVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -10,6 +11,6 @@ import java.util.List;
  */
 public interface OrderDetailMapper {
 
-    List<OrderDetail> listOrderDetail(List<Long> orderIds);
+    List<OrderDetailVO> listOrderDetail(@Param("orderIds") List<Long> orderIds);
 
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class OrderVO {
@@ -38,4 +39,6 @@ public class OrderVO {
 
     @JsonSerialize(using = CustomDoubleSerialize.class)
     private BigDecimal amount;
+
+    private List<OrderDetailVO> orderDetailVOList;
 }

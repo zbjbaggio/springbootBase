@@ -2,7 +2,7 @@ package com.springboot.base.controller.advice.manager;
 
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
-import com.springboot.base.data.entity.OrderDetail;
+import com.springboot.base.data.enmus.OrderStatus;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.OrderVO;
 import com.springboot.base.service.OrderService;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * 描述：订单管理
@@ -69,6 +68,16 @@ public class OrderInfoController {
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
         orderService.delete(orderIds);
+    }
+
+    /**
+     * 订单完成
+     * @param orderId 订单lid
+     * @throws Exception 异常
+     */
+    @RequestMapping(value = "/success", method = RequestMethod.POST)
+    public void success(@RequestParam Long orderId) throws Exception {
+        orderService.updateStatusByOrderId(orderId, OrderStatus.SUCCESS.getIndex(), OrderStatus.PAY_SUCCESS.getIndex());
     }
 
 }

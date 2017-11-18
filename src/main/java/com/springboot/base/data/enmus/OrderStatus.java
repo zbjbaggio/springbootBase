@@ -6,7 +6,7 @@ package com.springboot.base.data.enmus;
  */
 public enum OrderStatus {
 
-    UNPAY((byte)1, "待支付"), PAYING((byte)2, "支付中"), PAY_SUCCESS((byte)3, "支付完成");
+    UNPAY((byte)1, "待支付"), PAYING((byte)2, "支付中"), PAY_SUCCESS((byte)3, "支付完成"), SUCCESS((byte)4, "订单完成");
 
     private byte index;
 
