@@ -4,6 +4,7 @@ import com.springboot.base.data.dto.OrderDTO;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.entity.OrderInfo;
 import com.springboot.base.data.exception.PrivateException;
+import com.springboot.base.data.vo.PayVO;
 import com.springboot.base.service.PaypalService;
 import com.springboot.base.util.BindingResultUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +23,14 @@ public class OrderController {
     private PaypalService paypalService;
 
     @RequestMapping(method = RequestMethod.POST)
-    public String pay(@RequestBody @Validated OrderDTO orderDTO, BindingResult bindingResult) throws Exception {
+    public PayVO pay(@RequestBody @Validated OrderDTO orderDTO, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("参数错误！{}", BindingResultUtils.getErrorMessage(bindingResult.getAllErrors()));
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
         OrderInfo order = new OrderInfo();
         BeanUtils.copyProperties(orderDTO, order);
-        return  paypalService.createPayment(order);
+        return new PayVO(paypalService.createPayment(order));
     }
 
     @RequestMapping(value = "/success", method = RequestMethod.POST)
