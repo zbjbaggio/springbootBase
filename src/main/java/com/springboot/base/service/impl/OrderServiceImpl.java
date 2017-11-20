@@ -6,8 +6,10 @@ import com.springboot.base.data.enmus.OrderStatus;
 import com.springboot.base.data.entity.OrderDetail;
 import com.springboot.base.data.entity.OrderInfo;
 import com.springboot.base.data.exception.PrivateException;
+import com.springboot.base.data.vo.OrderDetailVO;
 import com.springboot.base.data.vo.OrderVO;
 import com.springboot.base.data.vo.ProductVO;
+import com.springboot.base.mapper.OrderDetailMapper;
 import com.springboot.base.mapper.OrderMapper;
 import com.springboot.base.service.OrderService;
 import com.springboot.base.service.ProductService;
@@ -32,6 +34,9 @@ public class OrderServiceImpl implements OrderService {
     private OrderMapper orderMapper;
 
     @Inject
+    private OrderDetailMapper orderDetailMapper;
+
+    @Inject
     private ProductService productService;
 
     @Override
@@ -52,7 +57,20 @@ public class OrderServiceImpl implements OrderService {
             for (OrderVO orderVO : orderVOs) {
                 orderIds.add(orderVO.getId());
             }
-            //orderMapper.listOrderDetail(orderIds);
+            List<OrderDetailVO> orderDetails = orderDetailMapper.listOrderDetail(orderIds);
+            Map<Long, List<OrderDetailVO>> map = new HashMap<>();
+            List<OrderDetailVO> list;
+            for (OrderDetailVO orderDetail : orderDetails) {
+                list = map.get(orderDetail.getOrder_id());
+                if (list == null) {
+                    list = new ArrayList<>();
+                }
+                list.add(orderDetail);
+                map.put(orderDetail.getOrder_id(), list);
+            }
+            for (OrderVO orderVO : orderVOs) {
+                orderVO.setOrderDetailVOList(map.get(orderVO.getId()));
+            }
             page.setList(orderVOs);
         }
         return page;
@@ -127,8 +145,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateStatus(String paymentId, byte newOrderStatus, byte oldOrderStatus) throws Exception {
-        int count = orderMapper.updateStatus(paymentId, newOrderStatus, oldOrderStatus);
+    public void updateStatusByPaymentId(String paymentId, byte newOrderStatus, byte oldOrderStatus) throws Exception {
+        int count = orderMapper.updateStatusByPaymentId(paymentId, newOrderStatus, oldOrderStatus);
+        if (count != 1) {
+            log.error("订单状态保存失败！");
+            throw new PrivateException(ErrorInfo.SAVE_ERROR);
+        }
+    }
+
+    @Override
+    public void updateStatusByOrderId(Long orderId, byte newOrderStatus, byte oldOrderStatus) throws Exception {
+        int count = orderMapper.updateStatusByOrderId(orderId, newOrderStatus, oldOrderStatus);
         if (count != 1) {
             log.error("订单状态保存失败！");
             throw new PrivateException(ErrorInfo.SAVE_ERROR);

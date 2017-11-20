@@ -82,7 +82,7 @@ public class PaypalServiceImpl implements PaypalService {
         payment = payment.execute(apiContext, paymentExecute);
         if (payment.getState().equals("approved")) {
             //处理订单
-            orderService.updateStatus(paymentId, OrderStatus.PAY_SUCCESS.getIndex(), OrderStatus.PAYING.getIndex());
+            orderService.updateStatusByPaymentId(paymentId, OrderStatus.PAY_SUCCESS.getIndex(), OrderStatus.PAYING.getIndex());
         } else {
             throw new PrivateException(ErrorInfo.PAY_ERROR);
         }
