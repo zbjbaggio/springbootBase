@@ -19,4 +19,6 @@ public interface OrderService {
     void updateStatusByPaymentId(String paymentId, byte newOrderStatus, byte oldOrderStatus) throws Exception;
 
     void updateStatusByOrderId(Long orderId, byte newOrderStatus, byte oldOrderStatus) throws Exception;
+
+    void updateStatusByOrderId(Long orderId, byte newOrderStatus) throws Exception;
 }

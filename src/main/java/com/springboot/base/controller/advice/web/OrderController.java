@@ -33,7 +33,7 @@ public class OrderController {
         return new PayVO(paypalService.createPayment(order));
     }
 
-    @RequestMapping(value = "/success", method = RequestMethod.POST)
+    @RequestMapping(value = "/success", method = RequestMethod.GET)
     public void successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) throws Exception {
         paypalService.executePayment(paymentId, payerId);
     }

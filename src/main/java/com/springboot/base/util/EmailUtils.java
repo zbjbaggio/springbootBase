@@ -21,7 +21,7 @@ public class EmailUtils {
     // 发件人的 邮箱 和 密码（替换为自己的邮箱和密码）
     // PS: 某些邮箱服务器为了增加邮箱本身密码的安全性，给 SMTP 客户端设置了独立密码（有的邮箱称为“授权码”）,
     //     对于开启了独立密码的邮箱, 这里的邮箱密码必需使用这个独立密码（授权码）。
-    private static  String myEmailAccount;
+    private static String myEmailAccount;
 
     private static String myEmailPassword;
 

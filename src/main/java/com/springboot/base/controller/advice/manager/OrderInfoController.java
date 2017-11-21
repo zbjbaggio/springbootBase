@@ -77,7 +77,7 @@ public class OrderInfoController {
      */
     @RequestMapping(value = "/success", method = RequestMethod.POST)
     public void success(@RequestParam Long orderId) throws Exception {
-        orderService.updateStatusByOrderId(orderId, OrderStatus.SUCCESS.getIndex(), OrderStatus.PAY_SUCCESS.getIndex());
+        orderService.updateStatusByOrderId(orderId, OrderStatus.SUCCESS.getIndex());
     }
 
 }
