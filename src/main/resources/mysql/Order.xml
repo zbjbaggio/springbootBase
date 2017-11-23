@@ -7,7 +7,8 @@
         <result column="order_no" property="order_no" jdbcType="VARCHAR"/>
         <result column="email" property="email" jdbcType="VARCHAR"/>
         <result column="receiver_name" property="receiver_name" jdbcType="VARCHAR"/>
-        <result column="receiver_address" property="receiver_address" jdbcType="VARCHAR"/>
+        <result column="receiver_address1" property="receiver_address1" jdbcType="VARCHAR"/>
+        <result column="receiver_address2" property="receiver_address2" jdbcType="VARCHAR"/>
         <result column="receiver_city" property="receiver_city" jdbcType="VARCHAR"/>
         <result column="receiver_country" property="receiver_country" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
@@ -18,7 +19,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,email,receiver_name,receiver_address,receiver_city,receiver_country,remark,create_time,description,postage,amount,order_no,status
+        id,email,receiver_name,receiver_address1,receiver_address2,receiver_city,receiver_country,remark,create_time,description,postage,amount,order_no,status
     </sql>
 
     <select id="count" resultType="java.lang.Long">

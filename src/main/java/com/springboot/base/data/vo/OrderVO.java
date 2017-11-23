@@ -23,7 +23,9 @@ public class OrderVO {
 
     private String receiver_name;
 
-    private String receiver_address;
+    private String receiver_address1;
+
+    private String receiver_address2;
 
     private String receiver_city;
 

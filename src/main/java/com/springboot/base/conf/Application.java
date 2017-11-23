@@ -83,7 +83,7 @@ public class Application extends WebMvcConfigurerAdapter {
 	//拦截器
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(authenticationInterceptor).addPathPatterns("/manager/user/**");
+		registry.addInterceptor(authenticationInterceptor).addPathPatterns("/manage/user/**");
 	}
 
 /*	@Bean

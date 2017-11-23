@@ -30,5 +30,5 @@ public interface OrderMapper {
     int updateStatusByOrderId(@Param("orderId")Long orderId, @Param("newOrderStatus")byte newOrderStatus, @Param("oldOrderStatus")byte oldOrderStatus);
 
     @Update("update t_order_info set status = #{newOrderStatus} where id = #{orderId} ")
-    int updateStatusByOrderId(Long orderId, byte newOrderStatus);
+    int updateStatusByOrderIdAndStatus(Long orderId, byte newOrderStatus);
 }

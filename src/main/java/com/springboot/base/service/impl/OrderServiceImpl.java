@@ -164,7 +164,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void updateStatusByOrderId(Long orderId, byte newOrderStatus) throws Exception {
-        int count = orderMapper.updateStatusByOrderId(orderId, newOrderStatus);
+        int count = orderMapper.updateStatusByOrderIdAndStatus(orderId, newOrderStatus);
         if (count != 1) {
             log.error("订单状态保存失败！");
             throw new PrivateException(ErrorInfo.SAVE_ERROR);
