@@ -69,7 +69,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
             redisService.saveUser(managerInfo);
             return true;
         }
-        log.info("重新登录");
+        log.info("重新登录, token:{}, key:{}, managerInfo:{}", token, key, managerInfo);
         return false;
     }
 
