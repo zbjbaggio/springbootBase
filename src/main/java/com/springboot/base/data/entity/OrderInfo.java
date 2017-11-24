@@ -3,6 +3,7 @@ package com.springboot.base.data.entity;
 import com.springboot.base.data.base.EntityBase;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Max;
@@ -30,6 +31,10 @@ public class OrderInfo extends EntityBase implements Serializable {
     @Min(value = 0, message = "邮费最小为0")
     private BigDecimal postage;
 
+    @NotEmpty(message = "邮编不能为空")
+    @Length(message = "邮编长度不能超过100", max = 100)
+    private String postcode;
+
     @NotEmpty(message = "邮箱不能为空")
     @Max(value = 50, message = "email长度超长")
     private String email;
@@ -55,6 +60,9 @@ public class OrderInfo extends EntityBase implements Serializable {
 
     @Min(value = 0, message = "订单状态最小为0")
     private int status;
+
+    @NotNull(message = "邮费Id不能为空")
+    private Long postageId;
 
     //描述
     private String description;

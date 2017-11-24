@@ -3,6 +3,7 @@ package com.springboot.base.data.dto;
 import com.springboot.base.data.entity.OrderDetail;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
@@ -27,9 +28,12 @@ public class OrderDTO {
     @Size(max = 50, message = "收货人名称长度超长")
     private String receiverName;
 
-    @NotEmpty(message = "收货地址不能为空")
-    @Size(max = 100, message = "收货地址长度超长")
-    private String receiverAddress;
+    @NotEmpty(message = "收货地址1不能为空")
+    @Size(max = 100, message = "收货地址1长度超长")
+    private String receiverAddress1;
+
+    @Size(max = 100, message = "收货地址2长度超长")
+    private String receiverAddress2;
 
     @NotEmpty(message = "收货城市不能为空")
     @Size(max = 100, message = "收货城市长度超长")
@@ -38,6 +42,13 @@ public class OrderDTO {
     @NotEmpty(message = "收货国家不能为空")
     @Size(max = 100, message = "收货国家长度超长")
     private String receiverCountry;
+
+    @NotNull(message = "邮费Id不能为空")
+    private Long postageId;
+
+    @NotEmpty(message = "邮编不能为空")
+    @Length(message = "邮编长度不能超过100", max = 100)
+    private String postcode;
 
     //描述
     private String description;

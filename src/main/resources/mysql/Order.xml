@@ -13,13 +13,16 @@
         <result column="receiver_country" property="receiver_country" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
-        <result column="postage" property="postage" jdbcType="VARCHAR"/>
+        <result column="payment_id" property="payment_id" jdbcType="VARCHAR"/>
+        <result column="postcode;" property="postcode" jdbcType="VARCHAR"/>
+        <result column="postage" property="postage" jdbcType="DECIMAL"/>
         <result column="status" property="status" jdbcType="TINYINT"/>
         <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="productAmount" property="productAmount" jdbcType="DECIMAL"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,email,receiver_name,receiver_address1,receiver_address2,receiver_city,receiver_country,remark,create_time,description,postage,amount,order_no,status
+        id,email,receiver_name,receiver_address1,payment_id,receiver_address2,postcode,receiver_city,receiver_country,remark,create_time,description,postage,amount,order_no,status,amount-postage productAmount
     </sql>
 
     <select id="count" resultType="java.lang.Long">
@@ -68,7 +71,7 @@
     </update>
 
     <insert id="save" parameterType="com.springboot.base.data.entity.OrderInfo" useGeneratedKeys="true" keyProperty="id">
-        insert into t_order_info(order_no,email,receiver_name,receiver_address1,receiver_address2,receiver_city, receiver_country,amount,status,create_time,description) values(#{orderNo},#{email},#{receiverName},#{receiverAddress1},#{receiverAddress2},#{receiverCity},#{receiverCountry},#{amount},#{status},now(),#{description})
+        insert into t_order_info(order_no,email,receiver_name,receiver_address1,receiver_address2,receiver_city,receiver_country,amount,status,create_time,description,postcode) values(#{orderNo},#{email},#{receiverName},#{receiverAddress1},#{receiverAddress2},#{receiverCity},#{receiverCountry},#{amount},#{status},now(),#{description},#{postcode})
     </insert>
 
     <insert id="saveDetails" useGeneratedKeys="true" parameterType="java.util.List">

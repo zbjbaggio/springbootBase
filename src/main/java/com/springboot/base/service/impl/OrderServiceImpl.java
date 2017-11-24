@@ -8,12 +8,15 @@ import com.springboot.base.data.entity.OrderInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.OrderDetailVO;
 import com.springboot.base.data.vo.OrderVO;
+import com.springboot.base.data.vo.PostageVO;
 import com.springboot.base.data.vo.ProductVO;
 import com.springboot.base.mapper.OrderDetailMapper;
 import com.springboot.base.mapper.OrderMapper;
 import com.springboot.base.service.OrderService;
+import com.springboot.base.service.PostageService;
 import com.springboot.base.service.ProductService;
 import com.springboot.base.util.NOUtils;
+import com.springboot.base.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +41,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Inject
     private ProductService productService;
+
+    @Inject
+    private PostageService postageService;
 
     @Override
     public Page listPage(int limit, int offset, String searchStr, int status, String orderBy, boolean desc) {
@@ -101,15 +107,21 @@ public class OrderServiceImpl implements OrderService {
         for (OrderDetail orderDetail : orderDetailList) {
             productIds.add(orderDetail.getProductId());
         }
+        PostageVO postageVO = postageService.getDetail(order.getPostageId());
+        if (postageVO == null) {
+            log.error("邮费id不能为空！邮费id{}", order.getPostageId());
+            throw new PrivateException(ErrorInfo.ORDER_ERROR);
+        }
         List<ProductVO> productVOfoList = productService.getByIds(productIds);
         if (productVOfoList == null || productVOfoList.size() <= 0 || productVOfoList.size() != productIds.size()) {
             log.error("有商品被删除或者已下架或者找不到商品！商品id{}", productIds);
-            throw new PrivateException(ErrorInfo.PRODUCT_ERROR);
+            throw new PrivateException(ErrorInfo.ORDER_ERROR);
         }
         for (ProductVO productVO : productVOfoList) {
             map.put(productVO.getId(), productVO);
         }
         BigDecimal orderAmount = new BigDecimal(0);
+        long orderNumber = 0;
         for (OrderDetail orderDetail : orderDetailList) {
             ProductVO productVO = map.get(orderDetail.getProductId());
             orderDetail.setProductName(productVO.getName());
@@ -117,8 +129,12 @@ public class OrderServiceImpl implements OrderService {
             BigDecimal amount = productVO.getPrice().multiply(BigDecimal.valueOf(orderDetail.getNumber()));
             orderDetail.setAmount(amount);
             orderAmount = orderAmount.add(amount);
+            orderNumber += orderDetail.getNumber();
         }
-        order.setAmount(orderAmount);
+        //计算邮费
+        BigDecimal postage = postageVO.getPrice().multiply(BigDecimal.valueOf(Math.ceil(orderNumber / 2.0)));
+        order.setPostage(postage);
+        order.setAmount(orderAmount.add(postage));
         int count = orderMapper.save(order);
         if (count != 1) {
             log.error("订单主表保存失败！");

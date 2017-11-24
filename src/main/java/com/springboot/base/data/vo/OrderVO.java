@@ -35,12 +35,20 @@ public class OrderVO {
 
     private String description;
 
-    private String postage;
+    private String postcode;
+
+    private String payment_id;
+
+    @JsonSerialize(using = CustomDoubleSerialize.class)
+    private BigDecimal postage;
 
     private byte status;
 
     @JsonSerialize(using = CustomDoubleSerialize.class)
     private BigDecimal amount;
+
+    @JsonSerialize(using = CustomDoubleSerialize.class)
+    private BigDecimal productAmount;
 
     private List<OrderDetailVO> orderDetailVOList;
 }
