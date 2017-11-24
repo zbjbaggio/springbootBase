@@ -20,7 +20,7 @@ public enum ErrorInfo {
     USER_NO_LOGIN(50010, "该用户已冻结请1个小时后再试！"),
     SAVE_ERROR(50011, "保存失败！"),
     STATUS_ERROR(50012, "修改状态失败！"),
-    DELETE_ERROR(50013, "用户已冻结！"),
+    DELETE_ERROR(50013, "删除失败！"),
     NAME_SAME(50014, "名称重复！"),
     UPDATE_ERROR(50015, "修改失败！"),
     PASSWORD_ERROR(50016, "密码错误！"),

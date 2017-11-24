@@ -26,7 +26,7 @@ public interface ProductMapper {
     int update(ProductInfo productInfo);
 
     @Select("select * from t_product_info where id = #{param1} and dr = 0")
-    ProductVO getDetailById(Long userId);
+    ProductVO getDetailById(Long productId);
 
     @Update("update t_product_info set status = #{param1} where id = #{param2}")
     int updateStatus(byte index, Long productId);

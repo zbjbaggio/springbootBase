@@ -10,20 +10,20 @@ import com.springboot.base.mapper.ProductMapper;
 import com.springboot.base.service.ProductService;
 import com.springboot.base.util.ValueHolder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.inject.Inject;
 import java.util.List;
 
 @Service
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
+    @Inject
     private ProductMapper productMapper;
 
-    @Autowired
+    @Inject
     private ValueHolder valueHolder;
 
     @Override
