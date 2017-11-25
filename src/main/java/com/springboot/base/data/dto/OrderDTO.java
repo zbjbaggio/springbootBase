@@ -25,22 +25,22 @@ public class OrderDTO {
     private String email;
 
     @NotEmpty(message = "收货人名称不能为空")
-    @Size(max = 50, message = "收货人名称长度超长")
+    @Length(max = 50, message = "收货人名称长度超长")
     private String receiverName;
 
     @NotEmpty(message = "收货地址1不能为空")
-    @Size(max = 100, message = "收货地址1长度超长")
+    @Length(max = 100, message = "收货地址1长度超长")
     private String receiverAddress1;
 
-    @Size(max = 100, message = "收货地址2长度超长")
+    @Length(max = 100, message = "收货地址2长度超长")
     private String receiverAddress2;
 
     @NotEmpty(message = "收货城市不能为空")
-    @Size(max = 100, message = "收货城市长度超长")
+    @Length(max = 100, message = "收货城市长度超长")
     private String receiverCity;
 
     @NotEmpty(message = "收货国家不能为空")
-    @Size(max = 100, message = "收货国家长度超长")
+    @Length(max = 100, message = "收货国家长度超长")
     private String receiverCountry;
 
     @NotNull(message = "邮费Id不能为空")

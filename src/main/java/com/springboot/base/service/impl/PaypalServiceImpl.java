@@ -29,9 +29,9 @@ public class PaypalServiceImpl implements PaypalService {
     @Value("${web.url}")
     private String WEB_URL;
 
-    private String PAYPAL_SUCCESS_URL = "";
+    private String PAYPAL_SUCCESS_URL = "/";
 
-    private String PAYPAL_CANCEL_URL ="";
+    private String PAYPAL_CANCEL_URL ="/";
 
     @Autowired
     private APIContext apiContext;
