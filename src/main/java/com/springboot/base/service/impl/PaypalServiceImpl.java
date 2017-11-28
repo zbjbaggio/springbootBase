@@ -13,7 +13,6 @@ import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.EmailOrderContentVO;
 import com.springboot.base.data.vo.OrderDetailVO;
 import com.springboot.base.data.vo.OrderVO;
-import com.springboot.base.mapper.OrderDetailMapper;
 import com.springboot.base.service.OrderService;
 import com.springboot.base.service.PaypalService;
 import com.springboot.base.util.EmailUtils;
