@@ -16,7 +16,6 @@ import com.springboot.base.service.OrderService;
 import com.springboot.base.service.PostageService;
 import com.springboot.base.service.ProductService;
 import com.springboot.base.util.NOUtils;
-import com.springboot.base.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -183,8 +182,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderInfo getByPaymentId(String paymentId) {
+    public OrderVO getByPaymentId(String paymentId) {
         return orderMapper.getByPaymentId(paymentId);
+    }
+
+    @Override
+    public List<OrderDetailVO> getOrderDetailById(Long orderId) {
+        return orderDetailMapper.getByOrderId(orderId);
     }
 
 }

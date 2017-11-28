@@ -10,16 +10,23 @@ import com.springboot.base.data.enmus.paypal.PaypalPaymentIntent;
 import com.springboot.base.data.enmus.paypal.PaypalPaymentMethod;
 import com.springboot.base.data.entity.OrderInfo;
 import com.springboot.base.data.exception.PrivateException;
+import com.springboot.base.data.vo.EmailOrderContentVO;
+import com.springboot.base.data.vo.OrderDetailVO;
+import com.springboot.base.data.vo.OrderVO;
+import com.springboot.base.mapper.OrderDetailMapper;
 import com.springboot.base.service.OrderService;
 import com.springboot.base.service.PaypalService;
 import com.springboot.base.util.EmailUtils;
 import com.springboot.base.util.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +97,7 @@ public class PaypalServiceImpl implements PaypalService {
         payment = payment.execute(apiContext(), paymentExecute);
         if (payment.getState().equals("approved")) {
             //处理订单
-            orderService.updateStatusByPaymentId(paymentId, OrderStatus.PAY_SUCCESS.getIndex(), OrderStatus.PAYING.getIndex());
+           orderService.updateStatusByPaymentId(paymentId, OrderStatus.PAY_SUCCESS.getIndex(), OrderStatus.PAYING.getIndex());
             HttpClientUtil.async(()->sendEmail(paymentId));
         } else {
             throw new PrivateException(ErrorInfo.PAY_ERROR);
@@ -103,10 +110,16 @@ public class PaypalServiceImpl implements PaypalService {
     }
 
     private void sendEmail(String paymentId) {
-        OrderInfo orderInfo = orderService.getByPaymentId(paymentId);
+        OrderVO order = orderService.getByPaymentId(paymentId);
+        EmailOrderContentVO emailOrderContentVO = new EmailOrderContentVO();
+        BeanUtils.copyProperties(order, emailOrderContentVO);
+        List<OrderDetailVO> orderDetailVOList = orderService.getOrderDetailById(order.getId());
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss yy/MM/dd");
+        emailOrderContentVO.setCreateTime(formatter.format(order.getCreate_time()));
+        emailOrderContentVO.setOrderDetailVOs(orderDetailVOList);
         try {
-            EmailUtils.sendEmail(new EmailDTO("小二", orderInfo.getEmail(), "尊敬的客户", "主题", "测试一下"));
-            log.info("success");
+            EmailUtils.sendEmail(new EmailDTO("", order.getEmail(), "", "ORDER SUMMARY JUNJIE", emailOrderContentVO.getContent()));
+            log.info("email success");
         } catch (Exception e) {
             log.error("邮件发送失败！paymentId{}", paymentId, e);
         }

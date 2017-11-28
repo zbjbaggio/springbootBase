@@ -33,6 +33,6 @@ public interface OrderMapper {
     @Update("update t_order_info set status = #{newOrderStatus} where id = #{orderId} ")
     int updateStatusByOrderIdAndStatus(@Param("orderId")Long orderId, @Param("newOrderStatus")byte newOrderStatus);
 
-    @Select("select * from t_product_info where payment_id = #{paymentId} ")
-    OrderInfo getByPaymentId(@Param("paymentId")String paymentId);
+    @Select("select * from t_order_info where payment_id = #{paymentId} ")
+    OrderVO getByPaymentId(@Param("paymentId")String paymentId);
 }

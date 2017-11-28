@@ -2,7 +2,10 @@ package com.springboot.base.service;
 
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.entity.OrderInfo;
+import com.springboot.base.data.vo.OrderDetailVO;
 import com.springboot.base.data.vo.OrderVO;
+
+import java.util.List;
 
 public interface OrderService {
 
@@ -20,5 +23,7 @@ public interface OrderService {
 
     void updateStatusByOrderId(Long orderId, byte newOrderStatus) throws Exception;
 
-    OrderInfo getByPaymentId(String paymentId);
+    OrderVO getByPaymentId(String paymentId);
+
+    List<OrderDetailVO> getOrderDetailById(Long orderId);
 }
