@@ -6,7 +6,6 @@ import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -38,6 +37,10 @@ public class OrderInfo extends EntityBase implements Serializable {
     @NotEmpty(message = "邮箱不能为空")
     @Length(max = 50, message = "email长度超长")
     private String email;
+
+    @NotEmpty(message = "手机不能为空")
+    @Length(max = 50, message = "手机长度超长")
+    private String phone;
 
     @NotEmpty(message = "收货人名称不能为空")
     @Length(max = 50, message = "收货人名称长度超长")

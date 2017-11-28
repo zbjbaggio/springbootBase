@@ -21,6 +21,8 @@ public class OrderVO {
 
     private String email;
 
+    private String phone;
+
     private String receiver_name;
 
     private String receiver_address1;

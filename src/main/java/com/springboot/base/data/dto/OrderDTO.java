@@ -24,6 +24,10 @@ public class OrderDTO {
     @Size(max = 50, message = "email长度超长")
     private String email;
 
+    @NotEmpty(message = "手机不能为空")
+    @Length(max = 50, message = "手机长度超长")
+    private String phone;
+
     @NotEmpty(message = "收货人名称不能为空")
     @Length(max = 50, message = "收货人名称长度超长")
     private String receiverName;

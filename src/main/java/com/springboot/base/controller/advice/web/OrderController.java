@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.net.URLDecoder;
 
 @RestController
 @RequestMapping("/web/order")
@@ -32,6 +33,7 @@ public class OrderController {
         OrderInfo order = new OrderInfo();
         BeanUtils.copyProperties(orderDTO, order);
         //处理一下数据，receiverCountry 和  receiverArea互换
+        order.setEmail(URLDecoder.decode(order.getEmail(), "UTF-8"));
         String receiverCountry = order.getReceiverArea();
         order.setReceiverArea(order.getReceiverCountry());
         order.setReceiverCountry(receiverCountry);
