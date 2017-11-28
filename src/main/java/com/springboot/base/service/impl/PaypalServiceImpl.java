@@ -2,6 +2,8 @@ package com.springboot.base.service.impl;
 
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
+import com.paypal.base.rest.PayPalRESTException;
+import com.springboot.base.data.dto.EmailDTO;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.enmus.OrderStatus;
 import com.springboot.base.data.enmus.paypal.PaypalPaymentIntent;
@@ -10,8 +12,9 @@ import com.springboot.base.data.entity.OrderInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.service.OrderService;
 import com.springboot.base.service.PaypalService;
+import com.springboot.base.util.EmailUtils;
+import com.springboot.base.util.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,12 +32,18 @@ public class PaypalServiceImpl implements PaypalService {
     @Value("${web.url}")
     private String WEB_URL;
 
-    private String PAYPAL_SUCCESS_URL = "/";
+    @Value("${paypal.client.app}")
+    private String clientId;
+
+    @Value("${paypal.client.secret}")
+    private String clientSecret;
+
+    @Value("${paypal.mode}")
+    private String mode;
+
+    private String PAYPAL_SUCCESS_URL = "/checkout-forth.html";
 
     private String PAYPAL_CANCEL_URL ="/";
-
-    @Autowired
-    private APIContext apiContext;
 
     @Inject
     private OrderService orderService;
@@ -62,8 +71,7 @@ public class PaypalServiceImpl implements PaypalService {
         redirectUrls.setCancelUrl(WEB_URL + PAYPAL_CANCEL_URL);
         redirectUrls.setReturnUrl(WEB_URL + PAYPAL_SUCCESS_URL);
         payment.setRedirectUrls(redirectUrls);
-        Payment newPayment = payment.create(apiContext);
-        log.info("{}", newPayment);
+        Payment newPayment = payment.create(apiContext());
         for (Links links : newPayment.getLinks()) {
             if (links.getRel().equals("approval_url")) {
                 orderService.updatePaymentId(save.getId(), newPayment.getId());
@@ -79,12 +87,29 @@ public class PaypalServiceImpl implements PaypalService {
         payment.setId(paymentId);
         PaymentExecution paymentExecute = new PaymentExecution();
         paymentExecute.setPayerId(payerId);
-        payment = payment.execute(apiContext, paymentExecute);
+        payment = payment.execute(apiContext(), paymentExecute);
         if (payment.getState().equals("approved")) {
             //处理订单
             orderService.updateStatusByPaymentId(paymentId, OrderStatus.PAY_SUCCESS.getIndex(), OrderStatus.PAYING.getIndex());
+            HttpClientUtil.async(()->sendEmail(paymentId));
         } else {
             throw new PrivateException(ErrorInfo.PAY_ERROR);
         }
     }
+
+    private APIContext apiContext() throws PayPalRESTException {
+        APIContext apiContext = new APIContext(clientId, clientSecret, mode);
+        return apiContext;
+    }
+
+    private void sendEmail(String paymentId) {
+        OrderInfo orderInfo = orderService.getByPaymentId(paymentId);
+        try {
+            EmailUtils.sendEmail(new EmailDTO("小二", orderInfo.getEmail(), "尊敬的客户", "主题", "测试一下"));
+            log.info("success");
+        } catch (Exception e) {
+            log.error("邮件发送失败！paymentId{}", paymentId, e);
+        }
+    }
+
 }

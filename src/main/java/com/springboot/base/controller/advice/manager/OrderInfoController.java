@@ -46,17 +46,6 @@ public class OrderInfoController {
     }
 
     /**
-     * 订单详情
-     *
-     * @param orderId
-     * @return
-     */
-    @RequestMapping(value = "/detail", method = RequestMethod.GET)
-    public OrderVO detail(@RequestParam(value = "orderId") Long orderId) {
-        return orderService.getDetail(orderId);
-    }
-
-    /**
      * 订单删除
      * @param orderIds 订单lid
      * @throws Exception 异常

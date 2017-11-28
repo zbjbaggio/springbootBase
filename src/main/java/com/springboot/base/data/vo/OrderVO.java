@@ -31,6 +31,8 @@ public class OrderVO {
 
     private String receiver_country;
 
+    private String receiver_area;
+
     private String remark;
 
     private String description;

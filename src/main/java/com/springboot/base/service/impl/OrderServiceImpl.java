@@ -83,11 +83,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderVO getDetail(Long orderId) {
-        return null;
-    }
-
-    @Override
     public void delete(Long[] orderIds) throws Exception {
         int i = orderMapper.updateDr(orderIds);
         if (i <= 0) {
@@ -185,6 +180,11 @@ public class OrderServiceImpl implements OrderService {
             log.error("订单状态保存失败！");
             throw new PrivateException(ErrorInfo.SAVE_ERROR);
         }
+    }
+
+    @Override
+    public OrderInfo getByPaymentId(String paymentId) {
+        return orderMapper.getByPaymentId(paymentId);
     }
 
 }

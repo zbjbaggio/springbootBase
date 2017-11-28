@@ -11,7 +11,7 @@ import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.OAuthTokenCredential;
 import com.paypal.base.rest.PayPalRESTException;
 
-@Configuration
+//@Configuration()
 public class PaypalConfig {
 
     @Value("${paypal.client.app}")
@@ -30,6 +30,7 @@ public class PaypalConfig {
 
     @Bean
     public OAuthTokenCredential authTokenCredential() {
+        System.out.println("1111111111111");
         return new OAuthTokenCredential(clientId, clientSecret, paypalSdkConfig());
     }
 

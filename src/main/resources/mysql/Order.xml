@@ -19,10 +19,11 @@
         <result column="status" property="status" jdbcType="TINYINT"/>
         <result column="amount" property="amount" jdbcType="DECIMAL"/>
         <result column="productAmount" property="productAmount" jdbcType="DECIMAL"/>
+        <result column="receiver_area" property="receiver_area" jdbcType="DECIMAL"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,email,receiver_name,receiver_address1,payment_id,receiver_address2,postcode,receiver_city,receiver_country,remark,create_time,description,postage,amount,order_no,status,amount-postage productAmount
+        id,email,receiver_name,receiver_address1,payment_id,receiver_address2,postcode,receiver_city,receiver_country,remark,create_time,description,postage,amount,order_no,status,amount-postage productAmount,receiver_area
     </sql>
 
     <select id="count" resultType="java.lang.Long">

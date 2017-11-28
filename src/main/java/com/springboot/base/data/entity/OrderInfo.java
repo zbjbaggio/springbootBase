@@ -36,26 +36,30 @@ public class OrderInfo extends EntityBase implements Serializable {
     private String postcode;
 
     @NotEmpty(message = "邮箱不能为空")
-    @Max(value = 50, message = "email长度超长")
+    @Length(max = 50, message = "email长度超长")
     private String email;
 
     @NotEmpty(message = "收货人名称不能为空")
-    @Max(value = 50, message = "收货人名称长度超长")
+    @Length(max = 50, message = "收货人名称长度超长")
     private String receiverName;
 
     @NotEmpty(message = "收货地址1不能为空")
-    @Max(value = 200, message = "收货地址1长度超长")
+    @Length(max = 200, message = "收货地址1长度超长")
     private String receiverAddress1;
 
-    @Max(value = 200, message = "收货地址2长度超长")
+    @Length(max = 200, message = "收货地址2长度超长")
     private String receiverAddress2;
 
     @NotEmpty(message = "收货城市不能为空")
-    @Max(value = 100, message = "收货城市长度超长")
+    @Length(max = 100, message = "收货城市长度超长")
     private String receiverCity;
 
+    @NotEmpty(message = "收货地区不能为空")
+    @Length(max = 100, message = "收货地区长度超长")
+    private String receiverArea;
+
     @NotEmpty(message = "收货国家不能为空")
-    @Max(value = 100, message = "收货国家长度超长")
+    @Length(max = 100, message = "收货国家长度超长")
     private String receiverCountry;
 
     @Min(value = 0, message = "订单状态最小为0")

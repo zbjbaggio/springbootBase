@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -41,6 +42,10 @@ public class OrderDTO {
     @NotEmpty(message = "收货国家不能为空")
     @Length(max = 100, message = "收货国家长度超长")
     private String receiverCountry;
+
+    @NotEmpty(message = "收货地区不能为空")
+    @Length(max = 100, message = "收货地区长度超长")
+    private String receiverArea;
 
     @NotNull(message = "邮费Id不能为空")
     private Long postageId;

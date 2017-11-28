@@ -8,8 +8,6 @@ public interface OrderService {
 
     Page listPage(int limit, int offset, String searchStr, int status, String orderBy, boolean desc);
 
-    OrderVO getDetail(Long orderId);
-
     void delete(Long[] orderIds) throws Exception;
 
     OrderInfo save(OrderInfo order) throws Exception;
@@ -21,4 +19,6 @@ public interface OrderService {
     void updateStatusByOrderId(Long orderId, byte newOrderStatus, byte oldOrderStatus) throws Exception;
 
     void updateStatusByOrderId(Long orderId, byte newOrderStatus) throws Exception;
+
+    OrderInfo getByPaymentId(String paymentId);
 }

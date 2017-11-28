@@ -9,17 +9,18 @@ import com.springboot.base.service.PaypalService;
 import com.springboot.base.util.BindingResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.inject.Inject;
 
 @RestController
 @RequestMapping("/web/order")
 @Slf4j
 public class OrderController {
 
-    @Autowired
+    @Inject
     private PaypalService paypalService;
 
     @RequestMapping(method = RequestMethod.POST)
@@ -30,6 +31,10 @@ public class OrderController {
         }
         OrderInfo order = new OrderInfo();
         BeanUtils.copyProperties(orderDTO, order);
+        //处理一下数据，receiverCountry 和  receiverArea互换
+        String receiverCountry = order.getReceiverArea();
+        order.setReceiverArea(order.getReceiverCountry());
+        order.setReceiverCountry(receiverCountry);
         return new PayVO(paypalService.createPayment(order));
     }
 
