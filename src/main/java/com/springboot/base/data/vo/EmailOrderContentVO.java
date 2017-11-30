@@ -121,7 +121,6 @@ public class EmailOrderContentVO {
         content.append("        <th style=\"padding: 40px 10px 10px\" colspan=\"4\">\n" );
         content.append("            <div style=\"font-weight: bold;font-size: 35px;text-align: right\">JUN JIE</div>\n" );
         content.append("            <div style=\"font-weight: normal;text-align: right;margin-top: 10px\">https://www.junjieofficial.com</div>\n" );
-        content.append("            <div style=\"font-weight: normal;text-align: right;margin-top: 10px;\">HYEIN SEO 2000Antwerp, Belgium</div>\n" );
         content.append("        </th>\n" );
         content.append("    </tr>\n" );
         content.append("</table>");
