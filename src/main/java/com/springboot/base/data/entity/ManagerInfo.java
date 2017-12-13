@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 用户表
@@ -52,6 +53,8 @@ public class ManagerInfo extends EntityBase implements Serializable {
     private String token;
 
     private int passwordNumber;//密码猜测次数
+
+    private List<Permission> permissionList;
 
     public interface LoginGroup {
     }

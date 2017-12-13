@@ -9,6 +9,7 @@ import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ManagerVO;
 import com.springboot.base.mapper.ManagerInfoMapper;
+import com.springboot.base.mapper.PermissionMapper;
 import com.springboot.base.service.ManagerInfoService;
 import com.springboot.base.service.RedisService;
 import com.springboot.base.util.PasswordUtil;
@@ -34,6 +35,9 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     private ManagerInfoMapper managerInfoMapper;
 
     @Inject
+    private PermissionMapper permissionMapper;
+
+    @Inject
     private RedisService redisService;
 
     @Inject
@@ -50,7 +54,9 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         }
         newManagerInfo.setPasswordNumber(0);
         newManagerInfo.setPassword("");
-//        redisService.removeUserPasswordNumberByKey();
+        redisService.removeUserPasswordNumberByKey(newManagerInfo.getUsername());
+        //查询权限
+        permissionMapper.listByUserId(newManagerInfo.getId());
         saveRedis(newManagerInfo, true);
         ManagerVO managerVO = new ManagerVO();
         BeanUtils.copyProperties(newManagerInfo, managerVO);

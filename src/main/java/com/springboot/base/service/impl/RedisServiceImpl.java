@@ -68,8 +68,8 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public void removeUserPasswordNumberByKey(String key) {
-        template.delete(USER_PASSWORD_NUMBER_KEY + key);
+    public void removeUserPasswordNumberByKey(String username) {
+        template.delete(USER_PASSWORD_NUMBER_KEY + username);
     }
 
     private void save(String key, Object value, long time, TimeUnit timeUnit) {
