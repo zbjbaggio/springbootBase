@@ -1,6 +1,7 @@
 package com.springboot.base.util;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
@@ -9,18 +10,15 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 /**
  * Created by mentongwu on 16-1-11.
  *
  */
+@Slf4j
 public class HttpClientUtil {
 
     private static int socketTimeout = -1;
@@ -28,20 +26,8 @@ public class HttpClientUtil {
     //传输超时时间，默认30秒
     private static int connectTimeout = 60000;
 
-    private static final Logger LOG = LoggerFactory.getLogger(HttpClientUtil.class);
-
-    private static Executor executor = Executors.newCachedThreadPool();
-
-//    public static void postAsync(String url, String json){
-//        executor.execute(() -> post( url,  json));
-//    }
-
-    public static void async(Runnable runnable){
-        executor.execute(runnable);
-    }
-
     public static String post(String url, String jsonObject) {
-        LOG.info("【請求結算接口-{}】【开始】【参数：{}】, 开始时间:【{}】", url, jsonObject, DateUtil.formatTime(new Date()));
+        log.info("【請求地址-{}】【开始】【参数：{}】, 开始时间:【{}】", url, jsonObject, DateUtil.formatTime(new Date()));
         String result = null;
         CloseableHttpClient httpClient = HttpClients.custom().build();
         HttpPost httpPost = new HttpPost(url);
@@ -67,7 +53,7 @@ public class HttpClientUtil {
             HttpEntity entity = response.getEntity();
             result = EntityUtils.toString(entity, "UTF-8");
         } catch (Exception e) {
-            LOG.error(url + "http请求错误", e);
+            log.error(url + "http请求错误", e);
         } finally {
             httpPost.abort();
             try {
@@ -76,7 +62,7 @@ public class HttpClientUtil {
                 e.printStackTrace();
             }
         }
-        LOG.info("【請求結算接口-{}】【返回参数:{}】", url, result);
+        log.info("【請求地址-{}】【返回参数:{}】", url, result);
         return result;
     }
 

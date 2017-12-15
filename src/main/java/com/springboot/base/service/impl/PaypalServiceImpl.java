@@ -2,7 +2,6 @@ package com.springboot.base.service.impl;
 
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
-import com.paypal.base.rest.PayPalRESTException;
 import com.springboot.base.data.dto.EmailDTO;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.enmus.OrderStatus;
@@ -16,6 +15,7 @@ import com.springboot.base.data.vo.OrderVO;
 import com.springboot.base.service.OrderService;
 import com.springboot.base.service.PaypalService;
 import com.springboot.base.util.EmailUtils;
+import com.springboot.base.util.ExecutorUtils;
 import com.springboot.base.util.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -49,7 +49,7 @@ public class PaypalServiceImpl implements PaypalService {
 
     private String PAYPAL_SUCCESS_URL = "/checkout-forth.html";
 
-    private String PAYPAL_CANCEL_URL ="/";
+    private String PAYPAL_CANCEL_URL = "/";
 
     @Inject
     private OrderService orderService;
@@ -96,14 +96,14 @@ public class PaypalServiceImpl implements PaypalService {
         payment = payment.execute(apiContext(), paymentExecute);
         if (payment.getState().equals("approved")) {
             //处理订单
-           orderService.updateStatusByPaymentId(paymentId, OrderStatus.PAY_SUCCESS.getIndex(), OrderStatus.PAYING.getIndex());
-            HttpClientUtil.async(()->sendEmail(paymentId));
+            orderService.updateStatusByPaymentId(paymentId, OrderStatus.PAY_SUCCESS.getIndex(), OrderStatus.PAYING.getIndex());
+            ExecutorUtils.async(() -> sendEmail(paymentId));
         } else {
             throw new PrivateException(ErrorInfo.PAY_ERROR);
         }
     }
 
-    private APIContext apiContext() throws PayPalRESTException {
+    private APIContext apiContext() {
         APIContext apiContext = new APIContext(clientId, clientSecret, mode);
         return apiContext;
     }

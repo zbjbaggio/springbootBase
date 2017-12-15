@@ -31,7 +31,4 @@ public class Permission extends EntityBase implements Serializable {
 
     @NotEmpty
     private String resourceType;
-
-    @NotEmpty
-    private String url;
 }

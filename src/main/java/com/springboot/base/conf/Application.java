@@ -40,7 +40,7 @@ public class Application extends WebMvcConfigurerAdapter {
 	@Autowired
     private AuthenticationInterceptor authenticationInterceptor;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 

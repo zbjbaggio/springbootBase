@@ -5,7 +5,6 @@ import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.exception.PrivateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -37,7 +36,7 @@ public class ExceptionControllerAdvice implements ResponseBodyAdvice<Object> {
     @ResponseBody
     public ResponseResult handler(PrivateException e) {
         log.info(e.toString());
-        return ResponseResult.build(e.errCode, e.msg);
+        return ResponseResult.build(e.code, e.msg);
     }
 
     @ExceptionHandler()

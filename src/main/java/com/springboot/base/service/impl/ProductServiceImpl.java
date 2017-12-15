@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateStatus(Long productId, ProductStatus offShelves) throws PrivateException {
+    public void updateStatus(Long productId, ProductStatus offShelves) throws Exception {
         int i = productMapper.updateStatus(offShelves.getIndex(), productId);
         if (i <= 0) {
             throw new PrivateException(ErrorInfo.STATUS_ERROR);

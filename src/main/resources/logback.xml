@@ -55,5 +55,9 @@
     <appender-ref ref="STDOUT" />
     <appender-ref ref="USER" />
   </root>
+
+  <logger name="java.sql" level="debug">
+    <appender-ref ref="STDOUT"/>
+  </logger>
   
 </configuration>  

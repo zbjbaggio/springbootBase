@@ -5,12 +5,12 @@ import com.springboot.base.data.base.ResponseResult;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.service.ManagerInfoService;
 import lombok.extern.log4j.Log4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Value("${userTimeOut}")
     private Long userTimeOut;
 
-    @Autowired
+    @Inject
     private ManagerInfoService managerInfoService;
 
     /**
@@ -41,11 +41,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         try {
             String token = request.getHeader("token");
             String key = request.getHeader("key");
-            boolean isSuccess = managerInfoService.checkToken(token, key);
+            boolean isSuccess = managerInfoService.checkToken(token, key, request.getRequestURI());
             if (!isSuccess) {
                 getFail(response);
             }
-
             return isSuccess;
         } catch (Exception e) {
             log.error("登录验证异常！{}", e);

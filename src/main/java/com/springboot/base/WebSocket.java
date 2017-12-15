@@ -12,8 +12,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * 描述：
  * Created by jay on 2017-12-8.
  */
-@ServerEndpoint(value = "/webSocket")
-@Component
+//@ServerEndpoint(value = "/webSocket")
+//@Component
 @Slf4j
 public class WebSocket {
 

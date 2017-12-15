@@ -2,14 +2,10 @@ package com.springboot.base.controller.advice.manager;
 
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
-import com.springboot.base.data.enmus.ProductStatus;
 import com.springboot.base.data.entity.PostageInfo;
-import com.springboot.base.data.entity.ProductInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.PostageVO;
-import com.springboot.base.data.vo.ProductVO;
 import com.springboot.base.service.PostageService;
-import com.springboot.base.service.ProductService;
 import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -36,7 +32,6 @@ public class PostageController {
      * @param limit
      * @param offset
      * @param searchStr
-     * @param status
      * @return
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)

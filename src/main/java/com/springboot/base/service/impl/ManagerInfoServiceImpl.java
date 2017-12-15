@@ -8,9 +8,10 @@ import com.springboot.base.data.enmus.UserStatus;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ManagerVO;
+import com.springboot.base.data.dto.MenuAndButtonDTO;
 import com.springboot.base.mapper.ManagerInfoMapper;
-import com.springboot.base.mapper.PermissionMapper;
 import com.springboot.base.service.ManagerInfoService;
+import com.springboot.base.service.PermissionInfoService;
 import com.springboot.base.service.RedisService;
 import com.springboot.base.util.PasswordUtil;
 import com.springboot.base.util.TokenUtils;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.inject.Inject;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -35,10 +37,10 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     private ManagerInfoMapper managerInfoMapper;
 
     @Inject
-    private PermissionMapper permissionMapper;
+    private RedisService redisService;
 
     @Inject
-    private RedisService redisService;
+    private PermissionInfoService permissionInfoService;
 
     @Inject
     private ValueHolder valueHolder;
@@ -55,27 +57,34 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         newManagerInfo.setPasswordNumber(0);
         newManagerInfo.setPassword("");
         redisService.removeUserPasswordNumberByKey(newManagerInfo.getUsername());
-        //查询权限
-        permissionMapper.listByUserId(newManagerInfo.getId());
+        MenuAndButtonDTO menuAndButtonDTO = permissionInfoService.getMenu(newManagerInfo.getId());
+        newManagerInfo.setPermissionSet(menuAndButtonDTO.getPermissionSet());
         saveRedis(newManagerInfo, true);
         ManagerVO managerVO = new ManagerVO();
         BeanUtils.copyProperties(newManagerInfo, managerVO);
+        //获得菜单
+        managerVO.setPermissionList(menuAndButtonDTO.getMenuList());
         return managerVO;
     }
 
     @Override
-    public boolean checkToken(String token, String key) {
+    public boolean checkToken(String token, String key, String url) {
         if (StringUtils.isEmpty(token) || StringUtils.isEmpty(key)) {
-            log.info("未登录");
+            log.info("未登录！");
             return false;
         }
         ManagerInfo managerInfo = redisService.getUserInfoByKey(key);
         if (managerInfo != null && token.equals(managerInfo.getToken())) {
+            Set<String> permissionSet = managerInfo.getPermissionSet();
+            if (!url.contains("manager/user/me") && !permissionSet.contains(url)) {
+                log.info("{}未授权！managerInfo:{}", url, managerInfo);
+                return false;
+            }
             valueHolder.setUserIdHolder(managerInfo.getId());
             redisService.saveUser(managerInfo);
             return true;
         }
-        log.info("重新登录, token:{}, key:{}, managerInfo:{}", token, key, managerInfo);
+        log.info("重新登录, token:{}, key:{}, managerInfo:{}！", token, key, managerInfo);
         return false;
     }
 

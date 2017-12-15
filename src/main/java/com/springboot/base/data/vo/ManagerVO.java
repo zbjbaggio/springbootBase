@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 描述：
@@ -32,5 +33,7 @@ public class ManagerVO {
     private String phone;
 
     private byte status;
+
+    private List<PermissionVO> permissionList;
 
 }

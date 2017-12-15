@@ -1,7 +1,6 @@
 package com.springboot.base.controller.advice.manager;
 
 import com.springboot.base.data.base.Page;
-import com.springboot.base.data.dto.PasswordDTO;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.enmus.UserStatus;
 import com.springboot.base.data.entity.ManagerInfo;
@@ -58,18 +57,6 @@ public class ManagerInfoController {
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
         return managerInfoService.save(managerInfo);
-    }
-
-    /**
-     * 修改密码
-     */
-    @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
-    public void updatePassword(@RequestBody @Validated(PasswordDTO.BaseInfo.class) PasswordDTO passwordDTO, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
-        managerInfoService.updatePassword(passwordDTO);
     }
 
     /**

@@ -15,7 +15,7 @@ public interface ManagerInfoService {
 
     ManagerInfo save(ManagerInfo managerInfo) throws Exception;
 
-    boolean checkToken(String token, String key);
+    boolean checkToken(String token, String key, String url);
 
     Page listPage(int limit, int offset, String searchStr, int status, String orderBy, boolean desc);
 

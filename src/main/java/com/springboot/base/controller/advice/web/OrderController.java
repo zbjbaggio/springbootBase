@@ -1,6 +1,5 @@
 package com.springboot.base.controller.advice.web;
 
-import com.springboot.base.WebSocket;
 import com.springboot.base.data.dto.OrderDTO;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.entity.OrderInfo;
@@ -25,8 +24,8 @@ public class OrderController {
     @Inject
     private PaypalService paypalService;
 
-    @Inject
-    private WebSocket webSocket;
+/*    @Inject
+    private WebSocket webSocket;*/
 
     @RequestMapping(method = RequestMethod.POST)
     public PayVO pay(@RequestBody @Validated OrderDTO orderDTO, BindingResult bindingResult) throws Exception {
@@ -41,9 +40,8 @@ public class OrderController {
         String receiverCountry = order.getReceiverArea();
         order.setReceiverArea(order.getReceiverCountry());
         order.setReceiverCountry(receiverCountry);
-        String payment = "";
-        webSocket.onMessage("订单到了！");
-        return new PayVO(payment);
+        //webSocket.onMessage("订单到了！");
+        return new PayVO(paypalService.createPayment(order));
     }
 
     @RequestMapping(value = "/success", method = RequestMethod.GET)

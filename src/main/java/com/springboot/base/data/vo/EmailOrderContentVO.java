@@ -1,7 +1,7 @@
 package com.springboot.base.data.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.springboot.base.JsonSerializer.CustomDoubleSerialize;
+import com.springboot.base.jsonserializer.CustomDoubleSerialize;
 import lombok.Data;
 
 import java.math.BigDecimal;

@@ -10,12 +10,12 @@ import lombok.ToString;
 @ToString
 public class PrivateException extends Exception {
 
-    public int errCode;
+    public int code;
 
     public String msg;
 
     public PrivateException(ErrorInfo errorInfo) {
-        this.errCode = errorInfo.getValue();
+        this.code = errorInfo.getValue();
         this.msg = errorInfo.getName();
     }
 }

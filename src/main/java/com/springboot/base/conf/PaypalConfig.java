@@ -30,7 +30,6 @@ public class PaypalConfig {
 
     @Bean
     public OAuthTokenCredential authTokenCredential() {
-        System.out.println("1111111111111");
         return new OAuthTokenCredential(clientId, clientSecret, paypalSdkConfig());
     }
 

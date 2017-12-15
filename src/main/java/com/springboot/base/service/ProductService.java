@@ -18,9 +18,9 @@ public interface ProductService {
 
     ProductVO getDetail(Long productId);
 
-    void updateStatus(Long productId, ProductStatus offShelves) throws PrivateException;
+    void updateStatus(Long productId, ProductStatus offShelves) throws Exception;
 
-    void delete(Long[] productIds) throws PrivateException, Exception;
+    void delete(Long[] productIds) throws Exception;
 
     List<ProductVO> getByIds(List<Long> productIds);
 }

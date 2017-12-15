@@ -2,6 +2,7 @@ package com.springboot.base.data.entity;
 
 import com.springboot.base.constant.RegularExpressionConstant;
 import com.springboot.base.data.base.EntityBase;
+import com.springboot.base.data.vo.PermissionVO;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户表
@@ -54,7 +56,7 @@ public class ManagerInfo extends EntityBase implements Serializable {
 
     private int passwordNumber;//密码猜测次数
 
-    private List<Permission> permissionList;
+    private Set<String> permissionSet;
 
     public interface LoginGroup {
     }

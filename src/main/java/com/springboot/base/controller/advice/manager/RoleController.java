@@ -54,7 +54,7 @@ public class RoleController {
     }
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
-    public RoleVO detail(@RequestParam(value = "roleId") Long roleId) throws Exception {
+    public RoleVO detail(@RequestParam(value = "roleId") Long roleId) {
         return roleService.getDetail(roleId);
     }
 
