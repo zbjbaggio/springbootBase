@@ -64,6 +64,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         BeanUtils.copyProperties(newManagerInfo, managerVO);
         //获得菜单
         managerVO.setPermissionList(menuAndButtonDTO.getMenuList());
+        managerVO.setButtonSet(menuAndButtonDTO.getButtonSet());
         return managerVO;
     }
 

@@ -34,7 +34,7 @@ public class RoleController {
      * @param status
      * @return
      */
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public Page list(@RequestParam(value = "limit", defaultValue = "10") int limit,
                      @RequestParam(value = "offset", defaultValue = "0") int offset,
                      @RequestParam(value = "searchStr", defaultValue = "-1") String searchStr,
@@ -44,7 +44,7 @@ public class RoleController {
         return roleService.listPage(limit, offset, searchStr, status, orderBy, desc);
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @PostMapping(value = "/save")
     public Long save(@RequestBody @Validated(RoleInfo.Modify.class) RoleInfo role, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
@@ -53,7 +53,7 @@ public class RoleController {
         return roleService.save(role);
     }
 
-    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    @GetMapping(value = "/detail")
     public RoleVO detail(@RequestParam(value = "roleId") Long roleId) {
         return roleService.getDetail(roleId);
     }

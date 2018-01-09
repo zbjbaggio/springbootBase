@@ -8,9 +8,9 @@ import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
@@ -32,7 +32,7 @@ public class MeController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/loginOut", method = RequestMethod.POST)
+    @PostMapping(value = "/loginOut")
     public void loginOut() throws Exception {
         managerInfoService.loginOut();
     }
@@ -40,7 +40,7 @@ public class MeController {
     /**
      * 修改密码
      */
-    @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
+    @PostMapping(value = "/updatePassword")
     public void updatePassword(@RequestBody @Validated(PasswordDTO.BaseInfo.class) PasswordDTO passwordDTO, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));

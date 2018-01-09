@@ -27,7 +27,7 @@ public class OrderController {
 /*    @Inject
     private WebSocket webSocket;*/
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public PayVO pay(@RequestBody @Validated OrderDTO orderDTO, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("参数错误！{}", BindingResultUtils.getErrorMessage(bindingResult.getAllErrors()));
@@ -44,7 +44,7 @@ public class OrderController {
         return new PayVO(paypalService.createPayment(order));
     }
 
-    @RequestMapping(value = "/success", method = RequestMethod.GET)
+    @GetMapping(value = "/success")
     public void successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) throws Exception {
         paypalService.executePayment(paymentId, payerId);
     }

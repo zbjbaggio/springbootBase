@@ -35,7 +35,7 @@ public class ManagerInfoController {
      * @param status
      * @return
      */
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public Page list(@RequestParam(value = "limit", defaultValue = "10") int limit,
                      @RequestParam(value = "offset", defaultValue = "0") int offset,
                      @RequestParam(value = "searchStr", defaultValue = "-1") String searchStr,
@@ -50,7 +50,7 @@ public class ManagerInfoController {
      * @param managerInfo
      * @return
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @PostMapping(value = "/add")
     public ManagerInfo add(@RequestBody @Validated(ManagerInfo.BaseInfo.class) ManagerInfo managerInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
@@ -64,7 +64,7 @@ public class ManagerInfoController {
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    @GetMapping(value = "/detail")
     public ManagerVO detail(@RequestParam(value = "userId") Long userId) {
         return managerInfoService.getDetail(userId);
     }
@@ -75,7 +75,7 @@ public class ManagerInfoController {
      * @param bindingResult
      * @throws Exception
      */
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @PostMapping(value = "/update")
     public void update(@RequestBody @Validated(ManagerInfo.Modify.class) ManagerInfo managerInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
@@ -89,7 +89,7 @@ public class ManagerInfoController {
      * @param userId
      * @throws Exception
      */
-    @RequestMapping(value = "/updateFreeze", method = RequestMethod.POST)
+    @PostMapping(value = "/updateFreeze")
     public void updateFreeze(@RequestParam Long userId) throws Exception {
         if (userId == null) {
             log.info("userId为空！");
@@ -103,7 +103,7 @@ public class ManagerInfoController {
      * @param userIds
      * @throws Exception
      */
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @PostMapping(value = "/delete")
     public void delete(@RequestParam Long[] userIds) throws Exception {
         if (userIds == null || userIds.length <= 0) {
             log.info("userIds为空！");

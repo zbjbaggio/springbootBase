@@ -3,10 +3,7 @@ package com.springboot.base.controller.advice.web;
 import com.springboot.base.data.vo.ProductVO;
 import com.springboot.base.service.ProductService;
 import lombok.extern.log4j.Log4j;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 
@@ -22,7 +19,7 @@ public class ProductController {
     @Inject
     private ProductService productService;
 
-    @RequestMapping(value = "detail", method = RequestMethod.POST)
+    @PostMapping(value = "detail")
     public ProductVO detail(@RequestBody Long productId) {
         return productService.getDetail(productId);
     }

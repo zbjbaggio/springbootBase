@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 描述：
@@ -35,5 +36,7 @@ public class ManagerVO {
     private byte status;
 
     private List<PermissionVO> permissionList;
+
+    private Set<String> buttonSet;
 
 }

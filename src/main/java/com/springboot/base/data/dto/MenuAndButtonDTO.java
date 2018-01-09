@@ -16,4 +16,6 @@ public class MenuAndButtonDTO {
     private Set<String> permissionSet;
 
     private List<PermissionVO> menuList;
+
+    private Set<String> buttonSet;
 }

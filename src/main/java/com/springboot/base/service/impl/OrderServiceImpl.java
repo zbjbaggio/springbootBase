@@ -16,12 +16,14 @@ import com.springboot.base.service.OrderService;
 import com.springboot.base.service.PostageService;
 import com.springboot.base.service.ProductService;
 import com.springboot.base.util.NOUtils;
+import com.springboot.base.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.inject.Inject;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;

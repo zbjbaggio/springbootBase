@@ -32,6 +32,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         List<PermissionVO> permissionVOS = permissionInfoMapper.listByManagerId(managerId);
         Set<String> permissionSet = new HashSet<>();
         List<PermissionVO> menuList = new ArrayList<>();
+        Set<String> buttonSet = new HashSet<>();
         for (PermissionVO permissionVO : permissionVOS) {
             permissionSet.add("/" + path + permissionVO.getBe_url());
             // 一级菜单没有parentId
@@ -39,11 +40,14 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
                 menuList.add(permissionVO);
             } else if ("menu".equals(permissionVO.getResource_type())) {
                 setChild(menuList.get(menuList.size() - 1), permissionVO);
+            } else if ("button".equals(permissionVO.getResource_type())) {
+                buttonSet.add(permissionVO.getBe_url());
             }
         }
         MenuAndButtonDTO menuAndButtonDTO = new MenuAndButtonDTO();
         menuAndButtonDTO.setMenuList(menuList);
         menuAndButtonDTO.setPermissionSet(permissionSet);
+        menuAndButtonDTO.setButtonSet(buttonSet);
         return menuAndButtonDTO;
     }
 

@@ -34,7 +34,7 @@ public class PostageController {
      * @param searchStr
      * @return
      */
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public Page list(@RequestParam(value = "limit", defaultValue = "10") int limit,
                      @RequestParam(value = "offset", defaultValue = "0") int offset,
                      @RequestParam(value = "searchStr", defaultValue = "-1") String searchStr,
@@ -49,7 +49,7 @@ public class PostageController {
      * @param postageInfo
      * @return
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @PostMapping(value = "/add")
     public PostageInfo add(@RequestBody @Validated(PostageInfo.BaseInfo.class) PostageInfo postageInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
@@ -64,7 +64,7 @@ public class PostageController {
      * @param postageId
      * @return
      */
-    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    @GetMapping(value = "/detail")
     public PostageVO detail(@RequestParam(value = "postageId") Long postageId) {
         return postageService.getDetail(postageId);
     }
@@ -75,7 +75,7 @@ public class PostageController {
      * @param bindingResult
      * @throws Exception
      */
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @PostMapping(value = "/update")
     public void update(@RequestBody @Validated(PostageInfo.Modify.class) PostageInfo postageInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
@@ -89,7 +89,7 @@ public class PostageController {
      * @param postageIds
      * @throws Exception
      */
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @PostMapping(value = "/delete")
     public void delete(@RequestParam Long[] postageIds) throws Exception {
         if (postageIds == null || postageIds.length <= 0) {
             log.info("postageIds为空！");

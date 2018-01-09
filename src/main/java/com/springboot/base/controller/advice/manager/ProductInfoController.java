@@ -36,7 +36,7 @@ public class ProductInfoController {
      * @param status
      * @return
      */
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public Page list(@RequestParam(value = "limit", defaultValue = "10") int limit,
                      @RequestParam(value = "offset", defaultValue = "0") int offset,
                      @RequestParam(value = "searchStr", defaultValue = "-1") String searchStr,
@@ -52,7 +52,7 @@ public class ProductInfoController {
      * @param productInfo
      * @return
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @PostMapping(value = "/add")
     public ProductInfo add(@RequestBody @Validated(ProductInfo.BaseInfo.class) ProductInfo productInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
@@ -67,7 +67,7 @@ public class ProductInfoController {
      * @param productId
      * @return
      */
-    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    @GetMapping(value = "/detail")
     public ProductVO detail(@RequestParam(value = "productId") Long productId) {
         return productService.getDetail(productId);
     }
@@ -78,7 +78,7 @@ public class ProductInfoController {
      * @param bindingResult
      * @throws Exception
      */
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @PostMapping(value = "/update")
     public void update(@RequestBody @Validated(ProductInfo.Modify.class) ProductInfo productInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
@@ -92,7 +92,7 @@ public class ProductInfoController {
      * @param productId
      * @throws Exception
      */
-    @RequestMapping(value = "/offShelves", method = RequestMethod.POST)
+    @PostMapping(value = "/offShelves")
     public void offShelves(@RequestParam Long productId) throws Exception {
         if (productId == null) {
             log.info("productId为空！");
@@ -106,7 +106,7 @@ public class ProductInfoController {
      * @param productIds
      * @throws Exception
      */
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @PostMapping(value = "/delete")
     public void delete(@RequestParam Long[] productIds) throws Exception {
         if (productIds == null || productIds.length <= 0) {
             log.info("productIds为空！");

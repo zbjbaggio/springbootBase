@@ -6,10 +6,7 @@ import com.springboot.base.data.enmus.OrderStatus;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 
@@ -34,7 +31,7 @@ public class OrderInfoController {
      * @param status
      * @return
      */
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @GetMapping(value = "/list")
     public Page list(@RequestParam(value = "limit", defaultValue = "10") int limit,
                      @RequestParam(value = "offset", defaultValue = "0") int offset,
                      @RequestParam(value = "searchStr", defaultValue = "-1") String searchStr,
@@ -49,7 +46,7 @@ public class OrderInfoController {
      * @param orderIds 订单lid
      * @throws Exception 异常
      */
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @PostMapping(value = "/delete")
     public void delete(@RequestParam Long[] orderIds) throws Exception {
         if (orderIds == null || orderIds.length <= 0) {
             log.info("productIds为空！");
@@ -63,7 +60,7 @@ public class OrderInfoController {
      * @param orderId 订单lid
      * @throws Exception 异常
      */
-    @RequestMapping(value = "/success", method = RequestMethod.POST)
+    @PostMapping(value = "/success")
     public void success(@RequestParam Long orderId) throws Exception {
         orderService.updateStatusByOrderId(orderId, OrderStatus.SUCCESS.getIndex());
     }
