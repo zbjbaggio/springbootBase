@@ -74,10 +74,14 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
             log.info("未登录！");
             return false;
         }
+        //用户本身功能不限制权限
+        if (url.contains("manage/user/me")) {
+            return true;
+        }
         ManagerInfo managerInfo = redisService.getUserInfoByKey(key);
         if (managerInfo != null && token.equals(managerInfo.getToken())) {
             Set<String> permissionSet = managerInfo.getPermissionSet();
-            if (!url.contains("manager/user/me") && !permissionSet.contains(url)) {
+            if (!permissionSet.contains(url)) {
                 log.info("{}未授权！managerInfo:{}", url, managerInfo);
                 return false;
             }
