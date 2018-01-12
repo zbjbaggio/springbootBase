@@ -109,7 +109,7 @@ public class ManagerInfoController {
             log.info("userIds为空！");
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        managerInfoService.delete(userIds);
+        managerInfoService.remove(userIds);
     }
 
 }

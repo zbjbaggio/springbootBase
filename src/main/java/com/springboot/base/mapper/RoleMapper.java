@@ -19,7 +19,7 @@ public interface RoleMapper {
 
     List<ManagerVO> listPage(@Param("limit")int limit, @Param("offset")int offset, @Param("searchStr")String searchStr, @Param("status")Boolean status, @Param("orderBy")String orderBy, @Param("descStr")String descStr);
 
-    Long save(RoleInfo role);
+    int save(RoleInfo role);
 
     Long countRoleName(RoleInfo role);
 
@@ -28,4 +28,6 @@ public interface RoleMapper {
 
     @Select("select * from t_role_info where id = #{param1} ")
     RoleVO getDetailById(Long roleId);
+
+    int remove(@Param("roleIds")Long[] roleIds);
 }

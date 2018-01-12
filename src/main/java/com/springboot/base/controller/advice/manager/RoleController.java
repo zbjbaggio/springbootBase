@@ -4,6 +4,8 @@ import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.entity.RoleInfo;
 import com.springboot.base.data.exception.PrivateException;
+import com.springboot.base.data.vo.PermissionTreeVO;
+import com.springboot.base.data.vo.TreeVO;
 import com.springboot.base.data.vo.RoleVO;
 import com.springboot.base.service.RoleService;
 import com.springboot.base.util.BindingResutlUtils;
@@ -13,13 +15,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * 描述：角色管理控制类
  * Created by jay on 2017-10-12.
  */
-//@RestController
-@RequestMapping("user/roleManager")
+@RestController
+@RequestMapping("/manage/user/role")
 @Slf4j
 public class RoleController {
 
@@ -45,7 +48,7 @@ public class RoleController {
     }
 
     @PostMapping(value = "/save")
-    public Long save(@RequestBody @Validated(RoleInfo.Modify.class) RoleInfo role, BindingResult bindingResult) throws Exception {
+    public RoleInfo save(@RequestBody @Validated(RoleInfo.Modify.class) RoleInfo role, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
@@ -56,6 +59,26 @@ public class RoleController {
     @GetMapping(value = "/detail")
     public RoleVO detail(@RequestParam(value = "roleId") Long roleId) {
         return roleService.getDetail(roleId);
+    }
+
+    /**
+     * 删除按钮
+     * @param roleIds
+     * @throws Exception 异常
+     */
+    @PostMapping(value = "/remove")
+    public void remove(@RequestParam Long[] roleIds) throws Exception {
+        roleService.remove(roleIds);
+    }
+
+    /**
+     * 权限树
+     * @param roleId
+     * @return
+     */
+    @GetMapping(value = "/permissionDetail")
+    public PermissionTreeVO permissionDetail(@RequestParam(value = "roleId") Long roleId) {
+        return roleService.listPermissionDetail(roleId);
     }
 
 }

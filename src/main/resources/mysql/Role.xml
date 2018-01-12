@@ -66,4 +66,11 @@
         values(#{name},#{available},#{description}, now())
     </insert>
 
+    <delete id="remove" parameterType="java.util.Arrays">
+        delete from t_role_info where id in
+        <foreach item="roleId" index="index" collection="roleIds" open="(" separator="," close=")">
+            #{roleId}#
+        </foreach>
+    </delete>
+
 </mapper>

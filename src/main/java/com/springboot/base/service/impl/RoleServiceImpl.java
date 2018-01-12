@@ -4,11 +4,14 @@ import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.entity.RoleInfo;
 import com.springboot.base.data.exception.PrivateException;
+import com.springboot.base.data.vo.PermissionTreeVO;
 import com.springboot.base.data.vo.RoleVO;
 import com.springboot.base.mapper.RoleMapper;
+import com.springboot.base.service.PermissionInfoService;
 import com.springboot.base.service.RoleService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.inject.Inject;
@@ -23,6 +26,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Inject
     private RoleMapper roleMapper;
+
+    @Inject
+    private PermissionInfoService permissionInfoService;
 
     @Override
     public Page listPage(int limit, int offset, String searchStr, Boolean status, String orderBy, Boolean desc) {
@@ -43,22 +49,38 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Long save(RoleInfo role) throws Exception {
+    @Transactional(rollbackFor = Exception.class)
+    public RoleInfo save(RoleInfo role) throws Exception {
         checkRoleName(role);
+        int count;
         if (role.getId() != null) {
-            int count = roleMapper.update(role);
-            if (count <= 0) {
-                throw new PrivateException(ErrorInfo.UPDATE_ERROR);
-            }
+            count = roleMapper.update(role);
         } else {
-            roleMapper.save(role);
+            count = roleMapper.save(role);
         }
-        return role.getId();
+        if (count != 1) {
+            throw new PrivateException(ErrorInfo.UPDATE_ERROR);
+        }
+        return role;
     }
 
     @Override
     public RoleVO getDetail(Long roleId) {
         return roleMapper.getDetailById(roleId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void remove(Long[] roleIds) throws Exception {
+        int i = roleMapper.remove(roleIds);
+        if (i != roleIds.length) {
+            throw new PrivateException(ErrorInfo.DELETE_ERROR);
+        }
+    }
+
+    @Override
+    public PermissionTreeVO listPermissionDetail(Long roleId) {
+        return permissionInfoService.listPermissionDetail(roleId);
     }
 
     private void checkRoleName(RoleInfo role) throws Exception {

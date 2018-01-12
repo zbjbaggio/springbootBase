@@ -2,13 +2,13 @@ package com.springboot.base.service.impl;
 
 import com.springboot.base.constant.SystemConstants;
 import com.springboot.base.data.base.Page;
+import com.springboot.base.data.dto.MenuAndButtonDTO;
 import com.springboot.base.data.dto.PasswordDTO;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.enmus.UserStatus;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ManagerVO;
-import com.springboot.base.data.dto.MenuAndButtonDTO;
 import com.springboot.base.mapper.ManagerInfoMapper;
 import com.springboot.base.service.ManagerInfoService;
 import com.springboot.base.service.PermissionInfoService;
@@ -19,10 +19,10 @@ import com.springboot.base.util.ValueHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.inject.Inject;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -74,17 +74,15 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
             log.info("未登录！");
             return false;
         }
-        //用户本身功能不限制权限
-        if (url.contains("manage/user/me")) {
-            return true;
-        }
         ManagerInfo managerInfo = redisService.getUserInfoByKey(key);
         if (managerInfo != null && token.equals(managerInfo.getToken())) {
-            Set<String> permissionSet = managerInfo.getPermissionSet();
-            if (!permissionSet.contains(url)) {
+            // TODO: 2018-1-10 先不拦截权限
+/*            Set<String> permissionSet = managerInfo.getPermissionSet();
+            //用户本身功能不限制权限
+            if (!url.contains("/manage/user/me/") && !permissionSet.contains(url)) {
                 log.info("{}未授权！managerInfo:{}", url, managerInfo);
                 return false;
-            }
+            }*/
             valueHolder.setUserIdHolder(managerInfo.getId());
             redisService.saveUser(managerInfo);
             return true;
@@ -117,6 +115,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void update(ManagerInfo managerInfo) throws Exception {
         //校验用户名称是否重复
         checkUsernameByUserId(managerInfo.getUsername(), managerInfo.getId());
@@ -127,6 +126,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateStatus(Long userId, UserStatus index) throws Exception {
         int i = managerInfoMapper.updateStatus(index.getIndex(), userId);
         if (i <= 0) {
@@ -135,7 +135,8 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     }
 
     @Override
-    public void delete(Long[] userIds) throws Exception {
+    @Transactional(rollbackFor = Exception.class)
+    public void remove(Long[] userIds) throws Exception {
         int i = managerInfoMapper.updateDr(userIds);
         if (i <= 0) {
             throw new PrivateException(ErrorInfo.DELETE_ERROR);
@@ -149,6 +150,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updatePassword(PasswordDTO passwordDTO) throws Exception {
         Long userIdHolder = valueHolder.getUserIdHolder();
         ManagerInfo user = managerInfoMapper.getById(userIdHolder);
@@ -171,6 +173,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ManagerInfo save(ManagerInfo managerInfo) throws Exception {
         //校验用户名称是否重复
         checkUsername(managerInfo.getUsername());
@@ -182,10 +185,10 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         Long userIdHolder = valueHolder.getUserIdHolder();
         managerInfo.setOperatorId(userIdHolder);
         int count = managerInfoMapper.save(managerInfo);
-        if (count > 0) {
-            return managerInfo;
+        if (count != 1) {
+            throw new PrivateException(ErrorInfo.SAVE_ERROR);
         }
-        return null;
+        return managerInfo;
     }
 
     private void checkUsernameByUserId(String username, Long userId) throws Exception {

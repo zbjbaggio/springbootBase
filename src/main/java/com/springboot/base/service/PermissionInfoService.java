@@ -1,6 +1,10 @@
 package com.springboot.base.service;
 
+import com.springboot.base.data.base.Page;
 import com.springboot.base.data.dto.MenuAndButtonDTO;
+import com.springboot.base.data.entity.Permission;
+import com.springboot.base.data.vo.PermissionVO;
+import com.springboot.base.data.vo.PermissionTreeVO;
 
 /**
  * 描述：
@@ -10,4 +14,23 @@ public interface PermissionInfoService {
 
     MenuAndButtonDTO getMenu(long managerId);
 
+    Page listPage(int limit, int offset, String searchStr, Boolean available, String orderBy, boolean desc);
+
+    void remove(Long[] permissionIds) throws Exception;
+
+    PermissionVO getDetail(Long menuId);
+
+    PermissionVO buttonDetail(Long buttonId);
+
+    Permission save(Permission permission) throws Exception;
+
+    Permission update(Permission permission) throws Exception;
+
+    Permission saveButton(Permission permission) throws Exception;
+
+    Permission updateButton(Permission permission) throws Exception;
+
+    void removeButton(Long permissionId) throws Exception;
+
+    PermissionTreeVO listPermissionDetail(Long roleId);
 }
