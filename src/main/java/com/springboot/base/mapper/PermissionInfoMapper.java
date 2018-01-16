@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 描述：权限
@@ -34,7 +35,9 @@ public interface PermissionInfoMapper {
     int update(Permission permission);
 
     @Select("select * from t_permission_info where parent_id = #{param1} and resource_type = #{param2} ")
-    List<PermissionVO> getListByParentId(Long menuId, Enum resourceTpe);
+    List<PermissionVO> listByParentId(Long menuId, Enum resourceTpe);
+
+    List<PermissionVO> listByParentIds(@Param("permissionIds")Set<Long> permissionIds);
 
     @Delete("remove from t_permission_info where id = #{param1} and resource_type = #{param2}")
     int deleteByType(Long permissionId, Enum resourceTpe);
@@ -45,4 +48,7 @@ public interface PermissionInfoMapper {
     void removeByParentIds(@Param("permissionIds")Long[] permissionIds);
 
     List<TreeVO> listPermissionDetail(@Param("roleId")Long roleId);
+
+    List<PermissionVO> listByIds(@Param("permissionIds")List<Long> permissionIds);
+
 }

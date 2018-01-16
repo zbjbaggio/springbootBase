@@ -144,7 +144,7 @@ public class MenuController {
      * @param permissionId
      * @throws Exception 异常
      */
-    // TODO: 2018-1-11 未删除角色相对应的按钮
+    // TODO: 2018-1-11 未删除角色相对应的按钮 code应该重新排一下
     @PostMapping(value = "/removeButton")
     public void removeButton(@RequestParam Long permissionId) throws Exception {
         permissionInfoService.removeButton(permissionId);

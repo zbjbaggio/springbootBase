@@ -2,8 +2,11 @@ package com.springboot.base.service;
 
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.entity.RoleInfo;
+import com.springboot.base.data.entity.RolePermission;
 import com.springboot.base.data.vo.PermissionTreeVO;
 import com.springboot.base.data.vo.RoleVO;
+
+import java.util.List;
 
 /**
  * 描述：

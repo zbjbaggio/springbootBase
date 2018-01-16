@@ -3,10 +3,11 @@ package com.springboot.base.controller.advice.manager;
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.entity.RoleInfo;
+import com.springboot.base.data.entity.RolePermission;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.PermissionTreeVO;
-import com.springboot.base.data.vo.TreeVO;
 import com.springboot.base.data.vo.RoleVO;
+import com.springboot.base.service.RolePermissionService;
 import com.springboot.base.service.RoleService;
 import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.util.List;
 
 /**
  * 描述：角色管理控制类
@@ -28,6 +28,9 @@ public class RoleController {
 
     @Inject
     private RoleService roleService;
+
+    @Inject
+    private RolePermissionService rolePermissionService;
 
     /**
      * 角色查询
@@ -56,8 +59,8 @@ public class RoleController {
         return roleService.save(role);
     }
 
-    @GetMapping(value = "/detail")
-    public RoleVO detail(@RequestParam(value = "roleId") Long roleId) {
+    @GetMapping(value = "/getDetail")
+    public RoleVO getDetail(@RequestParam(value = "roleId") Long roleId) {
         return roleService.getDetail(roleId);
     }
 
@@ -76,9 +79,23 @@ public class RoleController {
      * @param roleId
      * @return
      */
-    @GetMapping(value = "/permissionDetail")
-    public PermissionTreeVO permissionDetail(@RequestParam(value = "roleId") Long roleId) {
+    @GetMapping(value = "/getPermissionDetail")
+    public PermissionTreeVO getPermissionDetail(@RequestParam(value = "roleId") Long roleId) {
         return roleService.listPermissionDetail(roleId);
+    }
+
+    /**
+     * 权限树保存
+     * @param rolePermission
+     * @return
+     */
+    @GetMapping(value = "/savePermission")
+    public void savePermission(@RequestBody @Validated(RolePermission.BaseInfo.class) RolePermission rolePermission, BindingResult bindingResult) throws Exception {
+        if (bindingResult.hasErrors()) {
+            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        rolePermissionService.savePermission(rolePermission);
     }
 
 }

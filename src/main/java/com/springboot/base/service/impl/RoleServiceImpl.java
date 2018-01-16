@@ -3,11 +3,13 @@ package com.springboot.base.service.impl;
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.entity.RoleInfo;
+import com.springboot.base.data.entity.RolePermission;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.PermissionTreeVO;
 import com.springboot.base.data.vo.RoleVO;
 import com.springboot.base.mapper.RoleMapper;
 import com.springboot.base.service.PermissionInfoService;
+import com.springboot.base.service.RolePermissionService;
 import com.springboot.base.service.RoleService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 描述：角色服务

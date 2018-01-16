@@ -75,16 +75,26 @@
         </foreach>
     </delete>
 
-    <insert id="save" parameterType="com.springboot.base.data.entity.Permission" useGeneratedKeys="true" keyProperty="id">
+    <insert id="save" parameterType="com.springboot.base.data.entity.Permission" useGeneratedKeys="true"
+            keyProperty="id">
       insert into t_permission_info(available,name,create_time,code,icon,be_url,fe_url,resource_type,parent_id) values(1,#{name},now(),#{code},#{icon},#{beUrl},#{feUrl},#{resourceType},#{parentId})
     </insert>
 
     <select id="listPermissionDetail" resultMap="TreeMap">
         SELECT
-        a.id,a.name,a.code,a.parent_id,b.role_id
+        a.id,a.name,a.code,a.parent_id,b.role_id,resource_type
         FROM t_permission_info a
         left join t_role_permission b on a.id = b.permission_id and b.role_id = #{roleId}
-        where a.resource_type= 'menu' order by a.code
+        order by a.code
+    </select>
+
+    <select id="listByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_permission_info where id in
+        <foreach item="permissionId" index="index" collection="permissionIds" open="(" separator="," close=")">
+            #{permissionId}#
+        </foreach>
     </select>
 
 </mapper>

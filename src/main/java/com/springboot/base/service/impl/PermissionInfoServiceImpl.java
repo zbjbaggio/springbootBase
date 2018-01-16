@@ -111,7 +111,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
     @Override
     public PermissionVO getDetail(Long menuId) {
         PermissionVO permissionVO = permissionInfoMapper.getDetailById(menuId, ResourceType.menu);
-        permissionVO.setButton(permissionInfoMapper.getListByParentId(menuId, ResourceType.button));
+        permissionVO.setButton(permissionInfoMapper.listByParentId(menuId, ResourceType.button));
         return permissionVO;
     }
 
@@ -131,6 +131,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         return permission;
     }
 
+    // TODO: 2018-1-16 计算一下code
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Permission saveButton(Permission permission) throws Exception {
@@ -172,22 +173,50 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
             if ("0".equals(treeVO.getParent_id() + "")) {
                 treeVOS.add(treeVO);
             } else {
+                if (treeVO.getResource_type().equals(String.valueOf(ResourceType.button))) {
+                    treeVO.setLabel("按钮-" + treeVO.getLabel());
+                }
                 setChild(treeVOS.get(treeVOS.size() - 1), treeVO);
             }
         }
         return new PermissionTreeVO(treeVOS, ids);
     }
 
-    private void setChild(PermissionVO node, PermissionVO permissionVO) {
-        List<PermissionVO> child = node.getChildren();
+    @Override
+    public Long[] checkTreePermission(List<Long> permissionIds) throws Exception {
+        List<PermissionVO> permissions = permissionInfoMapper.listByIds(permissionIds);
+        if (permissions == null || permissions.size() != permissionIds.size()) {
+            log.info("权限ids查询条数对不上！permissionIds：{}， permissions：{} ", permissionIds, permissions);
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        Set<Long> parentIds = new HashSet<>();
+        //已经查过的父类Id
+        Set<Long> hasParentIds = new HashSet<>(permissionIds);
+        List<PermissionVO> permissionVOS = permissions;
+        do {
+            for (PermissionVO permissionVO : permissionVOS) {
+                if (!permissionVO.getParent_id().equals(0L) && !hasParentIds.contains(permissionVO.getId())) {
+                    parentIds.add(permissionVO.getParent_id());
+                }
+            }
+            hasParentIds.addAll(parentIds);
+            if (parentIds.size() > 0) {
+                permissionVOS = permissionInfoMapper.listByParentIds(parentIds);
+            }
+        } while (parentIds.size() > 0);
+        return (Long[]) hasParentIds.toArray();
+    }
+
+    private void setChild(PermissionVO parentPermission, PermissionVO childrenPermissionVO) {
+        List<PermissionVO> child = parentPermission.getChildren();
         if (child == null) {
             child = new ArrayList<>();
-            child.add(permissionVO);
-        } else if ((child.get(child.size() - 1).getParent_id() + "").equals(permissionVO.getParent_id() + "")) {
-            child.add(permissionVO);
+            child.add(childrenPermissionVO);
+        } else if ((child.get(child.size() - 1).getParent_id() + "").equals(childrenPermissionVO.getParent_id() + "")) {
+            child.add(childrenPermissionVO);
         } else {
-            setChild(child.get(child.size() - 1), permissionVO);
+            setChild(child.get(child.size() - 1), childrenPermissionVO);
         }
-        node.setChildren(child);
+        parentPermission.setChildren(child);
     }
 }

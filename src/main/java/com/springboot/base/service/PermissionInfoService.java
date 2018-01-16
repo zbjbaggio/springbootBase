@@ -6,6 +6,8 @@ import com.springboot.base.data.entity.Permission;
 import com.springboot.base.data.vo.PermissionVO;
 import com.springboot.base.data.vo.PermissionTreeVO;
 
+import java.util.List;
+
 /**
  * 描述：
  * Created by jay on 2017-12-13.
@@ -33,4 +35,6 @@ public interface PermissionInfoService {
     void removeButton(Long permissionId) throws Exception;
 
     PermissionTreeVO listPermissionDetail(Long roleId);
+
+    Long[] checkTreePermission(List<Long> permissionIds) throws Exception;
 }
