@@ -11,7 +11,7 @@ import com.springboot.base.data.vo.ManagerVO;
  */
 public interface ManagerInfoService {
 
-    ManagerVO login(ManagerInfo user) throws Exception;
+    ManagerVO login(ManagerInfo user, String ip) throws Exception;
 
     ManagerInfo save(ManagerInfo managerInfo) throws Exception;
 

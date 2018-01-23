@@ -2,8 +2,10 @@ package com.springboot.base.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.springboot.base.constant.SystemConstants;
+import com.springboot.base.constant.SystemPropertiesConstants;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.service.RedisService;
+import com.springboot.base.util.StringUtil;
 import lombok.extern.log4j.Log4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -20,16 +22,15 @@ import java.util.concurrent.TimeUnit;
 @Log4j
 public class RedisServiceImpl implements RedisService {
 
-    private final String USER_TOKEN_KEY = "user_token_";//用户登录后存入redis的key
-
-    private final String USER_PASSWORD_NUMBER_KEY = "user_password_";//用户猜密码次数存入redis的key
-
     @Inject
     private StringRedisTemplate template;
 
+    @Inject
+    private SystemPropertiesConstants systemPropertiesConstants;
+
     @Override
     public void saveUser(ManagerInfo managerInfo) {
-        save(USER_TOKEN_KEY + managerInfo.getKey(), managerInfo, SystemConstants.USER_TOKEN_TIME_LONG, TimeUnit.MINUTES);
+        save(StringUtil.concatStringWithSign("_", USER_TOKEN_KEY, managerInfo.getKey()), managerInfo, systemPropertiesConstants.getUSER_TOKEN_TIME_LONG(), TimeUnit.MINUTES);
     }
 
 /*    @Override
@@ -44,7 +45,28 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public void saveUserPasswordNumber(String username, Integer number) {
-        save(USER_PASSWORD_NUMBER_KEY + username, number, SystemConstants.USER_PASSWORD_TIME_LONG, TimeUnit.MINUTES);
+        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username), number, systemPropertiesConstants.getUSER_PASSWORD_TIME_LONG(), TimeUnit.MINUTES);
+    }
+
+    /**
+     * 保存该用户名猜密码次数+ip
+     * @param username 登录名
+     * @param number 猜的次数
+     */
+    @Override
+    public void saveUserPasswordNumberSameIP(String username, String ip, Integer number) {
+        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username, ip), number, systemPropertiesConstants.getUSER_PASSWORD_TIME_LONG(), TimeUnit.MINUTES);
+    }
+
+    /**
+     * 根据key获取用户欲冻结次数
+     * @param key
+     * @return
+     */
+    @Override
+    public Integer getUserExpectNumber(String key) {
+        String numberString = get(key);
+        return numberString == null ? 0 : Integer.parseInt(numberString);
     }
 
     /**
@@ -53,28 +75,47 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public Integer getUserPasswordNumber(String username) {
-        String numberString = get(USER_PASSWORD_NUMBER_KEY + username);
+        String numberString = get(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username));
+        return numberString == null ? 0 : Integer.parseInt(numberString);
+    }
+
+    /**
+     * 获取该用户名猜密码次数+ip
+     * @param username 登录名
+     * @param ip ip地址
+     */
+    @Override
+    public Integer getUserPasswordNumberSameIP(String username, String ip) {
+        String numberString = get(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username, ip));
         return numberString == null ? 0 : Integer.parseInt(numberString);
     }
 
     @Override
     public ManagerInfo getUserInfoByKey(String key) {
-        return get(USER_TOKEN_KEY + key, ManagerInfo.class);
+        return get(StringUtil.concatStringWithSign("_", USER_TOKEN_KEY, key), ManagerInfo.class);
     }
 
     @Override
     public void removeUserTokenByKey(String key) {
-        template.delete(USER_TOKEN_KEY + key);
+        template.delete(StringUtil.concatStringWithSign("_", USER_TOKEN_KEY, key));
     }
 
     @Override
-    public void removeUserPasswordNumberByKey(String username) {
-        template.delete(USER_PASSWORD_NUMBER_KEY + username);
+    public void removeUserPasswordNumberByKey(String username, String ip) {
+        template.delete(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username, ip));
+        template.delete(StringUtil.concatStringWithSign("_", USER_EXPECT_NUMBER_KEY, username, ip));
     }
 
-    private void save(String key, Object value, long time, TimeUnit timeUnit) {
+    @Override
+    public void save(String key, Object value, long time, TimeUnit timeUnit) {
         ValueOperations<String, String> ops = template.opsForValue();
         ops.set(key, JSON.toJSONString(value), time, timeUnit);
+    }
+
+    @Override
+    public void save(String key, Object value) {
+        ValueOperations<String, String> ops = template.opsForValue();
+        ops.set(key, JSON.toJSONString(value));
     }
 
     private <T> T get(String key, Class<T> clazz) {

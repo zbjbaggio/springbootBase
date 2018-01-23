@@ -1,6 +1,6 @@
 package com.springboot.base.service.impl;
 
-import com.springboot.base.constant.SystemConstants;
+import com.springboot.base.constant.SystemPropertiesConstants;
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.dto.MenuAndButtonDTO;
 import com.springboot.base.data.dto.PasswordDTO;
@@ -13,7 +13,9 @@ import com.springboot.base.mapper.ManagerInfoMapper;
 import com.springboot.base.service.ManagerInfoService;
 import com.springboot.base.service.PermissionInfoService;
 import com.springboot.base.service.RedisService;
+import com.springboot.base.util.DateUtil;
 import com.springboot.base.util.PasswordUtil;
+import com.springboot.base.util.StringUtil;
 import com.springboot.base.util.TokenUtils;
 import com.springboot.base.util.ValueHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 用户信息
@@ -43,20 +47,22 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     private PermissionInfoService permissionInfoService;
 
     @Inject
+    private SystemPropertiesConstants systemPropertiesConstants;
+
+    @Inject
     private ValueHolder valueHolder;
 
     // TODO: 2017-10-12 未完成：1.登录成功时删除该用户登录错误次数 2.不能登录一个小时后，再猜错同样次数的直接冻结 3.同样ip地址猜错一次密码出验证码
     @Override
-    public ManagerVO login(ManagerInfo user) throws Exception {
-        Integer number = checkPasswordNumber(user.getUsername());
+    public ManagerVO login(ManagerInfo user, String ip) throws Exception {
+        Integer number = checkPasswordNumberSameIP(user.getUsername(), ip);
         ManagerInfo newManagerInfo = managerInfoMapper.getUserInfo(user.getUsername());
-        if (newManagerInfo == null || !checkUser(user.getPassword(), newManagerInfo)) {
-            redisService.saveUserPasswordNumber(user.getUsername(), number + 1);
+        if (newManagerInfo == null || !checkUser(user.getPassword(), newManagerInfo, ip, number)) {
             return null;
         }
         newManagerInfo.setPasswordNumber(0);
         newManagerInfo.setPassword("");
-        redisService.removeUserPasswordNumberByKey(newManagerInfo.getUsername());
+        redisService.removeUserPasswordNumberByKey(newManagerInfo.getUsername(), ip);
         MenuAndButtonDTO menuAndButtonDTO = permissionInfoService.getMenu(newManagerInfo.getId());
         newManagerInfo.setPermissionSet(menuAndButtonDTO.getPermissionSet());
         saveRedis(newManagerInfo, true);
@@ -215,7 +221,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     }
 
     //校验密码
-    private boolean checkUser(String passwordStr, ManagerInfo newManagerInfo) throws Exception {
+    private boolean checkUser(String passwordStr, ManagerInfo newManagerInfo, String ip, int number) throws Exception {
         if (newManagerInfo.getStatus() == UserStatus.FREEZE.getIndex()) {
             log.info("该用户被冻结！username：{}", newManagerInfo.getUsername());
             throw new PrivateException(ErrorInfo.USER_FREEZE);
@@ -225,16 +231,53 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
             throw new PrivateException(ErrorInfo.USER_UNACTIVATED);
         }
         String password = PasswordUtil.getPassword(passwordStr, newManagerInfo.getSalt());
-        return password.equals(newManagerInfo.getPassword());
+
+        boolean result = password.equals(newManagerInfo.getPassword());
+        if (!result) {
+            redisService.saveUserPasswordNumberSameIP(newManagerInfo.getUsername(), ip, ++number);
+            log.info("用户密码校验错误，失败次数：{}", number);
+            checkAndSaveExpectNumber(newManagerInfo.getUsername(), ip, number, newManagerInfo.getId());
+        }
+        return result;
     }
 
     //校验猜密码次数
     private Integer checkPasswordNumber(String username) throws Exception {
         Integer number = redisService.getUserPasswordNumber(username);
-        if (number >= SystemConstants.FREEZE_NUMBER) {
+        if (number >= systemPropertiesConstants.getMANAGER_LOGIN_LOCK_NUMBER()) {
             log.info("该用户被停止登录！username：{}", username);
             throw new PrivateException(ErrorInfo.USER_NO_LOGIN);
         }
         return number;
+    }
+
+    //校验猜密码次数+ip
+    private Integer checkPasswordNumberSameIP(String username, String ip) throws Exception {
+        Integer number = redisService.getUserPasswordNumberSameIP(username, ip);
+        if (number >= systemPropertiesConstants.getMANAGER_LOGIN_LOCK_NUMBER()) {
+            log.info("该用户被停止登录！username：{}, number:{}", username, number);
+            throw new PrivateException(ErrorInfo.USER_NO_LOGIN);
+        }
+        return number;
+    }
+
+    //校验是否存储欲冻结次数
+    @Transactional
+    private void checkAndSaveExpectNumber(String username, String ip, int lockNumber, Long userId) throws Exception {
+        //判断是否达到锁定上限
+        if (lockNumber >= systemPropertiesConstants.getMANAGER_LOGIN_LOCK_NUMBER()) {
+            String redisKey = StringUtil.concatStringWithSign("_", RedisService.USER_EXPECT_NUMBER_KEY, username, ip);
+            int expectNumber = redisService.getUserExpectNumber(redisKey);
+            expectNumber++;
+            //判断是否达到冻结上限
+            if (expectNumber >= systemPropertiesConstants.getMANAGER_LOGIN_EXPECT_NUMBER()) {
+                //冻结用户账户
+                updateStatus(userId, UserStatus.FREEZE);
+                log.info("该用户账户已被冻结！username:{}", username);
+            }
+            Date nowDate = new Date(System.currentTimeMillis());
+            long expectMin = DateUtil.getMinuteCompare(nowDate, DateUtil.getDayEndDate(nowDate));
+            redisService.save(redisKey, expectNumber, expectMin, TimeUnit.MINUTES);
+        }
     }
 }

@@ -324,6 +324,26 @@ public class DateUtil {
         return sFormat.compareTo(bFormat);
     }
 
+    public static Date getDayEndDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
+    /**
+     * 比较日期相差多少分钟
+     * @param sDate
+     * @param bDate
+     * @return
+     */
+    public static long getMinuteCompare(Date sDate, Date bDate) {
+        return (bDate.getTime() - sDate.getTime())/1000/60;
+    }
+
     public static String formatTime() {
         return format(new Date(), TIMEFORMAT);
     }
