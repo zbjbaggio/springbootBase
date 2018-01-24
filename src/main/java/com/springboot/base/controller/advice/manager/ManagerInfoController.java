@@ -7,6 +7,7 @@ import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ManagerVO;
 import com.springboot.base.service.ManagerInfoService;
+import com.springboot.base.service.RedisService;
 import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -26,6 +27,9 @@ public class ManagerInfoController {
 
     @Inject
     private ManagerInfoService managerInfoService;
+
+    @Inject
+    private RedisService redisService;
 
     /**
      * 用户查询
@@ -85,7 +89,7 @@ public class ManagerInfoController {
     }
 
     /**
-     * 管理员冻结
+     * 管理员锁定
      * @param userId
      * @throws Exception
      */
@@ -95,10 +99,28 @@ public class ManagerInfoController {
             log.info("userId为空！");
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        managerInfoService.updateStatus(userId, UserStatus.FREEZE);
+        managerInfoService.updateStatus(userId, UserStatus.LOCKED);
     }
 
     /**
+     *
+     * 管理员解锁
+     * @param userId
+     * @throws Exception
+     */
+    @PostMapping(value = "/unlocked")
+    public void unlocked(@RequestParam Long userId) throws Exception {
+        if (userId == null) {
+            log.info("userId为空！");
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        managerInfoService.updateStatus(userId, UserStatus.DEFAULT);
+        ManagerVO newManagerInfo = managerInfoService.getDetail(userId);
+        redisService.removeUserPasswordNumberByKey(newManagerInfo.getUsername());
+    }
+
+    /**
+     *
      * 管理员删除
      * @param userIds
      * @throws Exception

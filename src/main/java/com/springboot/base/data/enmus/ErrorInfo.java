@@ -15,7 +15,7 @@ public enum ErrorInfo {
     NO_AUTHORITY(50005, "未权限！"),
     USER_NAME_SAME(50006, "用户名重复！"),
     REGISTER_ERROR(50007, "用户注册失败！" ),
-    USER_FREEZE(50008, "该用户已被冻结，请联系管理员！" ),
+    USER_LOCKED(50008, "该用户已被锁定，请联系管理员！" ),
     USER_UNACTIVATED(50009, "该用户还未审核通过请耐心等待！"),
     USER_NO_LOGIN(50010, "该用户已冻结请1个小时后再试！"),
     SAVE_ERROR(50011, "保存失败！"),

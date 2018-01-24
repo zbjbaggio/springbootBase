@@ -101,9 +101,9 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public void removeUserPasswordNumberByKey(String username, String ip) {
-        template.delete(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username, ip));
-        template.delete(StringUtil.concatStringWithSign("_", USER_EXPECT_NUMBER_KEY, username, ip));
+    public void removeUserPasswordNumberByKey(String username) {
+        template.delete(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username));
+        template.delete(StringUtil.concatStringWithSign("_", USER_LOCKED_NUMBER_KEY, username));
     }
 
     @Override

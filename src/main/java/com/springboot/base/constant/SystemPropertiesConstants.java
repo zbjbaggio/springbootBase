@@ -20,9 +20,9 @@ public class SystemPropertiesConstants {
     @Value("${manager.login.verifiedTime}")
     int USER_PASSWORD_TIME_LONG = 60;       //用户猜密码次数存入redis的时长60分钟，即锁定时间
 
-    @Value("${manager.login.lockNumber}")
-    int MANAGER_LOGIN_LOCK_NUMBER = 3;      //n次猜错锁定账号
+    @Value("${manager.login.frozenNumber}")
+    int MANAGER_LOGIN_FROZEN_NUMBER = 3;      //n次猜错冻结账号
 
-    @Value("${manager.login.expectNumber}")
-    int MANAGER_LOGIN_EXPECT_NUMBER = 1;    //锁定n次后冻结账户
+    @Value("${manager.login.lockedNumber}")
+    int MANAGER_LOGIN_LOCKED_NUMBER = 1;    //冻结n次后锁定账户
 }

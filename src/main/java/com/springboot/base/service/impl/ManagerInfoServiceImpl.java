@@ -52,17 +52,16 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     @Inject
     private ValueHolder valueHolder;
 
-    // TODO: 2017-10-12 未完成：1.登录成功时删除该用户登录错误次数 2.不能登录一个小时后，再猜错同样次数的直接冻结 3.同样ip地址猜错一次密码出验证码
+    // TODO: 2017-10-12 未完成：1.登录成功时删除该用户登录错误次数 2.不能登录一个小时后，再猜错同样次数的直接锁定 3.同样ip地址猜错一次密码出验证码
     @Override
     public ManagerVO login(ManagerInfo user, String ip) throws Exception {
-        Integer number = checkPasswordNumberSameIP(user.getUsername(), ip);
         ManagerInfo newManagerInfo = managerInfoMapper.getUserInfo(user.getUsername());
-        if (newManagerInfo == null || !checkUser(user.getPassword(), newManagerInfo, ip, number)) {
+        if (newManagerInfo == null || !checkUser(user.getPassword(), newManagerInfo, ip)) {
             return null;
         }
         newManagerInfo.setPasswordNumber(0);
         newManagerInfo.setPassword("");
-        redisService.removeUserPasswordNumberByKey(newManagerInfo.getUsername(), ip);
+        redisService.removeUserPasswordNumberByKey(newManagerInfo.getUsername());
         MenuAndButtonDTO menuAndButtonDTO = permissionInfoService.getMenu(newManagerInfo.getId());
         newManagerInfo.setPermissionSet(menuAndButtonDTO.getPermissionSet());
         saveRedis(newManagerInfo, true);
@@ -221,20 +220,22 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     }
 
     //校验密码
-    private boolean checkUser(String passwordStr, ManagerInfo newManagerInfo, String ip, int number) throws Exception {
-        if (newManagerInfo.getStatus() == UserStatus.FREEZE.getIndex()) {
-            log.info("该用户被冻结！username：{}", newManagerInfo.getUsername());
-            throw new PrivateException(ErrorInfo.USER_FREEZE);
+    private boolean checkUser(String passwordStr, ManagerInfo newManagerInfo, String ip) throws Exception {
+        if (newManagerInfo.getStatus() == UserStatus.LOCKED.getIndex()) {
+            log.info("该用户被锁定！username：{}", newManagerInfo.getUsername());
+            throw new PrivateException(ErrorInfo.USER_LOCKED);
         }
         if (newManagerInfo.getStatus() == UserStatus.UNACTIVATED.getIndex()) {
             log.info("该用户还未审核通过！username：{}", newManagerInfo.getUsername());
             throw new PrivateException(ErrorInfo.USER_UNACTIVATED);
         }
+        //查看是否被冻结
+        Integer number = checkPasswordNumber(newManagerInfo.getUsername());
         String password = PasswordUtil.getPassword(passwordStr, newManagerInfo.getSalt());
 
         boolean result = password.equals(newManagerInfo.getPassword());
         if (!result) {
-            redisService.saveUserPasswordNumberSameIP(newManagerInfo.getUsername(), ip, ++number);
+            redisService.saveUserPasswordNumber(newManagerInfo.getUsername(), ++number);
             log.info("用户密码校验错误，失败次数：{}", number);
             checkAndSaveExpectNumber(newManagerInfo.getUsername(), ip, number, newManagerInfo.getId());
         }
@@ -244,7 +245,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     //校验猜密码次数
     private Integer checkPasswordNumber(String username) throws Exception {
         Integer number = redisService.getUserPasswordNumber(username);
-        if (number >= systemPropertiesConstants.getMANAGER_LOGIN_LOCK_NUMBER()) {
+        if (number >= systemPropertiesConstants.getMANAGER_LOGIN_FROZEN_NUMBER()) {
             log.info("该用户被停止登录！username：{}", username);
             throw new PrivateException(ErrorInfo.USER_NO_LOGIN);
         }
@@ -254,30 +255,32 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     //校验猜密码次数+ip
     private Integer checkPasswordNumberSameIP(String username, String ip) throws Exception {
         Integer number = redisService.getUserPasswordNumberSameIP(username, ip);
-        if (number >= systemPropertiesConstants.getMANAGER_LOGIN_LOCK_NUMBER()) {
-            log.info("该用户被停止登录！username：{}, number:{}", username, number);
+        if (number >= systemPropertiesConstants.getMANAGER_LOGIN_FROZEN_NUMBER()) {
+            log.info("该用户被停止登录！username：{}, ip:{}, number:{}", username, ip, number);
             throw new PrivateException(ErrorInfo.USER_NO_LOGIN);
         }
         return number;
     }
 
-    //校验是否存储欲冻结次数
+    //校验是否存储欲锁定次数
     @Transactional
     private void checkAndSaveExpectNumber(String username, String ip, int lockNumber, Long userId) throws Exception {
-        //判断是否达到锁定上限
-        if (lockNumber >= systemPropertiesConstants.getMANAGER_LOGIN_LOCK_NUMBER()) {
-            String redisKey = StringUtil.concatStringWithSign("_", RedisService.USER_EXPECT_NUMBER_KEY, username, ip);
-            int expectNumber = redisService.getUserExpectNumber(redisKey);
-            expectNumber++;
-            //判断是否达到冻结上限
-            if (expectNumber >= systemPropertiesConstants.getMANAGER_LOGIN_EXPECT_NUMBER()) {
-                //冻结用户账户
-                updateStatus(userId, UserStatus.FREEZE);
-                log.info("该用户账户已被冻结！username:{}", username);
+        //判断是否达到冻结上限
+        if (lockNumber >= systemPropertiesConstants.getMANAGER_LOGIN_FROZEN_NUMBER()) {
+            String redisKey = StringUtil.concatStringWithSign("_", RedisService.USER_LOCKED_NUMBER_KEY, username);
+            int lockedNumber = redisService.getUserExpectNumber(redisKey);
+            lockedNumber++;
+            //判断是否达到锁定上限
+            if (lockedNumber >= systemPropertiesConstants.getMANAGER_LOGIN_LOCKED_NUMBER()) {
+                //锁定用户账户
+                updateStatus(userId, UserStatus.LOCKED);
+                log.info("该用户账户已被锁定！username:{}", username);
+                throw new PrivateException(ErrorInfo.USER_LOCKED);
+            } else {
+                Date nowDate = new Date(System.currentTimeMillis());
+                long expectMin = DateUtil.getMinuteCompare(nowDate, DateUtil.getDayEndDate(nowDate));
+                redisService.save(redisKey, lockedNumber, expectMin, TimeUnit.MINUTES);
             }
-            Date nowDate = new Date(System.currentTimeMillis());
-            long expectMin = DateUtil.getMinuteCompare(nowDate, DateUtil.getDayEndDate(nowDate));
-            redisService.save(redisKey, expectNumber, expectMin, TimeUnit.MINUTES);
         }
     }
 }
