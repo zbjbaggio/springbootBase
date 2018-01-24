@@ -153,15 +153,17 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         }
         permission.setResourceType(String.valueOf(ResourceType.button));
         //根据parentId计算code
-        String code = permissionInfoMapper.getMaxCodeByParentId(permission.getParentId(), ResourceType.button);
-        if (code == null) {
-            PermissionVO parentPermissionVO = permissionInfoMapper.getDetailById(permission.getParentId(), ResourceType.menu);
-            code = parentPermissionVO.getCode() + "0001";
-        } else {
-            String tempCode = "000" + (Long.parseLong(code.substring(code.length() - 4)) + 1);
-            code = code.substring(0, code.length() - 4) +  tempCode.substring(tempCode.length() - 4);
+        if (permission.getId() == null) {
+            String code = permissionInfoMapper.getMaxCodeByParentId(permission.getParentId(), ResourceType.button);
+            if (code == null) {
+                PermissionVO parentPermissionVO = permissionInfoMapper.getDetailById(permission.getParentId(), ResourceType.menu);
+                code = parentPermissionVO.getCode() + "0001";
+            } else {
+                String tempCode = "000" + (Long.parseLong(code.substring(code.length() - 4)) + 1);
+                code = code.substring(0, code.length() - 4) +  tempCode.substring(tempCode.length() - 4);
+            }
+            permission.setCode(code);
         }
-        permission.setCode(code);
         int count;
         if (permission.getId() == null) {
             count = permissionInfoMapper.save(permission);
@@ -174,15 +176,9 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         return permission;
     }
 
-    public static void main(String[] args) {
-        String code = "00020001";
-        String tempCode = "000" + (Long.parseLong(code.substring(code.length() - 4)) + 1);
-        code = code.substring(0, code.length() - 4) +  tempCode.substring(tempCode.length() - 4);
-        System.out.println(code);
-    }
-
     @Override
     public void removeButton(Long permissionId) throws Exception {
+        //重新排button的code
         int i = permissionInfoMapper.deleteByType(permissionId, ResourceType.button);
         if (i != 1) {
             throw new PrivateException(ErrorInfo.DELETE_ERROR);
