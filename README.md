@@ -13,6 +13,7 @@ B) 领域模型命名规约<br>
     4） POJO 是 DO/DTO/BO/VO 的统称，禁止命名成 xxxPOJO。<br>
 
 未完成任务：
-1 t_permission_info parentIds,permission两个字段目前没用
+1 t_permission_info parentIds,permission两个字段目前没用，最后确定没用删除
 2 建立日志模块
 3 修改管理员和菜单信息把update和save合并，参照角色信息
+4 在用户中添加角色 在角色中添加用户

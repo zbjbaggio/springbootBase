@@ -89,7 +89,7 @@ public class RoleController {
      * @param rolePermission
      * @return
      */
-    @GetMapping(value = "/savePermission")
+    @PostMapping(value = "/savePermission")
     public void savePermission(@RequestBody @Validated(RolePermission.BaseInfo.class) RolePermission rolePermission, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));

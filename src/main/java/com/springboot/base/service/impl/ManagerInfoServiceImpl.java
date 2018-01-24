@@ -54,10 +54,10 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
 
     // TODO: 2017-10-12 未完成：1.登录成功时删除该用户登录错误次数 2.不能登录一个小时后，再猜错同样次数的直接冻结 3.同样ip地址猜错一次密码出验证码
     @Override
-    public ManagerVO login(ManagerInfo user, String ip) throws Exception {
-        Integer number = checkPasswordNumberSameIP(user.getUsername(), ip);
-        ManagerInfo newManagerInfo = managerInfoMapper.getUserInfo(user.getUsername());
-        if (newManagerInfo == null || !checkUser(user.getPassword(), newManagerInfo, ip, number)) {
+    public ManagerVO login(ManagerInfo managerInfo, String ip) throws Exception {
+        Integer number = checkPasswordNumberSameIP(managerInfo.getUsername(), ip);
+        ManagerInfo newManagerInfo = managerInfoMapper.getUserInfo(managerInfo.getUsername());
+        if (newManagerInfo == null || !checkUser(managerInfo.getPassword(), newManagerInfo, ip, number)) {
             return null;
         }
         newManagerInfo.setPasswordNumber(0);

@@ -1,7 +1,6 @@
 package com.springboot.base.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.springboot.base.constant.SystemConstants;
 import com.springboot.base.constant.SystemPropertiesConstants;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.service.RedisService;
