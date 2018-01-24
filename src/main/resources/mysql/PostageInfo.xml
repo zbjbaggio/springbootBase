@@ -43,7 +43,7 @@
         </if>
     </select>
 
-    <update id="delete" parameterType="java.util.Arrays">
+    <update id="remove" parameterType="java.util.Arrays">
         delete from t_postage_info where id in
         <foreach item="postageId" index="index" collection="postageIds" open="(" separator="," close=")">
             #{postageId}#

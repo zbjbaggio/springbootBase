@@ -26,5 +26,5 @@ public interface PostageMapper {
     @Update("update t_postage_info set name = #{name},price = #{price} where id = #{id}")
     int update(PostageInfo postageInfo);
 
-    int delete(@Param("postageIds")Long[] postageIds);
+    int remove(@Param("postageIds")Long[] postageIds);
 }

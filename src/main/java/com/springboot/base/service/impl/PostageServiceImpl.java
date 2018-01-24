@@ -67,7 +67,7 @@ public class PostageServiceImpl implements PostageService {
 
     @Override
     public void delete(Long[] postageIds) throws Exception {
-        int i = postageMapper.delete(postageIds);
+        int i = postageMapper.remove(postageIds);
         if (i <= 0) {
             throw new PrivateException(ErrorInfo.DELETE_ERROR);
         }

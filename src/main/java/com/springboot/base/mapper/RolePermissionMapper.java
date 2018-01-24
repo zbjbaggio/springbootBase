@@ -1,6 +1,8 @@
 package com.springboot.base.mapper;
 
 import com.springboot.base.data.entity.RolePermission;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -10,7 +12,8 @@ import java.util.List;
  */
 public interface RolePermissionMapper {
 
-    void delete(long roleId);
+    @Delete("delete from t_role_permission where role_id = #{roleId} ")
+    int remove(@Param("roleId")long roleId);
 
-    void saves(List<RolePermission> saves);
+    int saves(List<RolePermission> saves);
 }

@@ -37,7 +37,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
             saveRolePermission.setRoleId(rolePermission.getRoleId());
             saves.add(saveRolePermission);
         }
-        rolePermissionMapper.delete(rolePermission.getRoleId());
+        rolePermissionMapper.remove(rolePermission.getRoleId());
         rolePermissionMapper.saves(saves);
         return saves;
     }

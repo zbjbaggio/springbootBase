@@ -167,7 +167,8 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         List<TreeVO> treeVOS = new ArrayList<>();
         List<Long> ids = new ArrayList<>();
         for (TreeVO treeVO : roleTreeVOS) {
-            if (treeVO.getRoleId() != null) {
+            //角色没有的并且没有父节点的id
+            if (treeVO.getRoleId() != null && treeVO.getParentId() == null) {
                 ids.add(treeVO.getId());
             }
             if ("0".equals(treeVO.getParent_id() + "")) {
@@ -189,22 +190,24 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
             log.info("权限ids查询条数对不上！permissionIds：{}， permissions：{} ", permissionIds, permissions);
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        Set<Long> parentIds = new HashSet<>();
+        Set<Long> parentIds;
         //已经查过的父类Id
         Set<Long> hasParentIds = new HashSet<>(permissionIds);
         List<PermissionVO> permissionVOS = permissions;
+        //查找父类节点只到找不到为止
         do {
+            parentIds = new HashSet<>();
             for (PermissionVO permissionVO : permissionVOS) {
-                if (!permissionVO.getParent_id().equals(0L) && !hasParentIds.contains(permissionVO.getId())) {
+                if (!permissionVO.getParent_id().equals(0L) && !hasParentIds.contains(permissionVO.getParent_id())) {
                     parentIds.add(permissionVO.getParent_id());
                 }
             }
             hasParentIds.addAll(parentIds);
             if (parentIds.size() > 0) {
-                permissionVOS = permissionInfoMapper.listByParentIds(parentIds);
+                permissionVOS = permissionInfoMapper.listByIds(new ArrayList<>(parentIds));
             }
         } while (parentIds.size() > 0);
-        return (Long[]) hasParentIds.toArray();
+        return hasParentIds.toArray(new Long[hasParentIds.size()]);
     }
 
     private void setChild(PermissionVO parentPermission, PermissionVO childrenPermissionVO) {
