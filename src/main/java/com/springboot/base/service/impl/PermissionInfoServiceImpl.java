@@ -167,7 +167,8 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         List<TreeVO> treeVOS = new ArrayList<>();
         List<Long> ids = new ArrayList<>();
         for (TreeVO treeVO : roleTreeVOS) {
-            if (treeVO.getRoleId() != null) {
+            //角色没有的并且没有父节点的id
+            if (treeVO.getRoleId() != null && treeVO.getParentId() == null) {
                 ids.add(treeVO.getId());
             }
             if ("0".equals(treeVO.getParent_id() + "")) {
@@ -193,6 +194,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         //已经查过的父类Id
         Set<Long> hasParentIds = new HashSet<>(permissionIds);
         List<PermissionVO> permissionVOS = permissions;
+        //查找父类节点只到找不到为止
         do {
             parentIds = new HashSet<>();
             for (PermissionVO permissionVO : permissionVOS) {
