@@ -14,7 +14,7 @@ public interface RedisService {
 
     String USER_PASSWORD_NUMBER_KEY = "user_password";//用户猜密码次数存入redis的key
 
-    String USER_EXPECT_NUMBER_KEY = "user_expect_number";//用户欲冻结次数
+    String USER_LOCKED_NUMBER_KEY = "user_locked_number";//用户欲锁定次数
 
 
     /**
@@ -39,7 +39,7 @@ public interface RedisService {
 
     void removeUserTokenByKey(String key);
 
-    void removeUserPasswordNumberByKey(String key, String ip);
+    void removeUserPasswordNumberByKey(String key);
 
     void save(String key, Object value, long time, TimeUnit timeUnit);
 

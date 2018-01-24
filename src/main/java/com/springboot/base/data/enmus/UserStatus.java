@@ -6,7 +6,7 @@ package com.springboot.base.data.enmus;
  */
 public enum UserStatus {
 
-    UNACTIVATED((byte)0, "未激活"), DEFAULT((byte)1, "正常"), FREEZE((byte)2, "冻结");
+    UNACTIVATED((byte)0, "未激活"), DEFAULT((byte)1, "正常"), LOCKED((byte)2, "锁定");
 
     private byte index;
 
