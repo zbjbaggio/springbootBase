@@ -26,11 +26,7 @@ public interface PermissionInfoService {
 
     Permission save(Permission permission) throws Exception;
 
-    Permission update(Permission permission) throws Exception;
-
     Permission saveButton(Permission permission) throws Exception;
-
-    Permission updateButton(Permission permission) throws Exception;
 
     void removeButton(Long permissionId) throws Exception;
 

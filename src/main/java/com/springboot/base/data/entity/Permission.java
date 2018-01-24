@@ -17,20 +17,19 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 public class Permission extends EntityBase implements Serializable {
 
-    @NotNull(groups = {Update.class, UpdateButton.class})
     private Long id;
 
     private boolean available = true;
 
-    @NotEmpty(groups = {BaseInfo.class, Update.class, SaveButton.class, UpdateButton.class})
-    @Length(max = 30, message = "菜单名称不能超过30个字！", groups = {BaseInfo.class, Update.class, SaveButton.class, UpdateButton.class})
+    @NotEmpty(groups = {BaseInfo.class, SaveButton.class})
+    @Length(max = 30, message = "菜单名称不能超过30个字！", groups = {BaseInfo.class, SaveButton.class})
     private String name;
 
-    @NotEmpty(groups = {BaseInfo.class, Update.class})
+    @NotEmpty(groups = {BaseInfo.class})
     @Length(max = 30, message = "菜单编号不能超过255个字！")
     private String code;
 
-    @NotNull(groups = {SaveButton.class, UpdateButton.class})
+    @NotNull(groups = {SaveButton.class})
     private Long parentId;
 
     private String parentIds;
@@ -39,25 +38,21 @@ public class Permission extends EntityBase implements Serializable {
 
     private String resourceType;
 
-    @NotEmpty(groups = {SaveButton.class, UpdateButton.class})
-    @Length(max = 100, message = "后端地址不能超过100个字！", groups = {BaseInfo.class, Update.class, SaveButton.class, UpdateButton.class})
+    @NotEmpty(groups = {SaveButton.class}, message = "后端地址不能为空！")
+    @Length(max = 100, message = "后端地址不能超过100个字！", groups = {BaseInfo.class, SaveButton.class})
     private String beUrl;
 
-    @Length(max = 100, message = "前端地址不能超过100个字！", groups = {BaseInfo.class, Update.class, SaveButton.class, UpdateButton.class})
+    @NotEmpty(groups = {BaseInfo.class}, message = "前端地址不能为空！")
+    @Length(max = 100, message = "前端地址不能超过100个字！", groups = {BaseInfo.class, SaveButton.class})
     private String feUrl;
 
-    @Length(max = 40, message = "图片地址不能超过40个字！", groups = {BaseInfo.class, Update.class, SaveButton.class, UpdateButton.class})
+    @Length(max = 40, message = "图片地址不能超过40个字！", groups = {BaseInfo.class, SaveButton.class})
     private String icon;
 
     public interface BaseInfo {
     }
 
-    public interface Update {
-    }
 
     public interface SaveButton {
-    }
-
-    public interface UpdateButton {
     }
 }

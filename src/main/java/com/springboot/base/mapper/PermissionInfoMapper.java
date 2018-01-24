@@ -4,12 +4,11 @@ import com.springboot.base.data.entity.Permission;
 import com.springboot.base.data.vo.PermissionVO;
 import com.springboot.base.data.vo.TreeVO;
 import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 描述：权限
@@ -37,7 +36,8 @@ public interface PermissionInfoMapper {
     @Select("select * from t_permission_info where parent_id = #{param1} and resource_type = #{param2} ")
     List<PermissionVO> listByParentId(Long menuId, Enum resourceTpe);
 
-    List<PermissionVO> listByParentIds(@Param("permissionIds")Set<Long> permissionIds);
+    @Select("select count(id) from t_permission_info where parent_id = #{param1} and resource_type = #{param2} ")
+    long countByParentId(Long menuId, Enum resourceTpe);
 
     @Delete("remove from t_permission_info where id = #{param1} and resource_type = #{param2}")
     int deleteByType(Long permissionId, Enum resourceTpe);
@@ -45,10 +45,15 @@ public interface PermissionInfoMapper {
     @Select("select id from t_permission_info where code = #{param1} and resource_type= #{param2}")
     Long getIdByCode(String code, Enum resourceTpe);
 
+    @Select("select count(id) from t_permission_info where code = #{param1} and id <> #{param2} ")
+    long countByCodeAndId(String code, Long id);
+
     void removeByParentIds(@Param("permissionIds")Long[] permissionIds);
 
     List<TreeVO> listPermissionDetail(@Param("roleId")Long roleId);
 
     List<PermissionVO> listByIds(@Param("permissionIds")List<Long> permissionIds);
 
+    @Select("select max(code) from t_permission_info where parent_id = #{param1} and resource_type = #{param2} ")
+    String getMaxCodeByParentId(Long parentId, Enum resourceTpe);
 }

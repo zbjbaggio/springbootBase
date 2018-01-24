@@ -41,6 +41,8 @@ public class PermissionVO {
 
     private String code;
 
+    private Boolean hasButton;
+
     List<PermissionVO> children;
 
     List<PermissionVO> button;

@@ -46,7 +46,7 @@ public class MenuController {
     }
 
     /**
-     * 添加菜单
+     * 保存菜单
      * @param permission
      * @return
      */
@@ -57,20 +57,6 @@ public class MenuController {
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
         return permissionInfoService.save(permission);
-    }
-
-    /**
-     * 修改菜单
-     * @param permission
-     * @return
-     */
-    @PostMapping(value = "/update")
-    public Permission update(@RequestBody @Validated(Permission.Update.class) Permission permission, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
-        return permissionInfoService.update(permission);
     }
 
     /**
@@ -121,22 +107,6 @@ public class MenuController {
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
         return permissionInfoService.saveButton(permission);
-    }
-
-    /**
-     * 按钮修改
-     * @param permission
-     * @param bindingResult
-     * @throws Exception
-     */
-
-    @PostMapping(value = "/updateButton")
-    public Permission updateButton(@RequestBody @Validated(Permission.UpdateButton.class) Permission permission, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
-        return permissionInfoService.updateButton(permission);
     }
 
     /**

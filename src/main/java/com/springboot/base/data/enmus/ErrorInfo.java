@@ -27,7 +27,8 @@ public enum ErrorInfo {
     NO_SAME(50017, "编号重复！"),
     PAY_ERROR(50018, "支付失败！"),
     ORDER_ERROR(50019, "下单失败，请重新下单!"),
-    NO_ERROR(50017, "编号不正确！");
+    NO_ERROR(50020, "编号不正确！"),
+    BUTTON_ERROR(50021, "菜单有子菜单不能有按钮！");
 
     private int value;
 

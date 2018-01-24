@@ -94,14 +94,30 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
     @Transactional(rollbackFor = Exception.class)
     public Permission save(Permission permission) throws Exception {
         permission.setResourceType(String.valueOf(ResourceType.menu));
+        int count;
         String code = permission.getCode();
-        Long permissionId = permissionInfoMapper.getIdByCode(code.substring(0, code.length() - 4), ResourceType.menu);
-        if (permissionId == null) {
-            log.info("编码未找到父类id,菜单对象；{}", permission);
-            throw new PrivateException(ErrorInfo.NO_ERROR);
+        Long id = permission.getId();
+        //校验code唯一
+        long codeCount = permissionInfoMapper.countByCodeAndId(code, id == null ? -1 : id);
+        if (codeCount != 0) {
+            log.info("编码重复,菜单对象；{}", permission);
+            throw new PrivateException(ErrorInfo.NO_SAME);
+        }
+        //根据code查找父节点
+        Long permissionId = 0L;
+        if (code.length() > 4) {
+            permissionId = permissionInfoMapper.getIdByCode(code.substring(0, code.length() - 4), ResourceType.menu);
+            if (permissionId == null) {
+                log.info("编码未找到父类id,菜单对象；{}", permission);
+                throw new PrivateException(ErrorInfo.NO_ERROR);
+            }
         }
         permission.setParentId(permissionId);
-        int count = permissionInfoMapper.save(permission);
+        if (permission.getId() == null) {
+            count = permissionInfoMapper.save(permission);
+        } else {
+            count = permissionInfoMapper.update(permission);
+        }
         if (count != 1) {
             throw new PrivateException(ErrorInfo.SAVE_ERROR);
         }
@@ -111,7 +127,13 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
     @Override
     public PermissionVO getDetail(Long menuId) {
         PermissionVO permissionVO = permissionInfoMapper.getDetailById(menuId, ResourceType.menu);
-        permissionVO.setButton(permissionInfoMapper.listByParentId(menuId, ResourceType.button));
+        long count = permissionInfoMapper.countByParentId(permissionVO.getId(), ResourceType.menu);
+        if (count > 0) {
+            permissionVO.setHasButton(false);
+        } else {
+            permissionVO.setHasButton(true);
+            permissionVO.setButton(permissionInfoMapper.listByParentId(menuId, ResourceType.button));
+        }
         return permissionVO;
     }
 
@@ -122,35 +144,41 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Permission update(Permission permission) throws Exception {
-        permission.setResourceType(String.valueOf(ResourceType.menu));
-        int count = permissionInfoMapper.update(permission);
-        if (count != 1) {
-            throw new PrivateException(ErrorInfo.SAVE_ERROR);
-        }
-        return permission;
-    }
-
-    // TODO: 2018-1-16 计算一下code
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public Permission saveButton(Permission permission) throws Exception {
+        //校验，有子菜单的不允许有按钮
+        long countLong = permissionInfoMapper.countByParentId(permission.getId(), ResourceType.menu);
+        if (countLong > 0) {
+            log.info("有子菜单的不允许有按钮,菜单对象；{}", permission);
+            throw new PrivateException(ErrorInfo.BUTTON_ERROR);
+        }
         permission.setResourceType(String.valueOf(ResourceType.button));
-        int count = permissionInfoMapper.save(permission);
+        //根据parentId计算code
+        String code = permissionInfoMapper.getMaxCodeByParentId(permission.getParentId(), ResourceType.button);
+        if (code == null) {
+            PermissionVO parentPermissionVO = permissionInfoMapper.getDetailById(permission.getParentId(), ResourceType.menu);
+            code = parentPermissionVO.getCode() + "0001";
+        } else {
+            String tempCode = "000" + (Long.parseLong(code.substring(code.length() - 4)) + 1);
+            code = code.substring(0, code.length() - 4) +  tempCode.substring(tempCode.length() - 4);
+        }
+        permission.setCode(code);
+        int count;
+        if (permission.getId() == null) {
+            count = permissionInfoMapper.save(permission);
+        } else {
+            count = permissionInfoMapper.update(permission);
+        }
         if (count != 1) {
             throw new PrivateException(ErrorInfo.SAVE_ERROR);
         }
         return permission;
     }
 
-    @Override
-    public Permission updateButton(Permission permission) throws Exception {
-        permission.setResourceType(String.valueOf(ResourceType.button));
-        int count = permissionInfoMapper.update(permission);
-        if (count != 1) {
-            throw new PrivateException(ErrorInfo.SAVE_ERROR);
-        }
-        return permission;
+    public static void main(String[] args) {
+        String code = "00020001";
+        String tempCode = "000" + (Long.parseLong(code.substring(code.length() - 4)) + 1);
+        code = code.substring(0, code.length() - 4) +  tempCode.substring(tempCode.length() - 4);
+        System.out.println(code);
     }
 
     @Override
