@@ -136,6 +136,19 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         }
     }
 
+    /**
+     * 解锁用户状态
+     * @param userId
+     * @throws Exception
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void unlockedUserStatus(Long userId) throws Exception {
+        updateStatus(userId, UserStatus.DEFAULT);
+        ManagerVO newManagerInfo = getDetail(userId);
+        redisService.removeUserPasswordNumberByKey(newManagerInfo.getUsername());
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void remove(Long[] userIds) throws Exception {

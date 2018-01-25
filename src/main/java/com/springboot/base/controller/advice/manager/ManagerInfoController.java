@@ -103,9 +103,7 @@ public class ManagerInfoController {
             log.info("userId为空！");
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        managerInfoService.updateStatus(userId, UserStatus.DEFAULT);
-        ManagerVO newManagerInfo = managerInfoService.getDetail(userId);
-        redisService.removeUserPasswordNumberByKey(newManagerInfo.getUsername());
+        managerInfoService.unlockedUserStatus(userId);
     }
 
     /**

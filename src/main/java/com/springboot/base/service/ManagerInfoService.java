@@ -25,6 +25,8 @@ public interface ManagerInfoService {
 
     void updateStatus(Long userId, UserStatus index) throws Exception;
 
+    void unlockedUserStatus(Long userId) throws Exception;
+
     void remove(Long[] userIds) throws Exception;
 
     void loginOut() throws Exception;
