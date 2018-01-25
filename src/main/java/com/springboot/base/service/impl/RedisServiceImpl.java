@@ -1,7 +1,7 @@
 package com.springboot.base.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.springboot.base.constant.SystemPropertiesConstants;
+import com.springboot.base.constant.ManagerLoginConstants;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.service.RedisService;
 import com.springboot.base.util.DateUtil;
@@ -24,11 +24,14 @@ import java.util.concurrent.TimeUnit;
 public class RedisServiceImpl implements RedisService {
 
     @Inject
+    private ManagerLoginConstants managerLoginConstants;
+
+    @Inject
     private StringRedisTemplate template;
 
     @Override
     public void saveUser(ManagerInfo managerInfo) {
-        save(StringUtil.concatStringWithSign("_", USER_TOKEN_KEY, managerInfo.getKey()), managerInfo, SystemPropertiesConstants.time, TimeUnit.MINUTES);
+        save(StringUtil.concatStringWithSign("_", USER_TOKEN_KEY, managerInfo.getKey()), managerInfo, managerLoginConstants.getTime(), TimeUnit.MINUTES);
     }
 
 /*    @Override
@@ -43,7 +46,7 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public void saveUserPasswordNumber(String username, Integer number) {
-        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username), number, SystemPropertiesConstants.verifiedTime, TimeUnit.MINUTES);
+        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username), number, managerLoginConstants.getVerifiedTime(), TimeUnit.MINUTES);
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.springboot.base.service.impl;
 
-import com.springboot.base.constant.SystemPropertiesConstants;
+import com.springboot.base.constant.ManagerLoginConstants;
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.dto.MenuAndButtonDTO;
 import com.springboot.base.data.dto.PasswordDTO;
@@ -13,9 +13,7 @@ import com.springboot.base.mapper.ManagerInfoMapper;
 import com.springboot.base.service.ManagerInfoService;
 import com.springboot.base.service.PermissionInfoService;
 import com.springboot.base.service.RedisService;
-import com.springboot.base.util.DateUtil;
 import com.springboot.base.util.PasswordUtil;
-import com.springboot.base.util.StringUtil;
 import com.springboot.base.util.TokenUtils;
 import com.springboot.base.util.ValueHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.inject.Inject;
-import java.util.Date;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 用户信息
@@ -39,6 +35,9 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
 
     @Inject
     private ManagerInfoMapper managerInfoMapper;
+
+    @Inject
+    private ManagerLoginConstants managerLoginConstants;
 
     @Inject
     private RedisService redisService;
@@ -241,7 +240,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     //校验猜密码次数
     private Integer checkPasswordNumber(String username) throws Exception {
         Integer number = redisService.getUserPasswordNumber(username);
-        if (number >= SystemPropertiesConstants.frozenNumber) {
+        if (number >= managerLoginConstants.getFrozenNumber()) {
             log.info("该用户被停止登录！username：{}", username);
             throw new PrivateException(ErrorInfo.USER_NO_LOGIN);
         }
@@ -262,11 +261,11 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     @Transactional
     private void checkAndSaveExpectNumber(String username, int lockNumber, Long userId) throws Exception {
         //判断是否达到冻结上限
-        if (lockNumber >= SystemPropertiesConstants.frozenNumber) {
+        if (lockNumber >= managerLoginConstants.getFrozenNumber()) {
             int lockedNumber = redisService.getUserExpectNumber(username);
             lockedNumber++;
             //判断是否达到锁定上限
-            if (lockedNumber >= SystemPropertiesConstants.lockedNumber) {
+            if (lockedNumber >= managerLoginConstants.getLockedNumber()) {
                 //锁定用户账户
                 updateStatus(userId, UserStatus.LOCKED);
                 log.info("该用户账户已被锁定！username:{}", username);
