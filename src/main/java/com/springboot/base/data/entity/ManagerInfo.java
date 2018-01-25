@@ -35,7 +35,7 @@ public class ManagerInfo extends EntityBase implements Serializable {
     @NotEmpty(groups = {BaseInfo.class})
     private String name;
 
-    @NotEmpty(groups = {BaseInfo.class, LoginGroup.class}, message = "密码不能为空！")
+    @Length(max = 30, message = "密码不能超过50个字！")
     private String password;
 
     @NotEmpty(groups = {BaseInfo.class})
