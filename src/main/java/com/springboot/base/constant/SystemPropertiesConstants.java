@@ -3,7 +3,6 @@ package com.springboot.base.constant;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- *
  * Created by lilong on 2018/1/23.
  */
 @ConfigurationProperties(prefix = "manager.login")

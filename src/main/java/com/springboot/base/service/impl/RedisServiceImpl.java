@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.springboot.base.constant.SystemPropertiesConstants;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.service.RedisService;
+import com.springboot.base.util.DateUtil;
 import com.springboot.base.util.StringUtil;
 import lombok.extern.log4j.Log4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -11,6 +12,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -41,27 +43,17 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public void saveUserPasswordNumber(String username, Integer number) {
-        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username), number, SystemPropertiesConstants.verifiedTime, TimeUnit.MINUTES);
-    }
-
-    /**
-     * 保存该用户名猜密码次数+ip
-     * @param username 登录名
-     * @param number 猜的次数
-     */
-    @Override
-    public void saveUserPasswordNumberSameIP(String username, String ip, Integer number) {
-        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username, ip), number, SystemPropertiesConstants.verifiedTime, TimeUnit.MINUTES);
+        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username), number, SystemPropertiesConstants.time, TimeUnit.MINUTES);
     }
 
     /**
      * 根据key获取用户欲冻结次数
-     * @param key
+     * @param username
      * @return
      */
     @Override
-    public Integer getUserExpectNumber(String key) {
-        String numberString = get(key);
+    public Integer getUserExpectNumber(String username) {
+        String numberString = get(StringUtil.concatStringWithSign("_", RedisService.USER_LOCKED_NUMBER_KEY, username));
         return numberString == null ? 0 : Integer.parseInt(numberString);
     }
 
@@ -72,17 +64,6 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public Integer getUserPasswordNumber(String username) {
         String numberString = get(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username));
-        return numberString == null ? 0 : Integer.parseInt(numberString);
-    }
-
-    /**
-     * 获取该用户名猜密码次数+ip
-     * @param username 登录名
-     * @param ip ip地址
-     */
-    @Override
-    public Integer getUserPasswordNumberSameIP(String username, String ip) {
-        String numberString = get(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username, ip));
         return numberString == null ? 0 : Integer.parseInt(numberString);
     }
 
@@ -103,13 +84,18 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public void save(String key, Object value, long time, TimeUnit timeUnit) {
+    public void saveUserExpectNumber(String username, int lockedNumber) {
+        Date nowDate = new Date(System.currentTimeMillis());
+        long expectMin = DateUtil.getMinuteCompare(nowDate, DateUtil.getDayEndDate(nowDate));
+        save(StringUtil.concatStringWithSign("_", RedisService.USER_LOCKED_NUMBER_KEY, username), lockedNumber, expectMin, TimeUnit.MINUTES);
+    }
+
+    private void save(String key, Object value, long time, TimeUnit timeUnit) {
         ValueOperations<String, String> ops = template.opsForValue();
         ops.set(key, JSON.toJSONString(value), time, timeUnit);
     }
 
-    @Override
-    public void save(String key, Object value) {
+    private void save(String key, Object value) {
         ValueOperations<String, String> ops = template.opsForValue();
         ops.set(key, JSON.toJSONString(value));
     }

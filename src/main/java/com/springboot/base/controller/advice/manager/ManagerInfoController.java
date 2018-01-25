@@ -60,6 +60,10 @@ public class ManagerInfoController {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
+        if (managerInfo.getId() == null && managerInfo.getPassword() == null) {
+            log.info("新增是密码没给, managerInfo:{}", managerInfo);
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
         return managerInfoService.save(managerInfo);
     }
 
@@ -110,8 +114,8 @@ public class ManagerInfoController {
      * @param userIds
      * @throws Exception
      */
-    @PostMapping(value = "/delete")
-    public void delete(@RequestParam Long[] userIds) throws Exception {
+    @PostMapping(value = "/remove")
+    public void remove(@RequestParam Long[] userIds) throws Exception {
         if (userIds == null || userIds.length <= 0) {
             log.info("userIds为空！");
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
