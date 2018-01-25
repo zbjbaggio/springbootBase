@@ -43,7 +43,7 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public void saveUserPasswordNumber(String username, Integer number) {
-        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username), number, SystemPropertiesConstants.time, TimeUnit.MINUTES);
+        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username), number, SystemPropertiesConstants.verifiedTime, TimeUnit.MINUTES);
     }
 
     /**
