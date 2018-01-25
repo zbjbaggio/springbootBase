@@ -27,13 +27,11 @@ public interface RedisService {
 
     void saveUserPasswordNumber(String username, Integer number);
 
-    void saveUserPasswordNumberSameIP(String username, String ip, Integer number);
 
     Integer getUserExpectNumber(String key);
 
     Integer getUserPasswordNumber(String username);
 
-    Integer getUserPasswordNumberSameIP(String username, String ip);
 
     ManagerInfo getUserInfoByKey(String key);
 
@@ -41,7 +39,6 @@ public interface RedisService {
 
     void removeUserPasswordNumberByKey(String key);
 
-    void save(String key, Object value, long time, TimeUnit timeUnit);
 
-    void save(String key, Object value);
+    void saveUserExpectNumber(String username, int lockedNumber);
 }

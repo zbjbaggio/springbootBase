@@ -263,8 +263,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     private void checkAndSaveExpectNumber(String username, int lockNumber, Long userId) throws Exception {
         //判断是否达到冻结上限
         if (lockNumber >= SystemPropertiesConstants.frozenNumber) {
-            String redisKey = StringUtil.concatStringWithSign("_", RedisService.USER_LOCKED_NUMBER_KEY, username);
-            int lockedNumber = redisService.getUserExpectNumber(redisKey);
+            int lockedNumber = redisService.getUserExpectNumber(username);
             lockedNumber++;
             //判断是否达到锁定上限
             if (lockedNumber >= SystemPropertiesConstants.lockedNumber) {
@@ -273,9 +272,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
                 log.info("该用户账户已被锁定！username:{}", username);
                 throw new PrivateException(ErrorInfo.USER_LOCKED);
             } else {
-                Date nowDate = new Date(System.currentTimeMillis());
-                long expectMin = DateUtil.getMinuteCompare(nowDate, DateUtil.getDayEndDate(nowDate));
-                redisService.save(redisKey, lockedNumber, expectMin, TimeUnit.MINUTES);
+                redisService.saveUserExpectNumber(username, lockedNumber);
             }
         }
     }
