@@ -1,28 +1,19 @@
 package com.springboot.base.constant;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  *
  * Created by lilong on 2018/1/23.
  */
-@Component
-@Data
-@NoArgsConstructor
-public class SystemPropertiesConstants {
+@ConfigurationProperties(prefix = "manager.login")
+public interface SystemPropertiesConstants {
 
-    @Value("${manager.login.time}")
-    int USER_TOKEN_TIME_LONG = 30;          //用户登录后存入redis的时长30分钟
+    int time = 30;          //用户登录后存入redis的时长30分钟
 
-    @Value("${manager.login.verifiedTime}")
-    int USER_PASSWORD_TIME_LONG = 60;       //用户猜密码次数存入redis的时长60分钟，即锁定时间
+    int verifiedTime = 60;       //用户猜密码次数存入redis的时长60分钟，即锁定时间
 
-    @Value("${manager.login.frozenNumber}")
-    int MANAGER_LOGIN_FROZEN_NUMBER = 3;      //n次猜错冻结账号
+    int frozenNumber = 3;      //n次猜错冻结账号
 
-    @Value("${manager.login.lockedNumber}")
-    int MANAGER_LOGIN_LOCKED_NUMBER = 1;    //冻结n次后锁定账户
+    int lockedNumber = 1;    //冻结n次后锁定账户
 }

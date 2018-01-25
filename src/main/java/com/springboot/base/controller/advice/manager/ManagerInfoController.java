@@ -54,8 +54,8 @@ public class ManagerInfoController {
      * @param managerInfo
      * @return
      */
-    @PostMapping(value = "/add")
-    public ManagerInfo add(@RequestBody @Validated(ManagerInfo.BaseInfo.class) ManagerInfo managerInfo, BindingResult bindingResult) throws Exception {
+    @PostMapping(value = "/save")
+    public ManagerInfo save(@RequestBody @Validated(ManagerInfo.BaseInfo.class) ManagerInfo managerInfo, BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
@@ -71,21 +71,6 @@ public class ManagerInfoController {
     @GetMapping(value = "/detail")
     public ManagerVO detail(@RequestParam(value = "userId") Long userId) {
         return managerInfoService.getDetail(userId);
-    }
-
-    /**
-     * 管理员修改
-     * @param managerInfo
-     * @param bindingResult
-     * @throws Exception
-     */
-    @PostMapping(value = "/update")
-    public void update(@RequestBody @Validated(ManagerInfo.Modify.class) ManagerInfo managerInfo, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
-        managerInfoService.update(managerInfo);
     }
 
     /**

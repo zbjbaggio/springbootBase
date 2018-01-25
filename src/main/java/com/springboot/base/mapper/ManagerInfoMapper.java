@@ -12,9 +12,6 @@ import java.util.List;
  */
 public interface ManagerInfoMapper {
 
-    @Select("select * from t_manager_info where username = #{username}")
-    ManagerInfo getUserInfoNoState(String username);
-
     @Select("select * from t_manager_info where username = #{param1} and id <> #{param2}")
     ManagerInfo getUserInfoNoStateNoId(String username, Long userId);
 

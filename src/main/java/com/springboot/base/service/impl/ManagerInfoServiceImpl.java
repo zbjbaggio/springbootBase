@@ -47,16 +47,13 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     private PermissionInfoService permissionInfoService;
 
     @Inject
-    private SystemPropertiesConstants systemPropertiesConstants;
-
-    @Inject
     private ValueHolder valueHolder;
 
     // TODO: 2017-10-12 未完成：1.登录成功时删除该用户登录错误次数 2.不能登录一个小时后，再猜错同样次数的直接锁定 3.同样ip地址猜错一次密码出验证码
     @Override
-    public ManagerVO login(ManagerInfo user, String ip) throws Exception {
+    public ManagerVO login(ManagerInfo user) throws Exception {
         ManagerInfo newManagerInfo = managerInfoMapper.getUserInfo(user.getUsername());
-        if (newManagerInfo == null || !checkUser(user.getPassword(), newManagerInfo, ip)) {
+        if (newManagerInfo == null || !checkUser(user.getPassword(), newManagerInfo)) {
             return null;
         }
         newManagerInfo.setPasswordNumber(0);
@@ -181,15 +178,21 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     @Transactional(rollbackFor = Exception.class)
     public ManagerInfo save(ManagerInfo managerInfo) throws Exception {
         //校验用户名称是否重复
-        checkUsername(managerInfo.getUsername());
-        UUID uuid = UUID.randomUUID();
-        String salt = uuid.toString();
-        managerInfo.setSalt(salt);
-        managerInfo.setPassword(PasswordUtil.getPassword(managerInfo.getPassword(), salt));
-        managerInfo.setStatus(UserStatus.DEFAULT.getIndex());
-        Long userIdHolder = valueHolder.getUserIdHolder();
-        managerInfo.setOperatorId(userIdHolder);
-        int count = managerInfoMapper.save(managerInfo);
+        int count;
+        Long id = managerInfo.getId();
+        checkUsernameByUserId(managerInfo.getUsername(), id == null ? -1 : id);
+        if (managerInfo.getId() == null) {
+            UUID uuid = UUID.randomUUID();
+            String salt = uuid.toString();
+            managerInfo.setSalt(salt);
+            managerInfo.setPassword(PasswordUtil.getPassword(managerInfo.getPassword(), salt));
+            managerInfo.setStatus(UserStatus.DEFAULT.getIndex());
+            Long userIdHolder = valueHolder.getUserIdHolder();
+            managerInfo.setOperatorId(userIdHolder);
+            count = managerInfoMapper.save(managerInfo);
+        } else {
+            count = managerInfoMapper.update(managerInfo);
+        }
         if (count != 1) {
             throw new PrivateException(ErrorInfo.SAVE_ERROR);
         }
@@ -212,15 +215,8 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         redisService.saveUser(managerInfo);
     }
 
-    private void checkUsername(String username) throws Exception {
-        ManagerInfo user = managerInfoMapper.getUserInfoNoState(username);
-        if (user != null) {
-            throw new PrivateException(ErrorInfo.USER_NAME_SAME);
-        }
-    }
-
     //校验密码
-    private boolean checkUser(String passwordStr, ManagerInfo newManagerInfo, String ip) throws Exception {
+    private boolean checkUser(String passwordStr, ManagerInfo newManagerInfo) throws Exception {
         if (newManagerInfo.getStatus() == UserStatus.LOCKED.getIndex()) {
             log.info("该用户被锁定！username：{}", newManagerInfo.getUsername());
             throw new PrivateException(ErrorInfo.USER_LOCKED);
@@ -237,7 +233,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         if (!result) {
             redisService.saveUserPasswordNumber(newManagerInfo.getUsername(), ++number);
             log.info("用户密码校验错误，失败次数：{}", number);
-            checkAndSaveExpectNumber(newManagerInfo.getUsername(), ip, number, newManagerInfo.getId());
+            checkAndSaveExpectNumber(newManagerInfo.getUsername(), number, newManagerInfo.getId());
         }
         return result;
     }
@@ -245,14 +241,14 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     //校验猜密码次数
     private Integer checkPasswordNumber(String username) throws Exception {
         Integer number = redisService.getUserPasswordNumber(username);
-        if (number >= systemPropertiesConstants.getMANAGER_LOGIN_FROZEN_NUMBER()) {
+        if (number >= SystemPropertiesConstants.frozenNumber) {
             log.info("该用户被停止登录！username：{}", username);
             throw new PrivateException(ErrorInfo.USER_NO_LOGIN);
         }
         return number;
     }
 
-    //校验猜密码次数+ip
+/*    //校验猜密码次数+ip
     private Integer checkPasswordNumberSameIP(String username, String ip) throws Exception {
         Integer number = redisService.getUserPasswordNumberSameIP(username, ip);
         if (number >= systemPropertiesConstants.getMANAGER_LOGIN_FROZEN_NUMBER()) {
@@ -260,18 +256,18 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
             throw new PrivateException(ErrorInfo.USER_NO_LOGIN);
         }
         return number;
-    }
+    }*/
 
     //校验是否存储欲锁定次数
     @Transactional
-    private void checkAndSaveExpectNumber(String username, String ip, int lockNumber, Long userId) throws Exception {
+    private void checkAndSaveExpectNumber(String username, int lockNumber, Long userId) throws Exception {
         //判断是否达到冻结上限
-        if (lockNumber >= systemPropertiesConstants.getMANAGER_LOGIN_FROZEN_NUMBER()) {
+        if (lockNumber >= SystemPropertiesConstants.frozenNumber) {
             String redisKey = StringUtil.concatStringWithSign("_", RedisService.USER_LOCKED_NUMBER_KEY, username);
             int lockedNumber = redisService.getUserExpectNumber(redisKey);
             lockedNumber++;
             //判断是否达到锁定上限
-            if (lockedNumber >= systemPropertiesConstants.getMANAGER_LOGIN_LOCKED_NUMBER()) {
+            if (lockedNumber >= SystemPropertiesConstants.lockedNumber) {
                 //锁定用户账户
                 updateStatus(userId, UserStatus.LOCKED);
                 log.info("该用户账户已被锁定！username:{}", username);

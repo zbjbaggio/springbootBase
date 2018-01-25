@@ -24,12 +24,9 @@ public class RedisServiceImpl implements RedisService {
     @Inject
     private StringRedisTemplate template;
 
-    @Inject
-    private SystemPropertiesConstants systemPropertiesConstants;
-
     @Override
     public void saveUser(ManagerInfo managerInfo) {
-        save(StringUtil.concatStringWithSign("_", USER_TOKEN_KEY, managerInfo.getKey()), managerInfo, systemPropertiesConstants.getUSER_TOKEN_TIME_LONG(), TimeUnit.MINUTES);
+        save(StringUtil.concatStringWithSign("_", USER_TOKEN_KEY, managerInfo.getKey()), managerInfo, SystemPropertiesConstants.time, TimeUnit.MINUTES);
     }
 
 /*    @Override
@@ -44,7 +41,7 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public void saveUserPasswordNumber(String username, Integer number) {
-        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username), number, systemPropertiesConstants.getUSER_PASSWORD_TIME_LONG(), TimeUnit.MINUTES);
+        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username), number, SystemPropertiesConstants.time, TimeUnit.MINUTES);
     }
 
     /**
@@ -54,7 +51,7 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public void saveUserPasswordNumberSameIP(String username, String ip, Integer number) {
-        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username, ip), number, systemPropertiesConstants.getUSER_PASSWORD_TIME_LONG(), TimeUnit.MINUTES);
+        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username, ip), number, SystemPropertiesConstants.time, TimeUnit.MINUTES);
     }
 
     /**
