@@ -6,15 +6,19 @@ import com.springboot.base.data.enmus.UserStatus;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ManagerVO;
+import com.springboot.base.data.vo.RoleVO;
 import com.springboot.base.service.ManagerInfoService;
 import com.springboot.base.service.RedisService;
+import com.springboot.base.service.RoleService;
 import com.springboot.base.util.BindingResutlUtils;
+import com.springboot.base.util.ValueHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * 描述：后台管理员管理
@@ -30,6 +34,12 @@ public class ManagerInfoController {
 
     @Inject
     private RedisService redisService;
+
+    @Inject
+    private RoleService roleService;
+
+    @Inject
+    private ValueHolder valueHolder;
 
     /**
      * 用户查询
@@ -119,6 +129,11 @@ public class ManagerInfoController {
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
         managerInfoService.remove(userIds);
+    }
+
+    @GetMapping(value = "/listRole")
+    public List<RoleVO> listRole(Long userId) {
+        return roleService.listAllByUserId(userId);
     }
 
 }

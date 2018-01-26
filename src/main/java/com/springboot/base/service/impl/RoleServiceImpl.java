@@ -31,9 +31,6 @@ public class RoleServiceImpl implements RoleService {
     @Inject
     private RoleMapper roleMapper;
 
-    @Inject
-    private PermissionInfoService permissionInfoService;
-
     @Override
     public Page listPage(int limit, int offset, String searchStr, Boolean status, String orderBy, Boolean desc) {
         if (!"-1".equals(searchStr)) {
@@ -83,8 +80,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public PermissionTreeVO listPermissionDetail(Long roleId) {
-        return permissionInfoService.listPermissionDetail(roleId);
+    public List<RoleVO> listAllByUserId(Long userIdHolder) {
+        return roleMapper.listAllByUserId(userIdHolder);
     }
 
     private void checkRoleName(RoleInfo role) throws Exception {

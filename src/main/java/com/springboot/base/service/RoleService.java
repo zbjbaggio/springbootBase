@@ -22,5 +22,6 @@ public interface RoleService {
 
     void remove(Long[] roleIds) throws Exception;
 
-    PermissionTreeVO listPermissionDetail(Long roleId);
+    List<RoleVO> listAllByUserId(Long userIdHolder);
+
 }

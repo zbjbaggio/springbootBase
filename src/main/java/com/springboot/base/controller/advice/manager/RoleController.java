@@ -7,6 +7,7 @@ import com.springboot.base.data.entity.RolePermission;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.PermissionTreeVO;
 import com.springboot.base.data.vo.RoleVO;
+import com.springboot.base.service.PermissionInfoService;
 import com.springboot.base.service.RolePermissionService;
 import com.springboot.base.service.RoleService;
 import com.springboot.base.util.BindingResutlUtils;
@@ -31,6 +32,9 @@ public class RoleController {
 
     @Inject
     private RolePermissionService rolePermissionService;
+
+    @Inject
+    private PermissionInfoService permissionInfoService;
 
     /**
      * 角色查询
@@ -81,7 +85,7 @@ public class RoleController {
      */
     @GetMapping(value = "/getPermissionDetail")
     public PermissionTreeVO getPermissionDetail(@RequestParam(value = "roleId") Long roleId) {
-        return roleService.listPermissionDetail(roleId);
+        return permissionInfoService.listPermissionDetail(roleId);
     }
 
     /**
