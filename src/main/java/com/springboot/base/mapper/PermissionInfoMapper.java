@@ -39,7 +39,7 @@ public interface PermissionInfoMapper {
     @Select("select count(id) from t_permission_info where parent_id = #{param1} and resource_type = #{param2} ")
     long countByParentId(Long menuId, Enum resourceTpe);
 
-    @Delete("remove from t_permission_info where id = #{param1} and resource_type = #{param2}")
+    @Delete("delete from t_permission_info where id = #{param1} and resource_type = #{param2}")
     int deleteByType(Long permissionId, Enum resourceTpe);
 
     @Select("select id from t_permission_info where code = #{param1} and resource_type= #{param2}")

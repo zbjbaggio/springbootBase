@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * 描述：
+ * 描述：角色权限关系
  * Created by jay on 2018-1-15.
  */
 public interface RolePermissionMapper {

@@ -4,14 +4,14 @@ import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.enmus.UserStatus;
 import com.springboot.base.data.entity.ManagerInfo;
+import com.springboot.base.data.entity.ManagerRole;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ManagerVO;
 import com.springboot.base.data.vo.RoleVO;
 import com.springboot.base.service.ManagerInfoService;
-import com.springboot.base.service.RedisService;
+import com.springboot.base.service.ManagerRoleService;
 import com.springboot.base.service.RoleService;
 import com.springboot.base.util.BindingResutlUtils;
-import com.springboot.base.util.ValueHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -33,13 +33,10 @@ public class ManagerInfoController {
     private ManagerInfoService managerInfoService;
 
     @Inject
-    private RedisService redisService;
-
-    @Inject
     private RoleService roleService;
 
     @Inject
-    private ValueHolder valueHolder;
+    private ManagerRoleService managerRoleService;
 
     /**
      * 用户查询
@@ -50,6 +47,7 @@ public class ManagerInfoController {
      * @return
      */
     @GetMapping(value = "/list")
+
     public Page list(@RequestParam(value = "limit", defaultValue = "10") int limit,
                      @RequestParam(value = "offset", defaultValue = "0") int offset,
                      @RequestParam(value = "searchStr", defaultValue = "-1") String searchStr,
@@ -61,6 +59,7 @@ public class ManagerInfoController {
 
     /**
      * 添加管理员
+     *
      * @param managerInfo
      * @return
      */
@@ -79,6 +78,7 @@ public class ManagerInfoController {
 
     /**
      * 管理员详情
+     *
      * @param userId
      * @return
      */
@@ -89,6 +89,7 @@ public class ManagerInfoController {
 
     /**
      * 管理员锁定
+     *
      * @param userId
      * @throws Exception
      */
@@ -102,8 +103,8 @@ public class ManagerInfoController {
     }
 
     /**
-     *
      * 管理员解锁
+     *
      * @param userId
      * @throws Exception
      */
@@ -117,8 +118,8 @@ public class ManagerInfoController {
     }
 
     /**
-     *
      * 管理员删除
+     *
      * @param userIds
      * @throws Exception
      */
@@ -132,8 +133,17 @@ public class ManagerInfoController {
     }
 
     @GetMapping(value = "/listRole")
-    public List<RoleVO> listRole(Long userId) {
+    public List<RoleVO> listRole(@RequestParam Long userId) {
         return roleService.listAllByUserId(userId);
+    }
+
+    @PostMapping(value = "/saveRoles")
+    public void saveRoles(@RequestBody @Validated(value = ManagerRole.Manager.class) ManagerRole managerInfo, BindingResult bindingResult) throws Exception {
+        if (bindingResult.hasErrors()) {
+            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        managerRoleService.saves(managerInfo);
     }
 
 }
