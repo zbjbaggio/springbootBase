@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.PostageVO">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="create_time" property="create_time" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="price" property="price" jdbcType="DECIMAL"/>
     </resultMap>
     <sql id="Base_Column_List">

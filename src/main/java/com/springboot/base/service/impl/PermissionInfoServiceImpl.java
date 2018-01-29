@@ -45,14 +45,14 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         List<PermissionVO> menuList = new ArrayList<>();
         Set<String> buttonSet = new HashSet<>();
         for (PermissionVO permissionVO : permissionVOS) {
-            permissionSet.add(path + permissionVO.getBe_url());
+            permissionSet.add(path + permissionVO.getBeUrl());
             // 一级菜单没有parentId
-            if ("0".equals(permissionVO.getParent_id() + "")) {
+            if ("0".equals(permissionVO.getParentId() + "")) {
                 menuList.add(permissionVO);
-            } else if ("menu".equals(permissionVO.getResource_type())) {
+            } else if ("menu".equals(permissionVO.getResourceType())) {
                 setChild(menuList.get(menuList.size() - 1), permissionVO);
-            } else if ("button".equals(permissionVO.getResource_type())) {
-                buttonSet.add(permissionVO.getBe_url());
+            } else if ("button".equals(permissionVO.getResourceType())) {
+                buttonSet.add(permissionVO.getBeUrl());
             }
         }
         MenuAndButtonDTO menuAndButtonDTO = new MenuAndButtonDTO();
@@ -195,10 +195,10 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
             if (treeVO.getRoleId() != null && treeVO.getParentId() == null) {
                 ids.add(treeVO.getId());
             }
-            if ("0".equals(treeVO.getParent_id() + "")) {
+            if ("0".equals(treeVO.getParentId() + "")) {
                 treeVOS.add(treeVO);
             } else {
-                if (treeVO.getResource_type().equals(String.valueOf(ResourceType.button))) {
+                if (treeVO.getResourceType().equals(String.valueOf(ResourceType.button))) {
                     treeVO.setLabel("按钮-" + treeVO.getLabel());
                 }
                 setChild(treeVOS.get(treeVOS.size() - 1), treeVO);
@@ -222,8 +222,8 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         do {
             parentIds = new HashSet<>();
             for (PermissionVO permissionVO : permissionVOS) {
-                if (!permissionVO.getParent_id().equals(0L) && !hasParentIds.contains(permissionVO.getParent_id())) {
-                    parentIds.add(permissionVO.getParent_id());
+                if (!permissionVO.getParentId().equals(0L) && !hasParentIds.contains(permissionVO.getParentId())) {
+                    parentIds.add(permissionVO.getParentId());
                 }
             }
             hasParentIds.addAll(parentIds);
@@ -239,7 +239,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         if (child == null) {
             child = new ArrayList<>();
             child.add(childrenPermissionVO);
-        } else if ((child.get(child.size() - 1).getParent_id() + "").equals(childrenPermissionVO.getParent_id() + "")) {
+        } else if ((child.get(child.size() - 1).getParentId() + "").equals(childrenPermissionVO.getParentId() + "")) {
             child.add(childrenPermissionVO);
         } else {
             setChild(child.get(child.size() - 1), childrenPermissionVO);

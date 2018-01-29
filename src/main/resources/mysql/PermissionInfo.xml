@@ -4,20 +4,20 @@
     <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.PermissionVO">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="create_time" property="create_time" jdbcType="TIMESTAMP"/>
-        <result column="parent_id" property="parent_id" jdbcType="BIGINT"/>
-        <result column="parent_ids" property="parent_ids" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="parent_ids" property="parentIds" jdbcType="VARCHAR"/>
         <result column="permission" property="permission" jdbcType="VARCHAR"/>
-        <result column="resource_type" property="resource_type" jdbcType="VARCHAR"/>
-        <result column="be_url" property="be_url" jdbcType="VARCHAR"/>
+        <result column="resource_type" property="resourceType" jdbcType="VARCHAR"/>
+        <result column="be_url" property="beUrl" jdbcType="VARCHAR"/>
         <result column="icon" property="icon" jdbcType="VARCHAR"/>
         <result column="code" property="code" jdbcType="VARCHAR"/>
-        <result column="fe_url" property="fe_url" jdbcType="VARCHAR"/>
+        <result column="fe_url" property="feUrl" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="TreeMap" type="com.springboot.base.data.vo.TreeVO">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="name" property="label" jdbcType="VARCHAR"/>
-        <result column="parent_id" property="parent_id" jdbcType="BIGINT"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
         <result column="role_id" property="roleId" jdbcType="BIGINT"/>
         <result column="code" property="code" jdbcType="VARCHAR"/>
     </resultMap>

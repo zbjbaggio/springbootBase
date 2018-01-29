@@ -27,7 +27,7 @@ public interface PermissionInfoMapper {
 
     int save(Permission permission);
 
-    @Select("select * from t_permission_info where id = #{param1} and resource_type=#{param2} ")
+    @Select("select id,create_time createTime,name,icon,be_url beUrl,fe_url feUrl,parent_id parentId,permission,code,available from t_permission_info where id = #{param1} and resource_type=#{param2} ")
     PermissionVO getDetailById(Long menuId, Enum resource_type);
 
     @Update("update t_permission_info set name = #{name}, code = #{code}, be_url=#{beUrl}, fe_url=#{feUrl}, icon=#{icon}, available=#{available} where id = #{id}")

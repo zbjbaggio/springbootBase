@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -184,6 +185,11 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         if (count <= 0) {
             throw new PrivateException(ErrorInfo.UPDATE_ERROR);
         }
+    }
+
+    @Override
+    public List<ManagerVO> listAllByRoleId(Long roleId) {
+        return managerInfoMapper.listAllByRoleId(roleId);
     }
 
     @Override

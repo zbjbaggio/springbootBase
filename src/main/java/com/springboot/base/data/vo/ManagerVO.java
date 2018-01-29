@@ -29,7 +29,7 @@ public class ManagerVO {
     private String token;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date create_time;
+    private Date createTime;
 
     private String phone;
 
@@ -38,5 +38,7 @@ public class ManagerVO {
     private List<PermissionVO> permissionList;
 
     private Set<String> buttonSet;
+
+    private Long roleId;
 
 }

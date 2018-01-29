@@ -16,9 +16,9 @@ public class ProductVO {
     private Long id;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date create_time;
+    private Date createTime;
 
-    private String product_no;
+    private String productNo;
 
     private String name;
 

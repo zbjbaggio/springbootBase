@@ -24,20 +24,23 @@ public interface ManagerInfoMapper {
 
     List<ManagerVO> listPage(@Param("limit") int limit, @Param("offset") int offset, @Param("searchStr") String searchStr, @Param("status") int status, @Param("orderBy")String orderBy, @Param("descStr")String descStr);
 
-    @Select("select * from t_manager_info where id = #{param1} and dr = 0")
+    @Select("select id,email,name,phone,status,username,create_time createTime from t_manager_info where id = #{param1} and dr = 0")
     ManagerVO getDetailById(Long userId);
 
-    @Select("select * from t_manager_info where id = #{param1}")
+    @Select("select * from t_manager_info where id = #{param1} and dr = 0")
     ManagerInfo getById(Long userId);
 
-    @Update("update t_manager_info set username = #{username}, email = #{email}, name = #{name}, phone = #{phone}, status = #{status} where id = #{id}")
+    @Update("update t_manager_info set username = #{username}, email = #{email}, name = #{name}, phone = #{phone}, status = #{status} where id = #{id} and dr = 0")
     int update(ManagerInfo managerInfo);
 
-    @Update("update t_manager_info set status = #{param1} where id = #{param2}")
+    @Update("update t_manager_info set status = #{param1} where id = #{param2} and dr = 0")
     int updateStatus(byte index, Long userId);
 
     int updateDr(@Param("userIds")Long[] userIds);
 
-    @Update("update t_manager_info set password = #{param2}, salt = #{param3} where id = #{param1}")
+    @Update("update t_manager_info set password = #{param2}, salt = #{param3} where id = #{param1} and dr = 0")
     int updatePassword(Long userIdHolder, String newPassword, String salt);
+
+    @Select("select a.id,a.name,a.username,a.phone,b.role_id roleId from t_manager_info a left join t_manager_role b on a.id = b.manager_id and b.role_id = #{param1} where a.dr = 0 ")
+    List<ManagerVO> listAllByRoleId(Long roleId);
 }

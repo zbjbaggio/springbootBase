@@ -21,15 +21,27 @@ public class ManagerRoleServiceImpl implements ManagerRoleService {
 
     @Override
     public void saves(ManagerRole managerRole) {
-        managerRoleMapper.remove(managerRole.getManagerId());
         long[] roleIds = managerRole.getRoleIds();
+        long[] managerIds = managerRole.getManagerIds();
         if (roleIds != null && roleIds.length > 0) {
+            managerRoleMapper.removeByManagerId(managerRole.getManagerId());
             List<ManagerRole> saves = new ArrayList<>(roleIds.length);
             ManagerRole save;
             for (long roleId : roleIds) {
                 save = new ManagerRole();
                 save.setManagerId(managerRole.getManagerId());
                 save.setRoleId(roleId);
+                saves.add(save);
+            }
+            managerRoleMapper.saves(saves);
+        } else if (managerIds != null && managerIds.length > 0) {
+            managerRoleMapper.removeByRoleId(managerRole.getRoleId());
+            List<ManagerRole> saves = new ArrayList<>(managerIds.length);
+            ManagerRole save;
+            for (long managerId : managerIds) {
+                save = new ManagerRole();
+                save.setRoleId(managerRole.getRoleId());
+                save.setManagerId(managerId);
                 saves.add(save);
             }
             managerRoleMapper.saves(saves);

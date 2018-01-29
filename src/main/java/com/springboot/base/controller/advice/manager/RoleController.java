@@ -2,14 +2,14 @@ package com.springboot.base.controller.advice.manager;
 
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.enmus.ErrorInfo;
+import com.springboot.base.data.entity.ManagerRole;
 import com.springboot.base.data.entity.RoleInfo;
 import com.springboot.base.data.entity.RolePermission;
 import com.springboot.base.data.exception.PrivateException;
+import com.springboot.base.data.vo.ManagerVO;
 import com.springboot.base.data.vo.PermissionTreeVO;
 import com.springboot.base.data.vo.RoleVO;
-import com.springboot.base.service.PermissionInfoService;
-import com.springboot.base.service.RolePermissionService;
-import com.springboot.base.service.RoleService;
+import com.springboot.base.service.*;
 import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * 描述：角色管理控制类
@@ -35,6 +36,12 @@ public class RoleController {
 
     @Inject
     private PermissionInfoService permissionInfoService;
+
+    @Inject
+    private ManagerRoleService managerRoleService;
+
+    @Inject
+    private ManagerInfoService managerInfoService;
 
     /**
      * 角色查询
@@ -100,6 +107,20 @@ public class RoleController {
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
         rolePermissionService.savePermission(rolePermission);
+    }
+
+    @GetMapping(value = "/listUser")
+    public List<ManagerVO> listUser(@RequestParam Long roleId) {
+        return managerInfoService.listAllByRoleId(roleId);
+    }
+
+    @PostMapping(value = "/saveUsers")
+    public void saveUsers(@RequestBody @Validated(value = ManagerRole.Manager.class) ManagerRole managerInfo, BindingResult bindingResult) throws Exception {
+        if (bindingResult.hasErrors()) {
+            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        managerRoleService.saves(managerInfo);
     }
 
 }

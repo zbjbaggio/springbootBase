@@ -14,5 +14,8 @@ public interface ManagerRoleMapper {
     int saves(List<ManagerRole> saves);
 
     @Delete("delete from t_manager_role where manager_id = #{param1}")
-    int remove(long managerId);
+    int removeByManagerId(long managerId);
+
+    @Delete("delete from t_manager_role where role_id = #{param1}")
+    int removeByRoleId(long roleId);
 }

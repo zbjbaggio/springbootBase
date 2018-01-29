@@ -4,8 +4,8 @@
     <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.ProductVO">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="product_no" property="product_no" jdbcType="VARCHAR"/>
-        <result column="create_time" property="create_time" jdbcType="TIMESTAMP"/>
+        <result column="product_no" property="productNo" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="title" property="title" jdbcType="VARCHAR"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="TINYINT"/>

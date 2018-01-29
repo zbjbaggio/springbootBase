@@ -19,7 +19,7 @@ public class PermissionVO {
     private Long id;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date create_time;
+    private Date createTime;
 
     private String name;
 
@@ -27,17 +27,17 @@ public class PermissionVO {
 
     private boolean available;
 
-    private Long parent_id;
+    private Long parentId;
 
-    private String parent_ids;
+    private String parentIds;
 
     private String permission;
 
-    private String resource_type;
+    private String resourceType;
 
-    private String fe_url;
+    private String feUrl;
 
-    private String be_url;
+    private String beUrl;
 
     private String code;
 

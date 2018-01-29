@@ -6,6 +6,8 @@ import com.springboot.base.data.enmus.UserStatus;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.vo.ManagerVO;
 
+import java.util.List;
+
 /**
  * Created by jay on 2017-4-10.
  */
@@ -32,4 +34,6 @@ public interface ManagerInfoService {
     void loginOut() throws Exception;
 
     void updatePassword(PasswordDTO passwordDTO) throws Exception;
+
+    List<ManagerVO> listAllByRoleId(Long roleId);
 }
