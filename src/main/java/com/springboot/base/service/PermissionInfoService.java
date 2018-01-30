@@ -24,7 +24,7 @@ public interface PermissionInfoService {
 
     PermissionVO buttonDetail(Long buttonId);
 
-    Permission save(Permission permission) throws Exception;
+    Permission saveMenu(Permission permission) throws Exception;
 
     Permission saveButton(Permission permission) throws Exception;
 

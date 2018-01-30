@@ -1,5 +1,6 @@
 package com.springboot.base.data.base;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ public class EntityBase implements Serializable {
 
     private Long id;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
     private Date lastModified;

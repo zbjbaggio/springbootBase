@@ -92,7 +92,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Permission save(Permission permission) throws Exception {
+    public Permission saveMenu(Permission permission) throws Exception {
         permission.setResourceType(String.valueOf(ResourceType.menu));
         int count;
         String code = permission.getCode();
@@ -177,12 +177,21 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void removeButton(Long permissionId) throws Exception {
         //重新排button的code
+        PermissionVO permissionVO = permissionInfoMapper.getDetailById(permissionId, ResourceType.button);
+        if (permissionVO == null) {
+            log.info("该按钮没找到！permissionId:{}", permissionId);
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        String code = permissionVO.getCode();
+        code = code.substring(0, code.length() - 5);
         int i = permissionInfoMapper.deleteByType(permissionId, ResourceType.button);
         if (i != 1) {
             throw new PrivateException(ErrorInfo.DELETE_ERROR);
         }
+        permissionInfoMapper.updateButtonCode(permissionVO.getParentId(), ResourceType.button, code);
     }
 
     @Override

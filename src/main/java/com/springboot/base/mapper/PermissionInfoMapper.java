@@ -1,5 +1,6 @@
 package com.springboot.base.mapper;
 
+import com.springboot.base.data.enmus.ResourceType;
 import com.springboot.base.data.entity.Permission;
 import com.springboot.base.data.vo.PermissionVO;
 import com.springboot.base.data.vo.TreeVO;
@@ -33,7 +34,7 @@ public interface PermissionInfoMapper {
     @Update("update t_permission_info set name = #{name}, code = #{code}, be_url=#{beUrl}, fe_url=#{feUrl}, icon=#{icon}, available=#{available} where id = #{id}")
     int update(Permission permission);
 
-    @Select("select * from t_permission_info where parent_id = #{param1} and resource_type = #{param2} ")
+    @Select("select id,create_time createTime,name,icon,be_url beUrl,fe_url feUrl,parent_id parentId,permission,code,available from t_permission_info where parent_id = #{param1} and resource_type = #{param2} ")
     List<PermissionVO> listByParentId(Long menuId, Enum resourceTpe);
 
     @Select("select count(id) from t_permission_info where parent_id = #{param1} and resource_type = #{param2} ")
@@ -56,4 +57,7 @@ public interface PermissionInfoMapper {
 
     @Select("select max(code) from t_permission_info where parent_id = #{param1} and resource_type = #{param2} ")
     String getMaxCodeByParentId(Long parentId, Enum resourceTpe);
+
+    @Update("update t_permission_info,(select @rownum:=1) t set code = concat(#{param3}, substr(concat('0000',@rownum), length(concat('0000',@rownum:=@rownum+1))-3, 4)) where parent_id = #{param1} and resource_type = #{param2};")
+    int updateButtonCode(Long permissionId, Enum resourceTpe, String code);
 }
