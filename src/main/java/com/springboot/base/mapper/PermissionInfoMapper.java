@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface PermissionInfoMapper {
 
-    @Select("select a.name,a.parent_id,a.parent_ids,a.permission,a.resource_type,a.fe_url,a.be_url,a.icon from t_permission_info a join t_role_permission b on a.id = b.permission_id join t_manager_role c on b.role_id = c.role_id where c.manager_id = #{managerId} order by code ")
+    @Select("select distinct a.name,a.parent_id parentId,a.permission,a.resource_type resourceType,a.fe_url feUrl,a.be_url beUrl,a.icon from t_permission_info a join t_role_permission b on a.id = b.permission_id join t_manager_role c on b.role_id = c.role_id where c.manager_id = #{managerId} order by code ")
     List<PermissionVO> listByManagerId(@Param("managerId") Long managerId);
 
     Long count(@Param("searchStr")String searchStr, @Param("available")Boolean available);
