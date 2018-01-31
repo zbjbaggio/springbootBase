@@ -186,7 +186,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
         String code = permissionVO.getCode();
-        code = code.substring(0, code.length() - 5);
+        code = code.substring(0, code.length() - 4);
         int i = permissionInfoMapper.deleteByType(permissionId, ResourceType.button);
         if (i != 1) {
             throw new PrivateException(ErrorInfo.DELETE_ERROR);
