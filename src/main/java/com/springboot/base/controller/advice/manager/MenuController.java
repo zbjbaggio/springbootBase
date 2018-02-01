@@ -78,8 +78,8 @@ public class MenuController {
      * @param menuId
      * @return
      */
-    @GetMapping(value = "/detail")
-    public PermissionVO detail(@RequestParam(value = "menuId") Long menuId) {
+    @GetMapping(value = "/getDetail")
+    public PermissionVO getDetail(@RequestParam(value = "menuId") Long menuId) {
         return permissionInfoService.getDetail(menuId);
     }
 
@@ -89,7 +89,7 @@ public class MenuController {
      * @return
      */
     @GetMapping(value = "/buttonDetail")
-    public PermissionVO buttonDetail(@RequestParam(value = "buttonId") Long buttonId) {
+    public PermissionVO getButtonDetail(@RequestParam(value = "buttonId") Long buttonId) {
         return permissionInfoService.buttonDetail(buttonId);
     }
 

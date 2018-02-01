@@ -64,8 +64,8 @@ public class PostageController {
      * @param postageId
      * @return
      */
-    @GetMapping(value = "/detail")
-    public PostageVO detail(@RequestParam(value = "postageId") Long postageId) {
+    @GetMapping(value = "/getDetail")
+    public PostageVO getDetail(@RequestParam(value = "postageId") Long postageId) {
         return postageService.getDetail(postageId);
     }
 

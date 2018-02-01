@@ -67,8 +67,8 @@ public class ProductInfoController {
      * @param productId
      * @return
      */
-    @GetMapping(value = "/detail")
-    public ProductVO detail(@RequestParam(value = "productId") Long productId) {
+    @GetMapping(value = "/getDetail")
+    public ProductVO getDetail(@RequestParam(value = "productId") Long productId) {
         return productService.getDetail(productId);
     }
 

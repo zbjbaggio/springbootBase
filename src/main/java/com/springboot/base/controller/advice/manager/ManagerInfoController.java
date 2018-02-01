@@ -82,8 +82,8 @@ public class ManagerInfoController {
      * @param userId
      * @return
      */
-    @GetMapping(value = "/detail")
-    public ManagerVO detail(@RequestParam(value = "userId") Long userId) {
+    @GetMapping(value = "/getDetail")
+    public ManagerVO getDetail(@RequestParam(value = "userId") Long userId) {
         return managerInfoService.getDetail(userId);
     }
 
