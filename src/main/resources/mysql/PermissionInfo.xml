@@ -18,7 +18,9 @@
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="name" property="label" jdbcType="VARCHAR"/>
         <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="grandParentId" property="grandParentId" jdbcType="BIGINT"/>
         <result column="role_id" property="roleId" jdbcType="BIGINT"/>
+        <result column="resource_type" property="resourceType" jdbcType="VARCHAR"/>
         <result column="code" property="code" jdbcType="VARCHAR"/>
     </resultMap>
 
@@ -82,7 +84,7 @@
 
     <select id="listPermissionDetail" resultMap="TreeMap">
         SELECT
-        a.id,a.name,a.code,a.parent_id,b.role_id,a.resource_type,c.id parentId
+        a.id,a.name,a.code,a.parent_id,b.role_id,a.resource_type,c.id grandParentId
         FROM t_permission_info a
         left join t_role_permission b on a.id = b.permission_id and b.role_id = #{roleId}
         left join t_permission_info c on a.id = c.parent_id

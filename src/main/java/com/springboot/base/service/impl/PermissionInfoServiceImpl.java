@@ -201,7 +201,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         List<Long> ids = new ArrayList<>();
         for (TreeVO treeVO : roleTreeVOS) {
             //角色没有的并且没有父节点的id
-            if (treeVO.getRoleId() != null && treeVO.getParentId() == null) {
+            if (treeVO.getRoleId() != null && treeVO.getGrandParentId() == null) {
                 ids.add(treeVO.getId());
             }
             if ("0".equals(treeVO.getParentId() + "")) {
