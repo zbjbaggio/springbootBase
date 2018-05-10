@@ -1,18 +1,25 @@
 package com.springboot.base.controller.advice.manager;
 
 import com.springboot.base.data.base.Page;
+import com.springboot.base.data.dto.PermissionDTO;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.entity.Permission;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.PermissionVO;
+import com.springboot.base.data.vo.TreeVO;
 import com.springboot.base.service.PermissionInfoService;
 import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  * 描述：
@@ -65,11 +72,11 @@ public class MenuController {
      * @throws Exception 异常
      */
     @PostMapping(value = "/remove")
-    public void remove(@RequestParam Long[] permissionIds) throws Exception {
-        if (permissionIds == null || permissionIds.length <= 0) {
+    public void remove(@RequestParam @NotEmpty Long[] permissionIds) throws Exception {
+ /*       if (permissionIds == null || permissionIds.length <= 0) {
             log.info("productIds为空！");
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
+        }*/
         permissionInfoService.remove(permissionIds);
     }
 
@@ -102,10 +109,6 @@ public class MenuController {
 
     @PostMapping(value = "/saveButton")
     public Permission saveButton(@RequestBody @Validated(Permission.SaveButton.class) Permission permission, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
         return permissionInfoService.saveButton(permission);
     }
 
@@ -117,6 +120,27 @@ public class MenuController {
     @PostMapping(value = "/removeButton")
     public void removeButton(@RequestParam Long permissionId) throws Exception {
         permissionInfoService.removeButton(permissionId);
+    }
+
+    /**
+     * 菜单树
+     */
+    @GetMapping(value = "/getMenuTreeDetail")
+    public List<TreeVO> getMenuTreeDetail() {
+       return permissionInfoService.getMenuTreeDetail();
+    }
+
+    /**
+     * 菜单树保存
+     * @param permissionDTOList
+     */
+    @PostMapping(value = "/saveMenuTree")
+    public void saveMenuTree(@RequestBody @Validated @NotEmpty List<PermissionDTO> permissionDTOList, BindingResult bindingResult) throws Exception {
+        if (bindingResult.hasErrors()) {
+            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        permissionInfoService.updateCode(permissionDTOList);
     }
 
 }

@@ -2,6 +2,7 @@ package com.springboot.base.service.impl;
 
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.dto.MenuAndButtonDTO;
+import com.springboot.base.data.dto.PermissionDTO;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.enmus.ResourceType;
 import com.springboot.base.data.entity.Permission;
@@ -198,21 +199,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
     public PermissionTreeVO listPermissionDetail(Long roleId) {
         List<TreeVO> roleTreeVOS = permissionInfoMapper.listPermissionDetail(roleId);
         List<TreeVO> treeVOS = new ArrayList<>();
-        List<Long> ids = new ArrayList<>();
-        for (TreeVO treeVO : roleTreeVOS) {
-            //角色没有的并且没有父节点的id
-            if (treeVO.getRoleId() != null && treeVO.getGrandParentId() == null) {
-                ids.add(treeVO.getId());
-            }
-            if ("0".equals(treeVO.getParentId() + "")) {
-                treeVOS.add(treeVO);
-            } else {
-                if (treeVO.getResourceType().equals(String.valueOf(ResourceType.button))) {
-                    treeVO.setLabel("按钮-" + treeVO.getLabel());
-                }
-                setChild(treeVOS.get(treeVOS.size() - 1), treeVO);
-            }
-        }
+        List<Long> ids = getMenuTree(roleTreeVOS, treeVOS);
         return new PermissionTreeVO(treeVOS, ids);
     }
 
@@ -243,6 +230,19 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         return hasParentIds.toArray(new Long[hasParentIds.size()]);
     }
 
+    @Override
+    public List<TreeVO> getMenuTreeDetail() {
+        List<TreeVO> permissionAll = permissionInfoMapper.listPermissionAll();
+        List<TreeVO> treeVOS = new ArrayList<>();
+        getMenuTree(permissionAll, treeVOS);
+        return treeVOS;
+    }
+
+    @Override
+    public int updateCode(List<PermissionDTO> permissionDTOList) {
+        return 0;
+    }
+
     private void setChild(PermissionVO parentPermission, PermissionVO childrenPermissionVO) {
         List<PermissionVO> child = parentPermission.getChildren();
         if (child == null) {
@@ -254,5 +254,30 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
             setChild(child.get(child.size() - 1), childrenPermissionVO);
         }
         parentPermission.setChildren(child);
+    }
+
+    /**
+     * 菜单转树
+     * @param permissionVOS 原菜单
+     * @param treeVOS 菜单树
+     * @return
+     */
+    private List<Long> getMenuTree(List<TreeVO> permissionVOS, List<TreeVO> treeVOS) {
+        List<Long> ids = new ArrayList<>();
+        for (TreeVO treeVO : permissionVOS) {
+            //角色没有的并且没有父节点的id
+            if (treeVO.getRoleId() != null && treeVO.getGrandParentId() == null) {
+                ids.add(treeVO.getId());
+            }
+            if ("0".equals(treeVO.getParentId() + "")) {
+                treeVOS.add(treeVO);
+            } else {
+                if (String.valueOf(ResourceType.button).equals(treeVO.getResourceType())) {
+                    treeVO.setLabel("按钮-" + treeVO.getLabel());
+                }
+                setChild(treeVOS.get(treeVOS.size() - 1), treeVO);
+            }
+        }
+        return ids;
     }
 }

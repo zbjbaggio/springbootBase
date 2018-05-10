@@ -15,7 +15,7 @@ public class TreeVO extends PermissionVO {
 
     private Long roleId;
 
-   private Long grandParentId;
+    private Long grandParentId;
 
 
 }

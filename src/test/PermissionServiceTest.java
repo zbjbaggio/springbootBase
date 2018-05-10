@@ -20,7 +20,7 @@ public class PermissionServiceTest {
 
     @Test
     public void sendEmail() throws Exception {
-        permissionInfoService.getMenu(32);
+        //permissionInfoService.getMenu(32);
     }
 
 }

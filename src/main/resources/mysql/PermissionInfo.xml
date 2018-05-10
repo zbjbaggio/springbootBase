@@ -92,6 +92,15 @@
         order by a.code
     </select>
 
+    <select id="listPermissionAll" resultMap="TreeMap">
+        SELECT
+        a.id,a.name,a.code,a.parent_id
+        FROM t_permission_info a
+        where a.resource_type = 'menu'
+        order by a.code
+    </select>
+
+
     <select id="listByIds" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>

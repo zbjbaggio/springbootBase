@@ -60,4 +60,7 @@ public interface PermissionInfoMapper {
 
     @Update("update t_permission_info,(select @rownum:=1) t set code = concat(#{param3}, substr(concat('0000',@rownum), length(concat('0000',@rownum:=@rownum+1))-3, 4)) where parent_id = #{param1} and resource_type = #{param2};")
     int updateButtonCode(Long permissionId, Enum resourceTpe, String code);
+
+    List<TreeVO> listPermissionAll();
+
 }

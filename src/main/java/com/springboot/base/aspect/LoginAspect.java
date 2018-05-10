@@ -1,5 +1,7 @@
 package com.springboot.base.aspect;
 
+import com.springboot.base.data.exception.PrivateException;
+import com.springboot.base.util.ValidationUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
@@ -50,12 +52,14 @@ public class LoginAspect {
     WebApplicationContext webApplicationConnect;
 
     @Before(value = "aspectMethod()")
-    public void before(JoinPoint point) {
+    public void before(JoinPoint point) throws Exception {
         startTime = System.currentTimeMillis();   //获取开始时间
         CodeSignature signature = (CodeSignature) point.getSignature();
         String className = signature.getDeclaringTypeName();
         String methodName = signature.getName();
         String argsStr = Arrays.toString(point.getArgs());
+        //校验参数
+        ValidationUtils.checkValidated(signature.getParameterTypes(), point.getArgs());
         //LOG.info(MarkerFactory.getMarker("USER_MARKER"), "商户id: {} url：{}  参数为：{}", valueHolder.getMerchIdHolder(), className + "." + methodName, argsStr);
         log.info("日志【请求】－－－－－－－－－－－方法为:{}  参数为：{}", className + "." + methodName, argsStr);
     }

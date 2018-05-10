@@ -2,9 +2,11 @@ package com.springboot.base.service;
 
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.dto.MenuAndButtonDTO;
+import com.springboot.base.data.dto.PermissionDTO;
 import com.springboot.base.data.entity.Permission;
 import com.springboot.base.data.vo.PermissionVO;
 import com.springboot.base.data.vo.PermissionTreeVO;
+import com.springboot.base.data.vo.TreeVO;
 
 import java.util.List;
 
@@ -33,4 +35,8 @@ public interface PermissionInfoService {
     PermissionTreeVO listPermissionDetail(Long roleId);
 
     Long[] checkTreePermission(List<Long> permissionIds) throws Exception;
+
+    List<TreeVO> getMenuTreeDetail();
+
+    int updateCode(List<PermissionDTO> permissionDTOList);
 }
