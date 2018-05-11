@@ -63,4 +63,6 @@ public interface PermissionInfoMapper {
 
     List<TreeVO> listPermissionAll();
 
+    @Update("update t_permission_info set code = #{param2}, parent_id = #{param3} where id = #{param1}")
+    int updateCode(Long id, String code, long parentId);
 }

@@ -38,5 +38,5 @@ public interface PermissionInfoService {
 
     List<TreeVO> getMenuTreeDetail();
 
-    int updateCode(List<PermissionDTO> permissionDTOList);
+    void updateCode(List<PermissionDTO> permissionDTOList);
 }

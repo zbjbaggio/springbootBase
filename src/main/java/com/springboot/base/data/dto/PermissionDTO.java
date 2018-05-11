@@ -2,7 +2,6 @@ package com.springboot.base.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -15,8 +14,8 @@ import java.util.List;
 @Data
 public class PermissionDTO {
 
-    @NotNull
-    private Long id;
+
+    private Long id;    @NotNull
 
     private String name;
 

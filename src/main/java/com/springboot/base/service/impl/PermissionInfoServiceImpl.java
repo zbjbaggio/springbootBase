@@ -12,6 +12,7 @@ import com.springboot.base.data.vo.PermissionTreeVO;
 import com.springboot.base.data.vo.TreeVO;
 import com.springboot.base.mapper.PermissionInfoMapper;
 import com.springboot.base.service.PermissionInfoService;
+import com.springboot.base.util.PermissionCodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -145,7 +146,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Permission saveButton(Permission permission) throws Exception {
+    public Permission saveButton(Permission permission) {
         //校验，有子菜单的不允许有按钮
         long countLong = permissionInfoMapper.countByParentId(permission.getId(), ResourceType.menu);
         if (countLong > 0) {
@@ -158,7 +159,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
             String code = permissionInfoMapper.getMaxCodeByParentId(permission.getParentId(), ResourceType.button);
             if (code == null) {
                 PermissionVO parentPermissionVO = permissionInfoMapper.getDetailById(permission.getParentId(), ResourceType.menu);
-                code = parentPermissionVO.getCode() + "0001";
+                code = parentPermissionVO.getCode() + PermissionCodeUtils.CODE_PLACE_FIRST;
             } else {
                 String tempCode = "000" + (Long.parseLong(code.substring(code.length() - 4)) + 1);
                 code = code.substring(0, code.length() - 4) +  tempCode.substring(tempCode.length() - 4);
@@ -179,20 +180,18 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void removeButton(Long permissionId) throws Exception {
+    public void removeButton(Long permissionId) {
         //重新排button的code
         PermissionVO permissionVO = permissionInfoMapper.getDetailById(permissionId, ResourceType.button);
         if (permissionVO == null) {
             log.info("该按钮没找到！permissionId:{}", permissionId);
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
-        String code = permissionVO.getCode();
-        code = code.substring(0, code.length() - 4);
         int i = permissionInfoMapper.deleteByType(permissionId, ResourceType.button);
         if (i != 1) {
             throw new PrivateException(ErrorInfo.DELETE_ERROR);
         }
-        permissionInfoMapper.updateButtonCode(permissionVO.getParentId(), ResourceType.button, code);
+        permissionInfoMapper.updateButtonCode(permissionVO.getParentId(), ResourceType.button, PermissionCodeUtils.getParentPlace(permissionVO.getCode()));
     }
 
     @Override
@@ -239,8 +238,42 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
     }
 
     @Override
-    public int updateCode(List<PermissionDTO> permissionDTOList) {
+    @Transactional
+    public void updateCode(List<PermissionDTO> permissionDTOList) {
+        updateCode(permissionDTOList, PermissionCodeUtils.CODE_PLACE_FIRST, 0L);
+    }
+
+    private int updateCode(List<PermissionDTO> permissionDTOList, String code, long parentId) {
+        for (PermissionDTO permissionDTO : permissionDTOList) {
+            updateMenuCode(permissionDTO.getId(), code, parentId);
+            if (permissionDTO.getChildren() != null && permissionDTO.getChildren().size() > 0) {
+                updateCode(permissionDTO.getChildren(), PermissionCodeUtils.getChildrenPlace(code), permissionDTO.getId());
+            }
+            code = PermissionCodeUtils.add(code);
+        }
         return 0;
+    }
+
+    private void updateMenuCode(Long permissionId, String code, long parentId) {
+        PermissionVO permissionVO = permissionInfoMapper.getDetailById(permissionId, ResourceType.menu);
+        if (permissionVO == null) {
+            log.info("参数中id不是菜单id{}", permissionId);
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        int count = permissionInfoMapper.updateCode(permissionId, code, parentId);
+        if (count != 1) {
+            log.error("修改功能code失败！code");
+            throw new PrivateException(ErrorInfo.UPDATE_ERROR);
+        }
+        //是否有按钮,有修改按钮code
+        List<PermissionVO> buttons = permissionInfoMapper.listByParentId(permissionId, ResourceType.button);
+        if (buttons != null && buttons.size() > 0) {
+            code = PermissionCodeUtils.getChildrenPlace(code);
+            for (PermissionVO button : buttons) {
+                permissionInfoMapper.updateCode(button.getId(), code, permissionId);
+                code = PermissionCodeUtils.add(code);
+            }
+        }
     }
 
     private void setChild(PermissionVO parentPermission, PermissionVO childrenPermissionVO) {

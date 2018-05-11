@@ -10,15 +10,11 @@ import com.springboot.base.data.vo.TreeVO;
 import com.springboot.base.service.PermissionInfoService;
 import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -72,11 +68,11 @@ public class MenuController {
      * @throws Exception 异常
      */
     @PostMapping(value = "/remove")
-    public void remove(@RequestParam @NotEmpty Long[] permissionIds) throws Exception {
- /*       if (permissionIds == null || permissionIds.length <= 0) {
+    public void remove(@RequestParam Long[] permissionIds) throws Exception {
+        if (permissionIds == null || permissionIds.length <= 0) {
             log.info("productIds为空！");
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }*/
+        }
         permissionInfoService.remove(permissionIds);
     }
 
@@ -135,10 +131,16 @@ public class MenuController {
      * @param permissionDTOList
      */
     @PostMapping(value = "/saveMenuTree")
-    public void saveMenuTree(@RequestBody @Validated @NotEmpty List<PermissionDTO> permissionDTOList, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
+    public void saveMenuTree(@RequestBody List<PermissionDTO> permissionDTOList) throws PrivateException {
+        if (permissionDTOList == null || permissionDTOList.size() == 0) {
+            log.info("permissionDTOList为空！");
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        for (PermissionDTO permissionDTO : permissionDTOList) {
+            if (permissionDTO.getId() == null) {
+                log.info("permissionDTOList中有id为空！");
+                throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+            }
         }
         permissionInfoService.updateCode(permissionDTOList);
     }

@@ -8,7 +8,7 @@ import lombok.ToString;
  * Created by jay on 2016-10-25.
  */
 @ToString
-public class PrivateException extends Exception {
+public class PrivateException extends RuntimeException {
 
     public int code;
 
