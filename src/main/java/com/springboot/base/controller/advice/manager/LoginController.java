@@ -1,20 +1,23 @@
 package com.springboot.base.controller.advice.manager;
 
+import com.alibaba.fastjson.JSONObject;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ManagerVO;
+import com.springboot.base.rabbitmq.HelloSender1;
 import com.springboot.base.service.ManagerInfoService;
 import com.springboot.base.util.BindingResultUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.MessagePostProcessor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.concurrent.*;
 
 /**
  * 登录
@@ -27,6 +30,9 @@ public class LoginController {
 
     @Inject
     private ManagerInfoService managerInfoService;
+
+    @Autowired
+    private HelloSender1 helloSender1;
 
     /**
      * 登录接口
@@ -47,4 +53,33 @@ public class LoginController {
         }
         return managerVO;
     }
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public void test(@RequestParam int id) throws Exception {
+       helloSender1.send(id);
+/*        MessagePostProcessor processor = message1 -> {
+            message1.getMessageProperties().setExpiration(30000 + "");
+            return message1;
+        };
+        rabbitTemplate.convertAndSend("helloExchange", "helloB", (Object) "1111111111111111111", processor);*/
+    }
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    /**
+     * http://localhost:8080/send?message=hello
+     *
+     * @param message
+     * @return
+     */
+    @RequestMapping("/send")
+    public void sendMQ(String message) {
+        //CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
+        //rabbitTemplate.convertAndSend("my-queue", (Object) message,correlationData);
+        for (int i = 0; i < 5; i++) {
+            rabbitTemplate.convertAndSend("my-queue", i + "");
+        }
+    }
+
+
 }
