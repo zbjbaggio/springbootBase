@@ -1,7 +1,7 @@
 package com.springboot.base.controller.advice.web;
 
 import com.springboot.base.data.dto.OrderDTO;
-import com.springboot.base.data.enmus.ErrorInfo;
+import com.springboot.base.enmus.ErrorInfo;
 import com.springboot.base.data.entity.OrderInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.PayVO;

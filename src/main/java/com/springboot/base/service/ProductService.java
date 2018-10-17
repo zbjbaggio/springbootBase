@@ -1,7 +1,7 @@
 package com.springboot.base.service;
 
 import com.springboot.base.data.base.Page;
-import com.springboot.base.data.enmus.ProductStatus;
+import com.springboot.base.enmus.ProductStatus;
 import com.springboot.base.data.entity.ProductInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ProductVO;

@@ -1,4 +1,4 @@
-package com.springboot.base.data.enmus.paypal;
+package com.springboot.base.enmus.paypal;
 
 /**
  * 描述：

@@ -1,6 +1,6 @@
 package com.springboot.base.controller.advice.manager;
 
-import com.springboot.base.data.enmus.ErrorInfo;
+import com.springboot.base.enmus.ErrorInfo;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.service.ManagerInfoService;

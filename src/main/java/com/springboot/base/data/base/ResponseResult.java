@@ -1,6 +1,6 @@
 package com.springboot.base.data.base;
 
-import com.springboot.base.data.enmus.ErrorInfo;
+import com.springboot.base.enmus.ErrorInfo;
 import lombok.Data;
 
 import java.io.Serializable;

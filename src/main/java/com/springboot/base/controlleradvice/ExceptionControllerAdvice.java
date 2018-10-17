@@ -1,11 +1,10 @@
 package com.springboot.base.controlleradvice;
 
 import com.springboot.base.data.base.ResponseResult;
-import com.springboot.base.data.enmus.ErrorInfo;
+import com.springboot.base.enmus.ErrorInfo;
 import com.springboot.base.data.exception.PrivateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;

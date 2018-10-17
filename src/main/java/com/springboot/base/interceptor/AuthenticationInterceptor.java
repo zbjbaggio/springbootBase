@@ -2,7 +2,7 @@ package com.springboot.base.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.springboot.base.data.base.ResponseResult;
-import com.springboot.base.data.enmus.ErrorInfo;
+import com.springboot.base.enmus.ErrorInfo;
 import com.springboot.base.service.ManagerInfoService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.springboot.base.rabbitmq;
+package com.springboot.base.rabbitmq.demo;
 
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
@@ -27,7 +27,8 @@ public class HelloReceiverC {
     @RabbitHandler
     public void process(String hello, Channel channel, Message message) throws Exception {
         System.out.println("HelloReceiverC收到  : " + hello + "收到时间" + new Date());
-        channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        //channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        rabbitTemplate.convertAndSend("hellos", "111111111111");
     }
 
 }

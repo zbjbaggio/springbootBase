@@ -1,4 +1,4 @@
-package com.springboot.base.data.enmus;
+package com.springboot.base.enmus;
 
 /**
  * 用户状态

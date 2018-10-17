@@ -2,7 +2,7 @@ package com.springboot.base.service;
 
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.dto.PasswordDTO;
-import com.springboot.base.data.enmus.UserStatus;
+import com.springboot.base.enmus.UserStatus;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.vo.ManagerVO;
 

@@ -1,13 +1,16 @@
 package com.springboot.base.controller.advice.manager;
 
-import com.alibaba.fastjson.JSONObject;
-import com.springboot.base.data.enmus.ErrorInfo;
+import com.springboot.base.data.dto.QueueMessageDTO;
+import com.springboot.base.enmus.ErrorInfo;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ManagerVO;
-import com.springboot.base.rabbitmq.HelloSender1;
+import com.springboot.base.enmus.MessageTypeEnum;
+import com.springboot.base.rabbitmq.demo.HelloSender1;
 import com.springboot.base.service.ManagerInfoService;
+import com.springboot.base.service.MessageQueueService;
 import com.springboot.base.util.BindingResultUtils;
+import com.sun.xml.internal.ws.api.model.MEP;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -17,7 +20,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.util.concurrent.*;
 
 /**
  * 登录
@@ -76,9 +78,22 @@ public class LoginController {
     public void sendMQ(String message) {
         //CorrelationData correlationData = new CorrelationData(UUID.randomUUID().toString());
         //rabbitTemplate.convertAndSend("my-queue", (Object) message,correlationData);
-        for (int i = 0; i < 5; i++) {
-            rabbitTemplate.convertAndSend("my-queue", i + "");
-        }
+        MessagePostProcessor processor = message1 -> {
+            message1.getMessageProperties().setExpiration(10000 + "");
+            return message1;
+        };
+        rabbitTemplate.convertAndSend("helloExchange", "helloB", (Object) "1111111111111111111", processor);
+    }
+
+    @Inject
+    private MessageQueueService messageQueueService;
+
+    @GetMapping("/send1")
+    public void send1(String message) {
+        QueueMessageDTO messageDTO = new QueueMessageDTO("aaaa", "1hello");
+        messageDTO.setSeconds(10);
+        messageDTO.setType(MessageTypeEnum.DELAYED.getIndex());
+        messageQueueService.send(messageDTO);
     }
 
 

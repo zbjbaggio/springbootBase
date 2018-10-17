@@ -1,17 +1,18 @@
-package com.springboot.base.data.enmus;
+package com.springboot.base.enmus;
 
 /**
- * 产品状态
+ * 用户状态
+ * Created by jay on 2016-11-1.
  */
-public enum ProductStatus {
+public enum UserStatus {
 
-    ON_SHELVES((byte)1, "上架"), OFF_SHELVES((byte)2, "下架");
+    UNACTIVATED((byte)0, "未激活"), DEFAULT((byte)1, "正常"), FREEZE((byte)2, "冻结");
 
     private byte index;
 
     private String name;
 
-    ProductStatus(byte index, String name) {
+    UserStatus(byte index, String name) {
         this.index = index;
         this.name = name;
     }
@@ -31,4 +32,5 @@ public enum ProductStatus {
     public void setName(String name) {
         this.name = name;
     }
+
 }

@@ -1,6 +1,5 @@
 import com.springboot.base.conf.Application;
-import com.springboot.base.rabbitmq.HelloSender;
-import com.springboot.base.rabbitmq.HelloSender1;
+import com.springboot.base.rabbitmq.demo.HelloSender1;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

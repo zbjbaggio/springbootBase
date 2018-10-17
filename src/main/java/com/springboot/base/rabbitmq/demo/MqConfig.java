@@ -1,4 +1,4 @@
-package com.springboot.base.rabbitmq;
+package com.springboot.base.rabbitmq.demo;
 
 
 import org.springframework.amqp.core.*;

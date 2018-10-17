@@ -1,4 +1,4 @@
-package com.springboot.base.rabbitmq;
+package com.springboot.base.rabbitmq.demo;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Consumer;
