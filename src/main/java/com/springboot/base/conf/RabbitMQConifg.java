@@ -55,6 +55,4 @@ public class RabbitMQConifg {
         return BindingBuilder.bind(defaultRepeatTradeQueue).to(defaultDirectExchange).with(QueueConstants.DEFAULT_REPEAT_TRADE_QUEUE_NAME);
     }
 
-
-
 }

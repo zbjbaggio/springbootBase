@@ -30,6 +30,11 @@ public class MqConfig {
     }
 
     @Bean
+    public Queue hellos() {
+        return new Queue("hellos",true, false, false);
+    }
+
+    @Bean
     public DirectExchange defaultDirectExchange() {
         return new DirectExchange("helloExchange", true, false);
     }

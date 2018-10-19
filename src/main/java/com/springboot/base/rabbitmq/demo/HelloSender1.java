@@ -23,7 +23,7 @@ public class HelloSender1 implements RabbitTemplate.ReturnCallback,RabbitTemplat
         System.out.println("Sender1 : " + context);
         rabbitTemplate.setReturnCallback(this);
         rabbitTemplate.setConfirmCallback(this);
-        rabbitTemplate.convertAndSend("helloA", context);
+        rabbitTemplate.convertAndSend("cccadaf", context);
     }
 
     @Override

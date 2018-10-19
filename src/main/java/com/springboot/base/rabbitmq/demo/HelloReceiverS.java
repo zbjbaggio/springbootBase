@@ -13,13 +13,13 @@ import java.io.IOException;
  * Created by jay on 2018-9-12.
  */
 @Component
-public class HelloReceiver {
+public class HelloReceiverS {
 
-    @RabbitListener(queues = "fanout.A")
+    @RabbitListener(queues = "hellos")
     @RabbitHandler
     public void processA(String hello, Channel channel, Message message) throws IOException {
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-        System.out.println("Receiver1  : " + hello);
+        System.out.println("Receiver2222  : " + hello);
     }
 
 

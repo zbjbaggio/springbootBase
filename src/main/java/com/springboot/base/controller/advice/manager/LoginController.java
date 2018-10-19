@@ -96,5 +96,18 @@ public class LoginController {
         messageQueueService.send(messageDTO);
     }
 
+    @GetMapping("/send2")
+    public void send2(String message) {
+        rabbitTemplate.convertAndSend("fanoutExchange", "", (Object) "1111111111111111111");
+    }
+
+    @GetMapping("/send3")
+    public void send3(String message) {
+        int i = 1;
+        while (true) {
+            rabbitTemplate.convertAndSend("hellos", (Object) i++);
+        }
+    }
+
 
 }

@@ -32,7 +32,7 @@ public class HelloReceiver1 {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("----error--------" + hello);
+            //System.out.println("----error--------" + hello);
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
         }
     }
