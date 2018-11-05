@@ -12,7 +12,7 @@ import java.util.Map;
  * 特别说明：如果在配置文件中声明了 Queue 对象，就不用在控制台创建队列了
  * Created by yanggm
  */
-@Configuration
+//@Configuration
 public class MqConfig {
     /**
      * 声明接收字符串的队列

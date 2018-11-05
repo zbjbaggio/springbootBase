@@ -1,7 +1,6 @@
 package com.springboot.base.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.springboot.base.constant.QueueConstants;
 import com.springboot.base.data.dto.QueueMessageDTO;
 import com.springboot.base.enmus.MessageTypeEnum;
@@ -9,8 +8,8 @@ import com.springboot.base.service.MessageQueueService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessagePostProcessor;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -37,7 +36,7 @@ public class MessageQueueServiceImpl implements MessageQueueService, RabbitTempl
         }
     }
 
-    //TODO 成功返回通知
+    //TODO 没有通知返回通知
     @Override
     public void returnedMessage(Message message, int i, String s, String s1, String s2) {
         System.out.println("sender return success" + message.toString() + "===" + i + "===" + s1 + "===" + s2);

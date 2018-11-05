@@ -1,6 +1,7 @@
 package com.springboot.base.conf;
 
 import com.springboot.base.interceptor.AuthenticationInterceptor;
+import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -35,12 +36,13 @@ import java.util.Locale;
 @ComponentScan("com.springboot.base")
 @MapperScan("com.springboot.base.mapper")
 @Configuration
-public class Application extends WebMvcConfigurerAdapter {
+@Slf4j
+public class Application implements WebMvcConfigurer {
 
 	@Autowired
     private AuthenticationInterceptor authenticationInterceptor;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 
@@ -62,7 +64,7 @@ public class Application extends WebMvcConfigurerAdapter {
 
 	@RequestMapping("/home")
 	String home() {
-        return "Hello World!";
+		return "Hello World!";
 	}
 
     @Bean
