@@ -10,7 +10,6 @@ import com.springboot.base.data.vo.ManagerVO;
 import com.springboot.base.data.vo.PermissionTreeVO;
 import com.springboot.base.data.vo.RoleVO;
 import com.springboot.base.service.*;
-import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -63,10 +62,6 @@ public class RoleController {
 
     @PostMapping(value = "/save")
     public RoleInfo save(@RequestBody @Validated(RoleInfo.Modify.class) RoleInfo role, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
         return roleService.save(role);
     }
 
@@ -102,10 +97,6 @@ public class RoleController {
      */
     @PostMapping(value = "/savePermission")
     public void savePermission(@RequestBody @Validated(RolePermission.BaseInfo.class) RolePermission rolePermission, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
         rolePermissionService.savePermission(rolePermission);
     }
 
@@ -116,10 +107,6 @@ public class RoleController {
 
     @PostMapping(value = "/saveUsers")
     public void saveUsers(@RequestBody @Validated(value = ManagerRole.Manager.class) ManagerRole managerInfo, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
         managerRoleService.saves(managerInfo);
     }
 

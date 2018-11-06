@@ -48,11 +48,8 @@ public class LoginAspect {
 
     }
 
-    @Inject
-    WebApplicationContext webApplicationConnect;
-
     @Before(value = "aspectMethod()")
-    public void before(JoinPoint point) throws Exception {
+    public void before(JoinPoint point) {
         startTime = System.currentTimeMillis();   //获取开始时间
         CodeSignature signature = (CodeSignature) point.getSignature();
         String className = signature.getDeclaringTypeName();
@@ -61,7 +58,7 @@ public class LoginAspect {
         //校验参数
         ValidationUtils.checkValidated(signature.getParameterTypes(), point.getArgs());
         //LOG.info(MarkerFactory.getMarker("USER_MARKER"), "商户id: {} url：{}  参数为：{}", valueHolder.getMerchIdHolder(), className + "." + methodName, argsStr);
-        log.info("日志【请求】－－－－－－－－－－－方法为:{}  参数为：{}", className + "." + methodName, argsStr);
+        log.info("日志【请求】方法为:{}  参数为：{}", className + "." + methodName, argsStr);
     }
 
     @AfterReturning(value = "aspectMethod()", returning = "returnValue")
@@ -70,7 +67,7 @@ public class LoginAspect {
         String className = signature.getDeclaringTypeName();
         String methodName = signature.getName();
         //LOG.info(MarkerFactory.getMarker("USER_MARKER"), "商户id: {} url: {} 返回值为： {}", valueHolder.getMerchIdHolder(), className + "." + methodName, returnValue);
-        log.info("日志【返回】－－－－－－－－－－－方法为:{}     返回值为：{}  【共耗时-{}-毫秒】 ", className + "." + methodName, returnValue, System.currentTimeMillis() - startTime);
+        log.info("日志【返回】方法为:{}  返回值为：{}  【共耗时-{}-毫秒】 ", className + "." + methodName, returnValue, System.currentTimeMillis() - startTime);
     }
 
     @AfterReturning(value = "aspectMethod() &&!aspectListMethod() &&!aspectGetMethod()", returning = "returnValue")
@@ -81,6 +78,5 @@ public class LoginAspect {
         log.info("HTTP_METHOD : " + request.getMethod());
         log.info("IP : " + request.getRemoteAddr());
         log.info("CLASS_METHOD : " + point.getSignature().getDeclaringTypeName() + "." + point.getSignature().getName());
-        log.info("日志1111111111111111111111111-------------------------11111111111111111111111-----------------");
     }
 }

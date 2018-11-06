@@ -6,7 +6,6 @@ import com.springboot.base.data.entity.PostageInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.PostageVO;
 import com.springboot.base.service.PostageService;
-import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -51,10 +50,6 @@ public class PostageController {
      */
     @PostMapping(value = "/add")
     public PostageInfo add(@RequestBody @Validated(PostageInfo.BaseInfo.class) PostageInfo postageInfo, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
         return postageService.save(postageInfo);
     }
 
@@ -77,10 +72,6 @@ public class PostageController {
      */
     @PostMapping(value = "/update")
     public void update(@RequestBody @Validated(PostageInfo.Modify.class) PostageInfo postageInfo, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
         postageService.update(postageInfo);
     }
 

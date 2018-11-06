@@ -33,7 +33,7 @@ import java.util.Set;
 @Slf4j
 public class PermissionInfoServiceImpl implements PermissionInfoService {
 
-    @Value("${server.context-path}")
+    @Value("${server.servlet.context-path}")
     private String path;
 
     @Inject

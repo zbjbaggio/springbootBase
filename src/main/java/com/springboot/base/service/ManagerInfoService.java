@@ -5,6 +5,7 @@ import com.springboot.base.data.dto.PasswordDTO;
 import com.springboot.base.data.enmus.UserStatus;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.vo.ManagerVO;
+import org.springframework.web.method.HandlerMethod;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface ManagerInfoService {
 
     ManagerInfo save(ManagerInfo managerInfo) throws Exception;
 
-    boolean checkToken(String token, String key, String url);
+    boolean checkToken(String token, String key, HandlerMethod handler);
 
     Page listPage(int limit, int offset, String searchStr, int status, String orderBy, boolean desc);
 

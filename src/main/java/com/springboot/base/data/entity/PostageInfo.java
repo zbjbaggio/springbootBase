@@ -4,9 +4,9 @@ import com.springboot.base.data.base.EntityBase;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;

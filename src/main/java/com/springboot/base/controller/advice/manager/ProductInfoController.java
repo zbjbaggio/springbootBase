@@ -7,7 +7,6 @@ import com.springboot.base.data.entity.ProductInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ProductVO;
 import com.springboot.base.service.ProductService;
-import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -54,10 +53,6 @@ public class ProductInfoController {
      */
     @PostMapping(value = "/add")
     public ProductInfo add(@RequestBody @Validated(ProductInfo.BaseInfo.class) ProductInfo productInfo, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
         return productService.save(productInfo);
     }
 
@@ -80,10 +75,6 @@ public class ProductInfoController {
      */
     @PostMapping(value = "/update")
     public void update(@RequestBody @Validated(ProductInfo.Modify.class) ProductInfo productInfo, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
         productService.update(productInfo);
     }
 

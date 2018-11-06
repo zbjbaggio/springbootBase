@@ -6,7 +6,6 @@ import com.springboot.base.data.entity.OrderInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.PayVO;
 import com.springboot.base.service.PaypalService;
-import com.springboot.base.util.BindingResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.validation.BindingResult;
@@ -29,10 +28,6 @@ public class OrderController {
 
     @PostMapping
     public PayVO pay(@RequestBody @Validated OrderDTO orderDTO, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("参数错误！{}", BindingResultUtils.getErrorMessage(bindingResult.getAllErrors()));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
         OrderInfo order = new OrderInfo();
         BeanUtils.copyProperties(orderDTO, order);
         //处理一下数据，receiverCountry 和  receiverArea互换

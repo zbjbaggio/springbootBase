@@ -4,7 +4,6 @@ import com.springboot.base.data.dto.PasswordDTO;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.service.ManagerInfoService;
-import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -42,10 +41,6 @@ public class MeController {
      */
     @PostMapping(value = "/updatePassword")
     public void updatePassword(@RequestBody @Validated(PasswordDTO.BaseInfo.class) PasswordDTO passwordDTO, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
         managerInfoService.updatePassword(passwordDTO);
     }
 }

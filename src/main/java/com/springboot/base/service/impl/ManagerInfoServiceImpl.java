@@ -1,5 +1,6 @@
 package com.springboot.base.service.impl;
 
+import com.springboot.base.ann.RequiresPermissions;
 import com.springboot.base.constant.ManagerLoginConstants;
 import com.springboot.base.data.base.Page;
 import com.springboot.base.data.dto.MenuAndButtonDTO;
@@ -21,9 +22,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.method.HandlerMethod;
 
 import javax.inject.Inject;
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -61,7 +65,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         redisService.removeUserPasswordNumberByKey(newManagerInfo.getUsername());
         MenuAndButtonDTO menuAndButtonDTO = permissionInfoService.getMenu(newManagerInfo.getId());
         newManagerInfo.setPermissionSet(menuAndButtonDTO.getPermissionSet());
-        saveRedis(newManagerInfo, true);
+        saveRedis(newManagerInfo);
         ManagerVO managerVO = new ManagerVO();
         BeanUtils.copyProperties(newManagerInfo, managerVO);
         //获得菜单
@@ -71,20 +75,14 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     }
 
     @Override
-    public boolean checkToken(String token, String key, String url) {
+    public boolean checkToken(String token, String key, HandlerMethod handler) {
         if (StringUtils.isEmpty(token) || StringUtils.isEmpty(key)) {
             log.info("未登录！");
             return false;
         }
         ManagerInfo managerInfo = redisService.getUserInfoByKey(key);
-        if (managerInfo != null && token.equals(managerInfo.getToken())) {
-            // TODO: 2018-1-10 先不拦截权限
-/*            Set<String> permissionSet = managerInfo.getPermissionSet();
-            //用户本身功能不限制权限
-            if (!url.contains("/manage/user/me/") && !permissionSet.contains(url)) {
-                log.info("{}未授权！managerInfo:{}", url, managerInfo);
-                return false;
-            }*/
+        if (managerInfo != null && token.equals(managerInfo.getToken()) && checkPermission(handler, managerInfo)) {
+            ;
             valueHolder.setUserIdHolder(managerInfo.getId());
             redisService.saveUser(managerInfo);
             return true;
@@ -118,7 +116,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void update(ManagerInfo managerInfo) throws Exception {
+    public void update(ManagerInfo managerInfo) {
         //校验用户名称是否重复
         checkUsernameByUserId(managerInfo.getUsername(), managerInfo.getId());
         int count = managerInfoMapper.update(managerInfo);
@@ -129,7 +127,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateStatus(Long userId, UserStatus index) throws Exception {
+    public void updateStatus(Long userId, UserStatus index) {
         int i = managerInfoMapper.updateStatus(index.getIndex(), userId);
         if (i <= 0) {
             throw new PrivateException(ErrorInfo.STATUS_ERROR);
@@ -143,7 +141,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void unlockedUserStatus(Long userId) throws Exception {
+    public void unlockedUserStatus(Long userId) {
         updateStatus(userId, UserStatus.DEFAULT);
         ManagerVO newManagerInfo = getDetail(userId);
         redisService.removeUserPasswordNumberByKey(newManagerInfo.getUsername());
@@ -151,7 +149,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void remove(Long[] userIds) throws Exception {
+    public void remove(Long[] userIds) {
         int i = managerInfoMapper.updateDr(userIds);
         if (i <= 0) {
             throw new PrivateException(ErrorInfo.DELETE_ERROR);
@@ -217,7 +215,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         return managerInfo;
     }
 
-    private void checkUsernameByUserId(String username, Long userId) throws Exception {
+    private void checkUsernameByUserId(String username, Long userId) {
         ManagerInfo user = managerInfoMapper.getUserInfoNoStateNoId(username, userId);
         if (user != null) {
             throw new PrivateException(ErrorInfo.USER_NAME_SAME);
@@ -225,11 +223,9 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     }
 
     //设置token
-    private void saveRedis(ManagerInfo managerInfo, boolean isToken) throws Exception {
+    private void saveRedis(ManagerInfo managerInfo) throws Exception {
         managerInfo.setKey(TokenUtils.getKey(managerInfo));
-        if (isToken) {
-            managerInfo.setToken(TokenUtils.getToken(managerInfo));
-        }
+        managerInfo.setToken(TokenUtils.getToken(managerInfo));
         redisService.saveUser(managerInfo);
     }
 
@@ -257,7 +253,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     }
 
     //校验猜密码次数
-    private Integer checkPasswordNumber(String username) throws Exception {
+    private Integer checkPasswordNumber(String username) {
         Integer number = redisService.getUserPasswordNumber(username);
         if (number >= managerLoginConstants.getFrozenNumber()) {
             log.info("该用户被停止登录！username：{}", username);
@@ -278,7 +274,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
 
     //校验是否存储欲锁定次数
     @Transactional
-    private void checkAndSaveExpectNumber(String username, int lockNumber, Long userId) throws Exception {
+    private void checkAndSaveExpectNumber(String username, int lockNumber, Long userId) {
         //判断是否达到冻结上限
         if (lockNumber >= managerLoginConstants.getFrozenNumber()) {
             int lockedNumber = redisService.getUserExpectNumber(username);
@@ -293,5 +289,27 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
                 redisService.saveUserExpectNumber(username, lockedNumber);
             }
         }
+    }
+
+    private boolean checkPermission(HandlerMethod handler, ManagerInfo managerInfo) {
+        Class<?> clazz = handler.getBeanType();
+        RequiresPermissions annotation = clazz.getAnnotation(RequiresPermissions.class);
+        String value = "";
+        if (annotation != null) {
+            value = annotation.value();
+        }
+        Method method = handler.getMethod();
+        annotation = method.getAnnotation(RequiresPermissions.class);
+        if (annotation != null) {
+            value = value + annotation.value();
+        }
+        if (value.length() > 0) {
+            Set<String> requestUrls = managerInfo.getPermissionSet();
+            if (!requestUrls.contains(value)) {
+                log.info("该用户没有该权限！userId:{}, Permission's permissions: {}, this request url：{}", managerInfo.getId(), requestUrls, value);
+                return false;
+            }
+        }
+        return true;
     }
 }

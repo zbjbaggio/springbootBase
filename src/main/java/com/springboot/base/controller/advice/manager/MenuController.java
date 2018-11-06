@@ -8,7 +8,6 @@ import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.PermissionVO;
 import com.springboot.base.data.vo.TreeVO;
 import com.springboot.base.service.PermissionInfoService;
-import com.springboot.base.util.BindingResutlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -55,10 +54,6 @@ public class MenuController {
      */
     @PostMapping(value = "/save")
     public Permission save(@RequestBody @Validated(Permission.BaseInfo.class) Permission permission, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            log.info("添加验证信息{}", BindingResutlUtils.getMessage(bindingResult));
-            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
-        }
         return permissionInfoService.saveMenu(permission);
     }
 

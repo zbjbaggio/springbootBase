@@ -2,16 +2,14 @@ package com.springboot.base.data.entity;
 
 import com.springboot.base.constant.RegularExpressionConstant;
 import com.springboot.base.data.base.EntityBase;
-import com.springboot.base.data.vo.PermissionVO;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -35,6 +33,7 @@ public class ManagerInfo extends EntityBase implements Serializable {
     @NotEmpty(groups = {BaseInfo.class})
     private String name;
 
+    @NotEmpty(groups = {LoginGroup.class}, message = "用户密码不能为空！")
     @Length(max = 30, message = "密码不能超过50个字！")
     private String password;
 

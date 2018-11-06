@@ -5,8 +5,8 @@ import com.springboot.base.data.base.ResponseResult;
 import com.springboot.base.data.enmus.ErrorInfo;
 import com.springboot.base.service.ManagerInfoService;
 import lombok.extern.log4j.Log4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,9 +24,6 @@ import java.io.PrintWriter;
 @Log4j
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
-    @Value("${userTimeOut}")
-    private Long userTimeOut;
-
     @Inject
     private ManagerInfoService managerInfoService;
 
@@ -35,13 +32,13 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (true || "OPTIONS".equals(request.getMethod())) {
+        if ("OPTIONS".equals(request.getMethod())) {
             return true;
         }
         try {
             String token = request.getHeader("token");
             String key = request.getHeader("key");
-            boolean isSuccess = managerInfoService.checkToken(token, key, request.getRequestURI());
+            boolean isSuccess = managerInfoService.checkToken(token, key, (HandlerMethod) handler);
             if (!isSuccess) {
                 getFail(response);
             }
