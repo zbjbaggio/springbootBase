@@ -1,10 +1,12 @@
 package com.springboot.base.util;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class DateUtil {
+
     private final static String VERIFYFORMAT = "yyyy-MM";
 
     private final static String DATEFORMAT = "yyyy-MM-dd";
@@ -320,6 +322,26 @@ public class DateUtil {
         String sFormat = formatDate(sDate);
         String bFormat = formatDate(bDate);
         return sFormat.compareTo(bFormat);
+    }
+
+    public static Date getDayEndDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
+    /**
+     * 比较日期相差多少分钟
+     * @param sDate
+     * @param bDate
+     * @return
+     */
+    public static long getMinuteCompare(Date sDate, Date bDate) {
+        return (bDate.getTime() - sDate.getTime())/1000/60;
     }
 
     public static String formatTime() {

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.base.mapper.PostageMapper">
+    <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.PostageVO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,name,create_time,price
+    </sql>
+
+    <select id="count" resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM t_postage_info
+        where 1 = 1
+        <if test="searchStr != '-1'">
+            and name like #{searchStr}
+        </if>
+    </select>
+
+    <select id="listPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_postage_info
+        where 1 = 1
+        <if test="searchStr != '-1'">
+            and name like #{searchStr}
+        </if>
+        <if test="orderBy != ''">
+            order by #{orderBy} #{descStr}
+        </if>
+        <if test="orderBy == ''">
+            order by create_time desc
+        </if>
+        <if test="limit != -1">
+            limit #{limit}
+        </if>
+        <if test="offset != -1">
+            offset #{offset}
+        </if>
+    </select>
+
+    <update id="remove" parameterType="java.util.Arrays">
+        delete from t_postage_info where id in
+        <foreach item="postageId" index="index" collection="postageIds" open="(" separator="," close=")">
+            #{postageId}#
+        </foreach>
+    </update>
+
+    <insert id="save" parameterType="com.springboot.base.data.entity.PostageInfo" useGeneratedKeys="true" keyProperty="id">
+      insert into t_postage_info(name,create_time,price) values(#{name},now(),#{price})
+    </insert>
+
+</mapper>

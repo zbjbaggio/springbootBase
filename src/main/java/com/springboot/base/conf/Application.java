@@ -2,7 +2,6 @@ package com.springboot.base.conf;
 
 import com.springboot.base.interceptor.AuthenticationInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.MessageSource;
@@ -23,6 +22,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import javax.inject.Inject;
 import java.util.Locale;
 
 /**
@@ -37,10 +37,10 @@ import java.util.Locale;
 @Configuration
 public class Application extends WebMvcConfigurerAdapter {
 
-	@Autowired
+	@Inject
     private AuthenticationInterceptor authenticationInterceptor;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 
@@ -83,7 +83,7 @@ public class Application extends WebMvcConfigurerAdapter {
 	//拦截器
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(authenticationInterceptor).addPathPatterns("/user/**");
+		registry.addInterceptor(authenticationInterceptor).addPathPatterns("/manage/user/**");
 	}
 
 /*	@Bean

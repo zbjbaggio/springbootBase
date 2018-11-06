@@ -28,7 +28,7 @@ CREATE TABLE `t_permission` (
   `name` varchar(30) NOT NULL COMMENT '名称',
   `parent_id` bigint(20) NOT NULL COMMENT '父编号',
   `parent_ids` varchar(30) NOT NULL COMMENT '父编号列表',
-  `permission` varchar(30) NOT NULL COMMENT '权限字符串,menu例子：role:*，button例子：role:create,role:update,role:delete,role:view',
+  `permission` varchar(30) NOT NULL COMMENT '权限字符串,menu例子：role:*，button例子：role:create,role:update,role:remove,role:view',
   `resource_type` enum('menu','button') NOT NULL COMMENT '资源类型，[menu|button]',
   `url` varchar(30) DEFAULT NULL COMMENT '资源路径',
   PRIMARY KEY (`id`)

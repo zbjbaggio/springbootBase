@@ -1,6 +1,6 @@
 package com.springboot.base.util;
 
-import com.springboot.base.data.entity.UserInfo;
+import com.springboot.base.data.entity.ManagerInfo;
 
 import java.util.UUID;
 
@@ -10,13 +10,13 @@ import java.util.UUID;
  */
 public class TokenUtils {
 
-    public static String getKey(UserInfo userInfo) throws Exception {
-        return Md5Util.MD5Encode(userInfo.getUsername(), userInfo.getSalt());
+    public static String getKey(ManagerInfo managerInfo) throws Exception {
+        return Md5Util.MD5Encode(managerInfo.getUsername(), managerInfo.getSalt());
     }
 
-    public static String getToken(UserInfo userInfo) throws Exception {
+    public static String getToken(ManagerInfo managerInfo) throws Exception {
         UUID uuid = UUID.randomUUID();
-        return Md5Util.MD5Encode(uuid.toString(), userInfo.getSalt());
+        return Md5Util.MD5Encode(uuid.toString(), managerInfo.getSalt());
     }
 
 }

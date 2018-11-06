@@ -15,14 +15,20 @@ public enum ErrorInfo {
     NO_AUTHORITY(50005, "未权限！"),
     USER_NAME_SAME(50006, "用户名重复！"),
     REGISTER_ERROR(50007, "用户注册失败！" ),
-    USER_FREEZE(50008, "该用户已被冻结，请联系管理员！" ),
+    USER_LOCKED(50008, "该用户已被锁定，请联系管理员！" ),
     USER_UNACTIVATED(50009, "该用户还未审核通过请耐心等待！"),
     USER_NO_LOGIN(50010, "该用户已冻结请1个小时后再试！"),
     SAVE_ERROR(50011, "保存失败！"),
     STATUS_ERROR(50012, "修改状态失败！"),
-    DELETE_ERROR(50013, "用户已冻结！"),
+    DELETE_ERROR(50013, "删除失败！"),
     NAME_SAME(50014, "名称重复！"),
-    UPDATE_ERROR(50015, "修改错误！");
+    UPDATE_ERROR(50015, "修改失败！"),
+    PASSWORD_ERROR(50016, "密码错误！"),
+    NO_SAME(50017, "编号重复！"),
+    PAY_ERROR(50018, "支付失败！"),
+    ORDER_ERROR(50019, "下单失败，请重新下单!"),
+    NO_ERROR(50020, "编号不正确！"),
+    BUTTON_ERROR(50021, "菜单有子菜单不能有按钮！");
 
     private int value;
 

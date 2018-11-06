@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.base.mapper.PermissionInfoMapper">
+    <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.PermissionVO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="parent_ids" property="parentIds" jdbcType="VARCHAR"/>
+        <result column="permission" property="permission" jdbcType="VARCHAR"/>
+        <result column="resource_type" property="resourceType" jdbcType="VARCHAR"/>
+        <result column="be_url" property="beUrl" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="fe_url" property="feUrl" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="TreeMap" type="com.springboot.base.data.vo.TreeVO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="label" jdbcType="VARCHAR"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="grandParentId" property="grandParentId" jdbcType="BIGINT"/>
+        <result column="role_id" property="roleId" jdbcType="BIGINT"/>
+        <result column="resource_type" property="resourceType" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,create_time,parent_id,parent_ids,permission,resource_type,be_url,icon,code,fe_url
+    </sql>
+
+    <select id="count" resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM t_permission_info
+        where resource_type = 'menu'
+        <if test="searchStr != '-1'">
+            and name like #{searchStr}
+        </if>
+        <if test="available != null">
+            and available = #{available}
+        </if>
+    </select>
+
+    <select id="listPage" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_permission_info
+        where resource_type = 'menu'
+        <if test="searchStr != '-1'">
+            and name like #{searchStr}
+        </if>
+        <if test="orderBy != ''">
+            order by #{orderBy} #{descStr}
+        </if>
+        <if test="orderBy == ''">
+            order by code
+        </if>
+        <if test="limit != -1">
+            limit #{limit}
+        </if>
+        <if test="offset != -1">
+            offset #{offset}
+        </if>
+    </select>
+
+    <delete id="remove" parameterType="java.util.Arrays">
+        delete from t_permission_info where id in
+        <foreach item="permissionId" index="index" collection="permissionIds" open="(" separator="," close=")">
+            #{permissionId}#
+        </foreach>
+    </delete>
+
+    <delete id="removeByParentIds" parameterType="java.util.Arrays">
+        delete from t_permission_info where parent_id in
+        <foreach item="permissionId" index="index" collection="permissionIds" open="(" separator="," close=")">
+            #{permissionId}#
+        </foreach>
+    </delete>
+
+    <insert id="save" parameterType="com.springboot.base.data.entity.Permission" useGeneratedKeys="true"
+            keyProperty="id">
+      insert into t_permission_info(available,name,create_time,code,icon,be_url,fe_url,resource_type,parent_id) values(1,#{name},now(),#{code},#{icon},#{beUrl},#{feUrl},#{resourceType},#{parentId})
+    </insert>
+
+    <select id="listPermissionDetail" resultMap="TreeMap">
+        SELECT
+        a.id,a.name,a.code,a.parent_id,b.role_id,a.resource_type,c.id grandParentId
+        FROM t_permission_info a
+        left join t_role_permission b on a.id = b.permission_id and b.role_id = #{roleId}
+        left join t_permission_info c on a.id = c.parent_id
+        GROUP by a.id
+        order by a.code
+    </select>
+
+    <select id="listPermissionAll" resultMap="TreeMap">
+        SELECT
+        a.id,a.name,a.code,a.parent_id
+        FROM t_permission_info a
+        where a.resource_type = 'menu'
+        order by a.code
+    </select>
+
+
+    <select id="listByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_permission_info where id in
+        <foreach item="permissionId" index="index" collection="permissionIds" open="(" separator="," close=")">
+            #{permissionId}#
+        </foreach>
+    </select>
+</mapper>

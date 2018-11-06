@@ -12,7 +12,7 @@ import javax.inject.Singleton;
 @Component
 @Singleton
 @Log4j
-public class ValueHolder  {
+public class ValueHolder {
 
     private ThreadLocal<Long> userIdHolder = new ThreadLocal<>();
 

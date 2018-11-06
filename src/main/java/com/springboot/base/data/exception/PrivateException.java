@@ -8,14 +8,14 @@ import lombok.ToString;
  * Created by jay on 2016-10-25.
  */
 @ToString
-public class PrivateException extends Exception {
+public class PrivateException extends RuntimeException {
 
-    public int errCode;
+    public int code;
 
     public String msg;
 
     public PrivateException(ErrorInfo errorInfo) {
-        this.errCode = errorInfo.getValue();
+        this.code = errorInfo.getValue();
         this.msg = errorInfo.getName();
     }
 }

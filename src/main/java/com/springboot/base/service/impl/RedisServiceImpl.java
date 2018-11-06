@@ -1,15 +1,18 @@
 package com.springboot.base.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.springboot.base.constant.SystemConstants;
-import com.springboot.base.data.entity.UserInfo;
+import com.springboot.base.constant.ManagerLoginConstants;
+import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.service.RedisService;
+import com.springboot.base.util.DateUtil;
+import com.springboot.base.util.StringUtil;
 import lombok.extern.log4j.Log4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,21 +23,20 @@ import java.util.concurrent.TimeUnit;
 @Log4j
 public class RedisServiceImpl implements RedisService {
 
-    private final String USER_TOKEN_KEY = "user_token_";//用户登录后存入redis的key
-
-    private final String USER_PASSWORD_NUMBER_KEY = "user_password_";//用户猜密码次数存入redis的key
+    @Inject
+    private ManagerLoginConstants managerLoginConstants;
 
     @Inject
     private StringRedisTemplate template;
 
     @Override
-    public void saveUser(UserInfo userInfo) {
-        save(USER_TOKEN_KEY + userInfo.getKey(), userInfo, SystemConstants.USER_TOKEN_TIME_LONG, TimeUnit.MINUTES);
+    public void saveUser(ManagerInfo managerInfo) {
+        save(StringUtil.concatStringWithSign("_", USER_TOKEN_KEY, managerInfo.getKey()), managerInfo, managerLoginConstants.getTime(), TimeUnit.MINUTES);
     }
 
 /*    @Override
-    public UserInfo getUserInfo(UserInfo userInfo) throws Exception {
-        return get(USER_TOKEN_KEY + TokenUtils.getKey(userInfo), UserInfo.class);
+    public ManagerInfo getUserInfo(ManagerInfo userInfo) throws Exception {
+        return get(USER_TOKEN_KEY + TokenUtils.getKey(userInfo), ManagerInfo.class);
     }*/
 
     /**
@@ -44,7 +46,18 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public void saveUserPasswordNumber(String username, Integer number) {
-        save(USER_PASSWORD_NUMBER_KEY + username, number, SystemConstants.USER_PASSWORD_TIME_LONG, TimeUnit.MINUTES);
+        save(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username), number, managerLoginConstants.getVerifiedTime(), TimeUnit.MINUTES);
+    }
+
+    /**
+     * 根据key获取用户欲冻结次数
+     * @param username
+     * @return
+     */
+    @Override
+    public Integer getUserExpectNumber(String username) {
+        String numberString = get(StringUtil.concatStringWithSign("_", RedisService.USER_LOCKED_NUMBER_KEY, username));
+        return numberString == null ? 0 : Integer.parseInt(numberString);
     }
 
     /**
@@ -53,29 +66,41 @@ public class RedisServiceImpl implements RedisService {
      */
     @Override
     public Integer getUserPasswordNumber(String username) {
-        String numberString = get(USER_PASSWORD_NUMBER_KEY + username);
-        Integer number = numberString == null ? 0 : Integer.parseInt(numberString);
-        return number;
+        String numberString = get(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username));
+        return numberString == null ? 0 : Integer.parseInt(numberString);
     }
 
     @Override
-    public UserInfo getUserInfoByKey(String key) {
-        return get(USER_TOKEN_KEY + key, UserInfo.class);
+    public ManagerInfo getUserInfoByKey(String key) {
+        return get(StringUtil.concatStringWithSign("_", USER_TOKEN_KEY, key), ManagerInfo.class);
     }
 
     @Override
     public void removeUserTokenByKey(String key) {
-        template.delete(USER_TOKEN_KEY + key);
+        template.delete(StringUtil.concatStringWithSign("_", USER_TOKEN_KEY, key));
     }
 
     @Override
-    public void removeUserPasswordNumberByKey(String key) {
-        template.delete(USER_PASSWORD_NUMBER_KEY + key);
+    public void removeUserPasswordNumberByKey(String username) {
+        template.delete(StringUtil.concatStringWithSign("_", USER_PASSWORD_NUMBER_KEY, username));
+        template.delete(StringUtil.concatStringWithSign("_", USER_LOCKED_NUMBER_KEY, username));
+    }
+
+    @Override
+    public void saveUserExpectNumber(String username, int lockedNumber) {
+        Date nowDate = new Date(System.currentTimeMillis());
+        long expectMin = DateUtil.getMinuteCompare(nowDate, DateUtil.getDayEndDate(nowDate));
+        save(StringUtil.concatStringWithSign("_", RedisService.USER_LOCKED_NUMBER_KEY, username), lockedNumber, expectMin, TimeUnit.MINUTES);
     }
 
     private void save(String key, Object value, long time, TimeUnit timeUnit) {
         ValueOperations<String, String> ops = template.opsForValue();
         ops.set(key, JSON.toJSONString(value), time, timeUnit);
+    }
+
+    private void save(String key, Object value) {
+        ValueOperations<String, String> ops = template.opsForValue();
+        ops.set(key, JSON.toJSONString(value));
     }
 
     private <T> T get(String key, Class<T> clazz) {

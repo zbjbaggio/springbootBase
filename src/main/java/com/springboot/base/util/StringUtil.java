@@ -31,4 +31,21 @@ public class StringUtil {
         return nf.format(value);
     }
 
+    /**
+     * 字符串特殊拼接
+     *
+     * @param sign
+     * @param contents
+     * @return
+     */
+    public static String concatStringWithSign(String sign, String... contents) {
+        String result = contents[0];
+        for (int i = 1; i < contents.length; i++) {
+            result = result.concat(sign).concat(contents[i]);
+        }
+        //int lastIndex = result.lastIndexOf(sign);
+        //result = result.substring(0, lastIndex);
+        return result;
+    }
+
 }

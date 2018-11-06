@@ -61,9 +61,16 @@
         </if>
     </select>
 
-    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.springboot.base.data.entity.Role">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="com.springboot.base.data.entity.RoleInfo">
         insert into t_role_info(name,available,description,create_time)
         values(#{name},#{available},#{description}, now())
     </insert>
+
+    <delete id="remove" parameterType="java.util.Arrays">
+        delete from t_role_info where id in
+        <foreach item="roleId" index="index" collection="roleIds" open="(" separator="," close=")">
+            #{roleId}#
+        </foreach>
+    </delete>
 
 </mapper>

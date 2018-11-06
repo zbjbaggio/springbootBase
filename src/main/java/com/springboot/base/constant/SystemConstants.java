@@ -6,10 +6,12 @@ package com.springboot.base.constant;
  */
 public interface SystemConstants {
 
-    int USER_TOKEN_TIME_LONG = 30;//用户登录后存入redis的时长30分钟
+    int time = 20;//用户登录后存入redis的时长30分钟
 
-    int USER_PASSWORD_TIME_LONG = 60;//用户猜密码次数存入redis的时长60分钟
+    int verifiedTime = 60;//用户猜密码次数存入redis的时长60分钟，即锁定时间
 
-    int FREEZE_NUMBER = 3;//3次猜错冻结
+    int frozenNumber = 3;//n次猜错冻结账号
+
+    int lockedNumber = 1;//冻结n次后锁定账户
 
 }
