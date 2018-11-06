@@ -33,9 +33,6 @@ import java.util.Set;
 @Slf4j
 public class PermissionInfoServiceImpl implements PermissionInfoService {
 
-    @Value("${server.servlet.context-path}")
-    private String path;
-
     @Inject
     private PermissionInfoMapper permissionInfoMapper;
 
@@ -47,7 +44,7 @@ public class PermissionInfoServiceImpl implements PermissionInfoService {
         List<PermissionVO> menuList = new ArrayList<>();
         Set<String> buttonSet = new HashSet<>();
         for (PermissionVO permissionVO : permissionVOS) {
-            permissionSet.add(path + permissionVO.getBeUrl());
+            permissionSet.add(permissionVO.getBeUrl());
             // 一级菜单没有parentId
             if ("0".equals(permissionVO.getParentId() + "")) {
                 menuList.add(permissionVO);
