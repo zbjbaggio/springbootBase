@@ -1,9 +1,17 @@
 package com.springboot.base.conf;
 
+import com.springboot.base.data.entity.OrderInfo;
+import com.springboot.base.data.vo.OrderVO;
 import com.springboot.base.interceptor.AuthenticationInterceptor;
+import com.springboot.base.mapper.RoleMapper;
+import com.springboot.base.mapper.TOrderMapper;
+import com.zaxxer.hikari.HikariDataSource;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,13 +24,11 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -35,10 +41,16 @@ import java.util.Locale;
 @ComponentScan("com.springboot.base")
 @MapperScan("com.springboot.base.mapper")
 @Configuration
-public class Application extends WebMvcConfigurerAdapter {
+public class Application extends WebMvcConfigurationSupport {
 
 	@Inject
     private AuthenticationInterceptor authenticationInterceptor;
+
+	@Inject
+	private TOrderMapper tOrderMapper;
+
+	@Inject
+    private RoleMapper roleMapper;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -62,7 +74,16 @@ public class Application extends WebMvcConfigurerAdapter {
 
 	@RequestMapping("/home")
 	String home() {
-        return "Hello World!";
+/*		OrderInfo order = new OrderInfo();
+		order.setPostageId(7L);
+		order.setEmail("11111");
+		tOrderMapper.save(order);
+		order.setPostageId(8L);
+		tOrderMapper.save(order);*/
+        roleMapper.listAllByUserId(1L);
+        List<OrderVO> select = tOrderMapper.select();
+        select.forEach(x -> System.out.println(x.getPostageId()));
+		return "Hello World!";
 	}
 
     @Bean
@@ -91,4 +112,5 @@ public class Application extends WebMvcConfigurerAdapter {
 		RequestMappingHandlerAdapter adapte = new RequestMappingHandlerAdapter();
 		return adapte;
 	}*/
+
 }

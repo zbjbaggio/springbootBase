@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.springboot.base.mapper.TOrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.springboot.base.data.vo.OrderVO">
+        <id column="order_id" property="postageId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        order_id
+    </sql>
+
+    <insert id="save" parameterType="com.springboot.base.data.entity.OrderInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into t_order(order_id,user_id,status) values(#{postageId},#{postageId},#{email})
+    </insert>
+
+    <select id="select" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_order order by order_id
+    </select>
+
+</mapper>

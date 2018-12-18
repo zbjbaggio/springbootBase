@@ -55,4 +55,7 @@ public class OrderVO {
     private BigDecimal productAmount;
 
     private List<OrderDetailVO> orderDetailVOList;
+
+    private Long postageId;
+
 }
