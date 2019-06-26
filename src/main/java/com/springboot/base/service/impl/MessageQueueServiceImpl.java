@@ -28,10 +28,10 @@ public class MessageQueueServiceImpl implements MessageQueueService, RabbitTempl
     @Override
     public void send(QueueMessageDTO message) {
         //checkMessage(message);
-        if (message.getType() == MessageTypeEnum.DEFAULT.getIndex() || message.getSeconds() < 0) {//即时消息
+        if (message.getType() == MessageTypeEnum.DEFAULT || message.getSeconds() < 0) {//即时消息
             sendMessage(message);
         }
-        if (message.getType() == MessageTypeEnum.DELAYED.getIndex()) {//延时消息
+        if (message.getType() == MessageTypeEnum.DELAYED) {//延时消息
             sendTimeMessage(message);
         }
     }

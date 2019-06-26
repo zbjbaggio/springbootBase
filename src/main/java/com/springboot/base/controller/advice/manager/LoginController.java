@@ -1,20 +1,21 @@
 package com.springboot.base.controller.advice.manager;
 
+import com.springboot.base.data.dto.QueueMessageDTO;
 import com.springboot.base.data.entity.ManagerInfo;
 import com.springboot.base.data.exception.PrivateException;
 import com.springboot.base.data.vo.ManagerVO;
 import com.springboot.base.enmus.ErrorInfo;
+import com.springboot.base.enmus.MessageTypeEnum;
 import com.springboot.base.service.ManagerInfoService;
+import com.springboot.base.service.MessageQueueService;
 import com.springboot.base.util.BindingResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.Date;
 
 /**
  * 登录
@@ -46,6 +47,18 @@ public class LoginController {
             throw new PrivateException(ErrorInfo.LOGIN_ERROR);
         }
         return managerVO;
+    }
+
+    @Inject
+    private MessageQueueService messageQueueService;
+
+    @GetMapping("/send1")
+    public void send1(String message) {
+        System.out.println("HelloReceiverB发送时间" + new Date());
+        QueueMessageDTO messageDTO = new QueueMessageDTO("aaaa", "1hello");
+        messageDTO.setSeconds(10);
+        messageDTO.setType(MessageTypeEnum.DELAYED);
+        messageQueueService.send(messageDTO);
     }
 /*
     @RequestMapping(value = "/test", method = RequestMethod.GET)

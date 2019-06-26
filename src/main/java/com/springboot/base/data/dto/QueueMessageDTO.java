@@ -32,7 +32,7 @@ public class QueueMessageDTO {
     /**
      * 类型，查看 MessageTypeEnum
      */
-    private Integer type;
+    private MessageTypeEnum type;
 
     /**
      * 消息组(group)
@@ -65,7 +65,7 @@ public class QueueMessageDTO {
         this.message = message;
         this.timestamp = new Date();
         this.isReturn = false;
-        this.type = MessageTypeEnum.DEFAULT.getIndex();
+        this.type = MessageTypeEnum.DEFAULT;
     }
 
     public QueueMessageDTO(String queueName, String message, boolean isReturn) {
@@ -73,7 +73,7 @@ public class QueueMessageDTO {
         this.message = message;
         this.timestamp = new Date();
         this.isReturn = isReturn;
-        this.type = MessageTypeEnum.DEFAULT.getIndex();
+        this.type = MessageTypeEnum.DEFAULT;
     }
 
     public boolean getIsReturn() {

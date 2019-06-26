@@ -15,7 +15,7 @@ import java.io.IOException;
 @Component
 public class ReceiveDirect {
 
-    @RabbitListener(queues = "my-queue")
+    //@RabbitListener(queues = "my-queue")
     public void receiveMessage(Message message, Channel channel) throws IOException {
         String messageRec = new String(message.getBody());
         System.out.println("接收到的字符串消息是 => " + messageRec);

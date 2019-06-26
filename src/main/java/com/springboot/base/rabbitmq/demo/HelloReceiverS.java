@@ -15,7 +15,7 @@ import java.io.IOException;
 @Component
 public class HelloReceiverS {
 
-    @RabbitListener(queues = "hellos")
+    //@RabbitListener(queues = "hellos")
     @RabbitHandler
     public void processA(String hello, Channel channel, Message message) throws IOException {
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
@@ -23,14 +23,14 @@ public class HelloReceiverS {
     }
 
 
-    @RabbitListener(queues = "fanout.B")
+    //@RabbitListener(queues = "fanout.B")
     @RabbitHandler
     public void processB(String hello, Channel channel, Message message) throws IOException {
        // channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         System.out.println("Receiver2  : " + hello);
     }
 
-    @RabbitListener(queues = "fanout.C")
+    //@RabbitListener(queues = "fanout.C")
     @RabbitHandler
     public void processC(String hello, Channel channel, Message message) throws IOException {
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);

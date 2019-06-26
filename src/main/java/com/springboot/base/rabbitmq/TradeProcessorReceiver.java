@@ -1,6 +1,5 @@
 package com.springboot.base.rabbitmq;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rabbitmq.client.Channel;
 import com.springboot.base.constant.QueueConstants;
@@ -32,7 +31,7 @@ public class TradeProcessorReceiver  {
     public void process(String content, Channel channel, Message message) throws IOException {
         QueueMessageDTO messageDTO = JSONObject.parseObject(content, QueueMessageDTO.class);
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
-        messageDTO.setType(MessageTypeEnum.DEFAULT.getIndex());
+        messageDTO.setType(MessageTypeEnum.DEFAULT);
         messageQueueService.send(messageDTO);
     }
 

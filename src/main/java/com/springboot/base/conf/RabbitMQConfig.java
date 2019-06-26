@@ -12,7 +12,7 @@ import java.util.Map;
  * 描述：RabbitMQ队列配置
  * Created by jay on 2018-10-17.
  */
-//@Configuration
+@Configuration
 public class RabbitMQConfig {
 
     /**

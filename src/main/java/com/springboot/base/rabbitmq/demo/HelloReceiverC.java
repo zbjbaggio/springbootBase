@@ -18,7 +18,7 @@ import java.util.Date;
  * Created by jay on 2018-9-12.
  */
 @Component
-@RabbitListener(queues = "helloC")
+//@RabbitListener(queues = "helloC")
 public class HelloReceiverC {
 
     @Autowired
